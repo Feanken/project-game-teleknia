@@ -24,7 +24,7 @@ public final class AudioControls extends HBox {
         mute.setTooltip(new Tooltip("Mute or restore all game audio"));
         mute.setOnAction(event -> {
             audio.setMuted(mute.isSelected());
-            mute.setText(mute.isSelected() ? "Unmute" : "Mute");
+            mute.setText(com.rpgchatgame.util.UiText.tr(mute.isSelected() ? "Unmute" : "Mute"));
         });
         Slider music = slider("Music volume", audio.getMusicVolume());
         Slider effects = slider("Sound effect volume", audio.getEffectsVolume());
@@ -38,8 +38,8 @@ public final class AudioControls extends HBox {
 
     private Slider slider(String title, double initial) {
         Slider slider = new Slider(0, 1, initial);
-        slider.setPrefWidth(130);
-        slider.setMaxWidth(130);
+        slider.setPrefWidth(95);
+        slider.setMaxWidth(95);
         slider.setBlockIncrement(0.05);
         slider.setAccessibleText(title);
         slider.setTooltip(new Tooltip(title));

@@ -16,6 +16,8 @@ public class GameService {
     public GameService() { this(new DatabaseManager()); }
     public GameService(DatabaseManager database) {
         this.database=database;database.initialize();saves=new SaveGameRepository(database);
+        saves.importVersion11();
+        if(!saves.any()) migrateLegacy();
     }
     public GameState startNewStory() { return startNewStory("Kael","Fighter"); }
     public GameState startNewStory(String name,String klass) {
@@ -31,15 +33,33 @@ public class GameService {
         state.getStoryLogs().add(new StoryLog(StoryLog.Speaker.GAME_MASTER,opening));
         commit(state);return currentState;
     }
-    public Optional<GameState> continueStory() {
-        Optional<GameState> saved=saves.load();
+    public Optional<GameState> continueStory() { return loadSlot(0); }
+    public Optional<GameState> loadSlot(int slot) {
+        Optional<GameState> saved=saves.load(slot);
         if(saved.isPresent()) {
-            currentState=saved.get();currentState.setCurrentChoices(story.choices(currentState));return saved;
+            GameState next=saved.get();next.setCurrentChoices(story.choices(next));
+            if(slot!=0)saves.save(next);
+            currentState=next;
         }
+        return saved;
+    }
+    public void saveSlot(int slot) {
+        if(slot<1||slot>3)throw new IllegalArgumentException("Choose manual slot 1-3");
+        if(currentState==null)throw new IllegalStateException("Start or load a character before making a manual save.");
+        saves.save(slot,currentState);
+    }
+    public java.util.List<SaveGameRepository.SlotInfo> saveSlots() { return saves.slots(); }
+    public void restoreBackup(int slot) {
+        GameState next=saves.restore(slot);next.setCurrentChoices(story.choices(next));
+        if(slot!=0)saves.save(next);
+        currentState=next;
+    }
+    public boolean hasCurrentGame() { return currentState!=null; }
+    private void migrateLegacy() {
         // Legacy tables are read once and retained as a fallback/backup, never cleared.
         var legacy=new CharacterRepository(database).load();
         var oldStory=new StoryLogRepository(database).loadGameState();
-        if(legacy.isEmpty()||oldStory.isEmpty())return Optional.empty();
+        if(legacy.isEmpty()||oldStory.isEmpty())return;
         GameState migrated=new GameState();migrated.setCharacter(legacy.get());
         migrated.setInventory(new InventoryRepository(database).loadAll());
         for(var item:migrated.getInventory()) {
@@ -53,13 +73,18 @@ public class GameService {
         migrated.getStoryLogs().add(new StoryLog(StoryLog.Speaker.SYSTEM,message));
         migrated.getCampaign().getJournal().add(message);migrated.setCurrentStorySummary(message);
         migrated.setCurrentQuest(story.quest(migrated));migrated.getCharacter().setCurrentQuest(migrated.getCurrentQuest());
-        migrated.setCurrentChoices(story.choices(migrated));commit(migrated);return Optional.of(currentState);
+        migrated.setCurrentChoices(story.choices(migrated));saves.importState(migrated);
     }
     public GameState getCurrentState() {
-        if(currentState==null)currentState=continueStory().orElseGet(this::startNewStory);
+        if(currentState==null) {
+            var saved=continueStory();
+            if(saved.isPresent())currentState=saved.get();
+            else if(saves.any())throw new SaveGameRepository.SaveProblem(0,"Autosave is missing. Open Saves to load a manual checkpoint or recover its backup.",null);
+            else currentState=startNewStory();
+        }
         return currentState;
     }
-    public boolean hasSavedGame() { return saves.exists()||new CharacterRepository(database).load().isPresent(); }
+    public boolean hasSavedGame() { return saves.any(); }
     private GameState copy() { return JsonUtil.fromJson(JsonUtil.toJson(getCurrentState()),GameState.class); }
     private void commit(GameState next) { saves.save(next);currentState=next; }
 

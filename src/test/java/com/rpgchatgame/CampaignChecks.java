@@ -116,7 +116,7 @@ public final class CampaignChecks {
         check(restored.getStoryLogs().getFirst().getMessage().startsWith("You wake"),"Opening log saved");
         check(restored.getStoryLogs().getFirst().getCreatedAt().equals(game.getCurrentState().getStoryLogs().getFirst().getCreatedAt()),"Timestamp roundtrip");
         try(Connection connection=database.getConnection();Statement statement=connection.createStatement()) {
-            statement.executeUpdate("CREATE TRIGGER fail_save BEFORE UPDATE ON campaign_save BEGIN SELECT RAISE(ABORT,'test failure'); END");
+            statement.executeUpdate("CREATE TRIGGER fail_save BEFORE UPDATE ON save_slots BEGIN SELECT RAISE(ABORT,'test failure'); END");
         }
         int logs=loaded.getCurrentState().getStoryLogs().size();
         try {act(loaded,"attack");throw new AssertionError("Save should fail");} catch(IllegalStateException expected) {assertions++;}

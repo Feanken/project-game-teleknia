@@ -1,0 +1,162 @@
+[
+  {
+    "item": {
+      "id": "rusty_sword",
+      "name": "Rusty Sword",
+      "type": "WEAPON",
+      "rarity": "COMMON",
+      "description": "A chipped blade carried from the village.",
+      "effect": "+2 Attack"
+    },
+    "price": 0,
+    "attack": 2,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "small_potion",
+      "name": "Small Potion",
+      "type": "CONSUMABLE",
+      "rarity": "COMMON",
+      "description": "A flask of red mountain herbs.",
+      "effect": "Restore 35 HP"
+    },
+    "price": 12,
+    "attack": 0,
+    "defense": 0,
+    "hp": 35,
+    "mp": 0,
+    "sold": true
+  },
+  {
+    "item": {
+      "id": "mana_potion",
+      "name": "Mana Draught",
+      "type": "CONSUMABLE",
+      "rarity": "UNCOMMON",
+      "description": "Cool water steeped in moonroot.",
+      "effect": "Restore 25 MP"
+    },
+    "price": 15,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 25,
+    "sold": true
+  },
+  {
+    "item": {
+      "id": "old_map",
+      "name": "Old Map",
+      "type": "QUEST",
+      "rarity": "UNCOMMON",
+      "description": "A hunter's map, with a shrine circled in faded ink.",
+      "effect": "Reveals the Emberwood route"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "ash_fang",
+      "name": "Ash Fang",
+      "type": "QUEST",
+      "rarity": "UNCOMMON",
+      "description": "A crack of red light runs through the wolf's fang.",
+      "effect": "Evidence of the Cinder Crown"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "iron_sword",
+      "name": "Iron Longsword",
+      "type": "WEAPON",
+      "rarity": "UNCOMMON",
+      "description": "A balanced blade forged by the camp smith.",
+      "effect": "+8 Attack"
+    },
+    "price": 40,
+    "attack": 8,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": true
+  },
+  {
+    "item": {
+      "id": "ranger_armor",
+      "name": "Ranger Armor",
+      "type": "ARMOR",
+      "rarity": "UNCOMMON",
+      "description": "Layered leather reinforced with iron scales.",
+      "effect": "+5 Defense"
+    },
+    "price": 35,
+    "attack": 0,
+    "defense": 5,
+    "hp": 0,
+    "mp": 0,
+    "sold": true
+  },
+  {
+    "item": {
+      "id": "ember_blade",
+      "name": "Ember Blade",
+      "type": "WEAPON",
+      "rarity": "EPIC",
+      "description": "The guardian's gift, tempered by a quiet flame.",
+      "effect": "+12 Attack"
+    },
+    "price": 0,
+    "attack": 12,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "silver_locket",
+      "name": "Silver Locket",
+      "type": "QUEST",
+      "rarity": "RARE",
+      "description": "A portrait of Mira's brother, rescued from the ruins.",
+      "effect": "Return to Mira at camp"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "sun_sigil",
+      "name": "Sun Sigil",
+      "type": "QUEST",
+      "rarity": "RARE",
+      "description": "The shrine's last unbroken seal.",
+      "effect": "Needed to purify the Crown"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  }
+]

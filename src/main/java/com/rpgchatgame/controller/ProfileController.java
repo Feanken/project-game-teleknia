@@ -33,6 +33,7 @@ public class ProfileController {
 
         Label name = new Label(character.getName());
         name.getStyleClass().add("profile-name");
+        name.getProperties().put("literal", true);
         Label klass = new Label(character.getCharacterClass() + " - Level " + character.getLevel());
         klass.getStyleClass().add("subtitle");
 

@@ -11,4 +11,6 @@ try {
     $classpath = (@('target/classes', 'target/test-classes') + $jars) -join ';'
     & java -cp $classpath com.rpgchatgame.CampaignChecks
     if ($LASTEXITCODE -ne 0) { throw 'Campaign checks failed.' }
+    & java -cp $classpath com.rpgchatgame.EssentialsChecks
+    if ($LASTEXITCODE -ne 0) { throw 'Essentials checks failed.' }
 } finally { Pop-Location }

@@ -34,6 +34,8 @@ public class DatabaseManager {
     public void initialize() {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS save_slots (slot INTEGER PRIMARY KEY CHECK(slot BETWEEN 0 AND 3), version INTEGER NOT NULL, saved_at TEXT NOT NULL, payload TEXT NOT NULL, checksum TEXT NOT NULL)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS save_backups (slot INTEGER PRIMARY KEY CHECK(slot BETWEEN 0 AND 3), version INTEGER NOT NULL, saved_at TEXT NOT NULL, payload TEXT NOT NULL, checksum TEXT NOT NULL)");
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS campaign_save (id INTEGER PRIMARY KEY, version INTEGER NOT NULL, payload TEXT NOT NULL)");
             statement.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS characters (

@@ -4,6 +4,7 @@ import com.rpgchatgame.MainApp;
 import com.rpgchatgame.model.*;
 import com.rpgchatgame.service.*;
 import com.rpgchatgame.ui.PixelAssets;
+import com.rpgchatgame.util.UiText;
 import javafx.geometry.*;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -59,7 +60,7 @@ public class AdventureController {
     }
     private VBox journal(GameState state) {
         var world=state.getCampaign();
-        VBox box=section("journal","QUEST JOURNAL",world.chapter()+" / "+state.getCurrentQuest());
+        VBox box=section("journal","QUEST JOURNAL",UiText.tr(world.chapter())+" / "+state.getCurrentQuest());
         List<String[]> quests=List.of(
                 new String[]{"survivors","People Before Ashes","Rescue Mira in Burned Village."},
                 new String[]{"wolf","The Northern Road","Defeat the Ash Wolf at Northern Gate."},
@@ -84,7 +85,7 @@ public class AdventureController {
         return box;
     }
     private VBox market(GameState state) {
-        VBox box=section("backpack","CAMP MARKET","Gold: "+state.getCharacter().getGold()+" / "+(game.canShop()?"The smith and herbalist are ready to trade.":"Visit Survivor Camp outside combat to trade."));
+        VBox box=section("backpack","CAMP MARKET","Gold: "+state.getCharacter().getGold()+" / "+UiText.tr(game.canShop()?"The smith and herbalist are ready to trade.":"Visit Survivor Camp outside combat to trade."));
         Label feedback=text("");feedback.getStyleClass().add("feedback-label");box.getChildren().add(feedback);
         for(var entry:ItemCatalog.shop()) {
             Item item=entry.item();

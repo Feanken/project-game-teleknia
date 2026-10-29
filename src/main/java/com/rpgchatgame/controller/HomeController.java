@@ -3,6 +3,7 @@ package com.rpgchatgame.controller;
 import com.rpgchatgame.MainApp;
 import com.rpgchatgame.service.GameService;
 import com.rpgchatgame.ui.PixelAssets;
+import com.rpgchatgame.util.Constants;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -49,17 +50,16 @@ public class HomeController {
         continueButton.setOnAction(event -> app.runSafely(() -> {
             gameService.continueStory().ifPresentOrElse(
                     state -> app.showStory(),
-                    () -> {
-                        gameService.startNewStory();
-                        app.showStory();
-                    }
+                    () -> app.showSaves(false, "")
             );
         }));
 
         Button inventoryButton = secondaryButton("Inventory");
+        inventoryButton.setDisable(!gameService.hasSavedGame() && !gameService.hasCurrentGame());
         inventoryButton.setOnAction(event -> app.runSafely(app::showInventory));
 
         Button profileButton = secondaryButton("Character Profile");
+        profileButton.setDisable(!gameService.hasSavedGame() && !gameService.hasCurrentGame());
         profileButton.setOnAction(event -> app.runSafely(app::showProfile));
 
         HBox topButtons = new HBox(14, startButton, continueButton);
@@ -75,9 +75,10 @@ public class HomeController {
         scenery.setAlignment(Pos.CENTER);
         scenery.setMaxWidth(javafx.scene.layout.Region.USE_PREF_SIZE);
         scenery.getStyleClass().add("world-strip");
-        Label footer = new Label("SINGLE PLAYER   /   OFFLINE ADVENTURE   /   AUTO SAVE");
+        Label footer = new Label("VERSION " + Constants.APP_VERSION + "   /   OFFLINE ADVENTURE   /   AUTO SAVE");
         footer.getStyleClass().add("item-meta");
         Button worldButton = secondaryButton("World Map & Quest Journal");
+        worldButton.setDisable(!gameService.hasSavedGame() && !gameService.hasCurrentGame());
         worldButton.setOnAction(event -> app.runSafely(app::showAdventure));
         menuCard.getChildren().add(worldButton);
         hero.getChildren().addAll(eyebrow, scenery, title, subtitle, menuCard, footer);
@@ -105,17 +106,25 @@ public class HomeController {
             default -> "100 HP / 30 MP. Strong defense. Power Strike doubles your equipped attack before enemy armor.";
         });
         klass.valueProperty().addListener((o,b,a) -> update.run()); update.run();
-        Label notice = new Label(gameService.hasSavedGame() ? "Beginning replaces the current campaign save." : "Three chapters, seven locations, three endings. Your progress saves automatically.");
+        Label notice = new Label("This replaces autosave only. Manual slots stay safe.");
         notice.setWrapText(true); notice.setMaxWidth(440);
-        VBox form = new VBox(12, new Label("Character name (1-24 characters)"), name, new Label("Class"), klass, details, notice);
+        var tutorial = new javafx.scene.control.CheckBox("Show the beginner tutorial");
+        tutorial.setSelected(!app.getSettings().tutorialSeen());
+        VBox form = new VBox(12, new Label("Character name (1-24 characters)"), name, new Label("Class"), klass, details, notice, tutorial);
         form.setPadding(new Insets(20));
         dialog.getDialogPane().setContent(form);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/styles/fantasy.css").toExternalForm());
         dialog.getDialogPane().lookupButton(start).disableProperty().bind(javafx.beans.binding.Bindings.createBooleanBinding(
                 () -> name.getText().isBlank() || name.getText().trim().length() > 24, name.textProperty()));
+        var localizedCancel = new javafx.scene.control.ButtonType(com.rpgchatgame.util.UiText.tr("Cancel"), javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().set(1, localizedCancel);
+        dialog.setTitle(com.rpgchatgame.util.UiText.tr("New Adventure"));
+        com.rpgchatgame.ui.UiLocalization.apply(dialog.getDialogPane());
+        klass.setOnAction(event -> { update.run(); com.rpgchatgame.ui.UiLocalization.apply(dialog.getDialogPane()); });
         dialog.setResultConverter(type -> type == start);
         dialog.showAndWait().filter(Boolean::booleanValue).ifPresent(ok -> app.runSafely(() -> {
             gameService.startNewStory(name.getText(), klass.getValue()); app.showStory();
+            if (tutorial.isSelected()) app.showHelp();
         }));
     }
 

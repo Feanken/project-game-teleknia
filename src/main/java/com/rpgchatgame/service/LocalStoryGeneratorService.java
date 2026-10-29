@@ -7,7 +7,7 @@ import java.util.*;
 public class LocalStoryGeneratorService implements StoryGeneratorService {
     public static final List<String> LOCATIONS = List.of("Burned Village", "Northern Gate", "Emberwood Trail", "Survivor Camp", "Emberwood Shrine", "Sunken Ruins", "Cinder Tower");
     private final InventoryService inventory = new InventoryService();
-    private static Choice c(String label,String action) { return new Choice(label,action); }
+    private static Choice c(String label,String action) { return new Choice(ActionDefinitions.label(action,label),action); }
 
     public List<Choice> choices(GameState state) {
         var world=state.getCampaign();

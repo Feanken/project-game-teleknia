@@ -24,6 +24,7 @@ public class StatusPanel extends VBox {
         setPadding(new Insets(18));
 
         title.getStyleClass().add("panel-title");
+        title.getProperties().put("literal", true);
         hpBar.getStyleClass().add("hp-bar");
         mpBar.getStyleClass().add("mp-bar");
         expBar.getStyleClass().add("exp-bar");

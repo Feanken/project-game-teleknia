@@ -158,7 +158,9 @@ public class StoryController {
     private VBox messageBubble(StoryLog log) {
         Label speaker = new Label(speakerName(log.getSpeaker()));
         speaker.getStyleClass().add("bubble-speaker");
+        if (log.getSpeaker() == StoryLog.Speaker.PLAYER) speaker.getProperties().put("literal", true);
         Label message = new Label(log.getMessage());
+        message.getProperties().put("literal", true);
         message.setWrapText(true);
         String sprite = switch (log.getSpeaker()) {
             case GAME_MASTER -> "game_master";
