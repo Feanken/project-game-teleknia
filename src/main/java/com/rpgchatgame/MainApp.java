@@ -44,7 +44,7 @@ public class MainApp extends Application {
             case ESCAPE->runSafely(()->{if(primaryStage.isFullScreen())setFullscreen(false);else if(screen.equals("SETTINGS")||screen.equals("HELP")||screen.equals("SAVES"))back();else showSettings();});
             default->{
                 if(!screen.equals("STORY")||event.isShiftDown()||scene.getFocusOwner() instanceof TextInputControl||scene.getFocusOwner() instanceof ComboBoxBase)return;
-                int index=switch(event.getCode()){case DIGIT1,NUMPAD1->0;case DIGIT2,NUMPAD2->1;case DIGIT3,NUMPAD3->2;case DIGIT4,NUMPAD4->3;case DIGIT5,NUMPAD5->4;case DIGIT6,NUMPAD6->5;case DIGIT7,NUMPAD7->6;case DIGIT8,NUMPAD8->7;default->-1;};
+                int index=switch(event.getCode()){case DIGIT1,NUMPAD1->0;case DIGIT2,NUMPAD2->1;case DIGIT3,NUMPAD3->2;case DIGIT4,NUMPAD4->3;case DIGIT5,NUMPAD5->4;case DIGIT6,NUMPAD6->5;case DIGIT7,NUMPAD7->6;case DIGIT8,NUMPAD8->7;case DIGIT9,NUMPAD9->8;case DIGIT0,NUMPAD0->9;default->-1;};
                 if(index<0)return;
                 var pane=scene.lookup(".choices-box");if(pane instanceof Parent parent&&index<parent.getChildrenUnmodifiable().size()&&parent.getChildrenUnmodifiable().get(index) instanceof Button button)button.fire();
             }

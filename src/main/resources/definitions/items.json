@@ -158,5 +158,56 @@
     "hp": 0,
     "mp": 0,
     "sold": false
+  },
+  {
+    "item": {
+      "id": "plate_armor",
+      "name": "Sentinel Plate",
+      "type": "ARMOR",
+      "rarity": "RARE",
+      "description": "Crafted by the camp smith for a chosen fighting style.",
+      "effect": "+8 Defense"
+    },
+    "price": 55,
+    "attack": 0,
+    "defense": 8,
+    "hp": 0,
+    "mp": 0,
+    "sold": true,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "duelist_charm",
+      "name": "Duelist Charm",
+      "type": "ACCESSORY",
+      "rarity": "RARE",
+      "description": "Crafted by the camp smith for a chosen fighting style.",
+      "effect": "+2 Attack; critical attacks every third combat turn"
+    },
+    "price": 30,
+    "attack": 2,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": true,
+    "critical": 1
+  },
+  {
+    "item": {
+      "id": "warding_charm",
+      "name": "Warding Charm",
+      "type": "ACCESSORY",
+      "rarity": "RARE",
+      "description": "Crafted by the camp smith for a chosen fighting style.",
+      "effect": "+3 Defense"
+    },
+    "price": 30,
+    "attack": 0,
+    "defense": 3,
+    "hp": 0,
+    "mp": 0,
+    "sold": true,
+    "critical": 0
   }
 ]

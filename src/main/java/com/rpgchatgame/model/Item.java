@@ -2,7 +2,7 @@ package com.rpgchatgame.model;
 
 public class Item {
     public enum ItemType {
-        WEAPON, ARMOR, CONSUMABLE, QUEST
+        WEAPON, ARMOR, ACCESSORY, CONSUMABLE, QUEST
     }
 
     public enum Rarity {

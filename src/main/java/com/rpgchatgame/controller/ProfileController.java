@@ -56,9 +56,14 @@ public class ProfileController {
         addStat(stats, 11, "Weapon", com.rpgchatgame.service.ItemCatalog.equippedName(gameService.getCurrentState().getCampaign().getWeapon()));
         addStat(stats, 12, "Armor", com.rpgchatgame.service.ItemCatalog.equippedName(gameService.getCurrentState().getCampaign().getArmor()));
         addStat(stats, 13, "Class skill / 6 MP", com.rpgchatgame.service.LocalStoryGeneratorService.skillName(gameService.getCurrentState()));
+        addStat(stats, 14, "Accessory", com.rpgchatgame.service.ItemCatalog.equippedName(gameService.getCurrentState().getCampaign().getAccessory()));
+        addStat(stats, 15, "Skill points", String.valueOf(com.rpgchatgame.service.SkillCatalog.points(gameService.getCurrentState())));
+        addStat(stats, 16, "Difficulty", gameService.getCurrentState().getCampaign().getDifficulty());
+        addStat(stats, 17, "Critical attacks", "Every " + com.rpgchatgame.service.ItemCatalog.criticalPeriod(gameService.getCurrentState()) + " turns, requires Agility 10 or Duelist Charm");
+        Button skills = navButton("Manage skills", () -> app.showAdventure(3, ""));
         HBox identity = new HBox(20, PixelAssets.view("kael", 2), new VBox(10, name, klass));
         identity.setAlignment(Pos.CENTER_LEFT);
-        VBox profileCard = new VBox(18, identity, stats);
+        VBox profileCard = new VBox(18, identity, skills, stats);
         profileCard.getStyleClass().addAll("card", "profile-card");
         profileCard.setMaxWidth(760);
 

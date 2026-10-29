@@ -2,6 +2,7 @@ package com.rpgchatgame.repository;
 
 import com.rpgchatgame.model.GameState;
 import com.rpgchatgame.util.JsonUtil;
+import com.rpgchatgame.service.SkillCatalog;
 import java.sql.*;
 import java.time.Instant;
 import java.util.*;
@@ -10,7 +11,7 @@ import java.security.MessageDigest;
 
 /** Three manual slots plus independent autosave; valid previous snapshots survive bad writes. */
 public final class SaveGameRepository {
-    public static final int SCHEMA = 2;
+    public static final int SCHEMA = 3;
     public record SlotInfo(int slot, boolean occupied, boolean corrupt, boolean backup,
                            String name, String characterClass, int level, String location, String savedAt) {}
     public static final class SaveProblem extends IllegalStateException {
@@ -41,6 +42,22 @@ public final class SaveGameRepository {
                 ||hero.getMaxMp()<1||hero.getMp()<0||hero.getMp()>hero.getMaxMp())throw new IllegalStateException("Invalid character data");
         if(world.getFlags()==null||world.getVisited()==null||world.getJournal()==null||world.getWeapon()==null||world.getArmor()==null
                 ||world.getEnding()==null||world.getTurn()<0)throw new IllegalStateException("Invalid campaign data");
+        if(world.getDifficulty()==null||!Set.of("STANDARD","STORY").contains(world.getDifficulty())||world.getAccessory()==null
+                ||world.getSkillRanks()==null||world.getCooldowns()==null||world.getPlayerEffects()==null||world.getEnemyEffects()==null)
+            throw new IllegalStateException("Invalid combat/build data");
+        int spent=0;
+        for(var rank:world.getSkillRanks().entrySet()){
+            if(SkillCatalog.find(state,rank.getKey())==null||rank.getValue()==null||rank.getValue()<1||rank.getValue()>3)throw new IllegalStateException("Invalid skill rank");
+            spent+=rank.getValue();
+        }
+        if(spent>hero.getLevel())throw new IllegalStateException("Skill points exceed earned levels");
+        for(var cd:world.getCooldowns().entrySet())if((!cd.getKey().equals("heal")&&SkillCatalog.find(state,cd.getKey())==null)||cd.getValue()==null||cd.getValue()<1||cd.getValue()>8)
+            throw new IllegalStateException("Invalid cooldown");
+        for(var effects:List.of(world.getPlayerEffects(),world.getEnemyEffects()))for(var effect:effects.entrySet()){
+            if(!Set.of("burn","poison","stun","shield").contains(effect.getKey())||effect.getValue()==null||effect.getValue().getTurns()<1||effect.getValue().getTurns()>5||effect.getValue().getPotency()<0||effect.getValue().getPotency()>1000)
+                throw new IllegalStateException("Invalid status effect");
+        }
+        if(world.getEnemy()==null&&(!world.getPlayerEffects().isEmpty()||!world.getEnemyEffects().isEmpty()||!world.getCooldowns().isEmpty()))throw new IllegalStateException("Combat effects outside an encounter");
         Set<String> ids=new HashSet<>();
         for(var item:state.getInventory()) {
             if(item==null||item.getItem()==null||item.getItem().getId()==null||item.getItem().getType()==null||item.getItem().getRarity()==null
@@ -58,7 +75,7 @@ public final class SaveGameRepository {
         GameState state=JsonUtil.fromJson(data.payload(),GameState.class);
         // Sequential v1 -> v2: gameplay payload is unchanged; slots, timestamp and checksum move into the envelope.
         int version=data.version();
-        while(version<SCHEMA) { if(version==1)version=2;else throw new IllegalStateException("Missing save migration"); }
+        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else throw new IllegalStateException("Missing save migration"); }
         validate(state);return state;
     }
     private Snapshot read(Connection connection,String table,int slot) throws SQLException {
@@ -106,7 +123,8 @@ public final class SaveGameRepository {
                 Snapshot backup=read(connection,"save_backups",slot);
                 if(backup==null)throw new IllegalStateException("No backup available");
                 GameState restored=decode(backup);
-                put(connection,"save_slots",slot,new Snapshot(SCHEMA,backup.savedAt(),backup.payload(),backup.checksum()));
+                String payload=JsonUtil.toJson(restored);
+                put(connection,"save_slots",slot,new Snapshot(SCHEMA,backup.savedAt(),payload,digest(payload)));
                 connection.commit();return restored;
             } catch(Exception error) { connection.rollback();throw error; }
         } catch(Exception error) { throw new SaveProblem(slot,"Backup could not be restored. Current data was kept.",error); }

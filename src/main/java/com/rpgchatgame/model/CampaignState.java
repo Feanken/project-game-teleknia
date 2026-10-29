@@ -12,6 +12,25 @@ public class CampaignState {
     private String weapon = "rusty_sword";
     private String armor = "";
     private String ending = "";
+    private String difficulty = "STANDARD";
+    private String accessory = "";
+    private Map<String,Integer> skillRanks = new LinkedHashMap<>();
+    private Map<String,Integer> cooldowns = new LinkedHashMap<>();
+    private Map<String,StatusEffect> playerEffects = new LinkedHashMap<>();
+    private Map<String,StatusEffect> enemyEffects = new LinkedHashMap<>();
+    public String getDifficulty(){return difficulty;}
+    public void setDifficulty(String value){difficulty=value;}
+    public String getAccessory(){return accessory;}
+    public void setAccessory(String value){accessory=value;}
+    public Map<String,Integer> getSkillRanks(){return skillRanks;}
+    public void setSkillRanks(Map<String,Integer> value){skillRanks=value;}
+    public Map<String,Integer> getCooldowns(){return cooldowns;}
+    public void setCooldowns(Map<String,Integer> value){cooldowns=value;}
+    public Map<String,StatusEffect> getPlayerEffects(){return playerEffects;}
+    public void setPlayerEffects(Map<String,StatusEffect> value){playerEffects=value;}
+    public Map<String,StatusEffect> getEnemyEffects(){return enemyEffects;}
+    public void setEnemyEffects(Map<String,StatusEffect> value){enemyEffects=value;}
+
     public Set<String> getFlags() { return flags; }
     public void setFlags(Set<String> value) { flags = value; }
     public Set<String> getVisited() { return visited; }

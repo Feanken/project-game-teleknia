@@ -1,7 +1,7 @@
 # Roadmap Teleknia: 1.2 sampai 2.0
 
-Status: versi 1.2 sudah diimplementasikan. Versi game aktif adalah 1.2.
-Bagian 1.3 sampai 2.0 tetap merupakan rencana pengembangan.
+Status: versi 1.2 dan 1.3 sudah diimplementasikan. Versi game aktif adalah 1.3.
+Bagian 1.4 sampai 2.0 tetap merupakan rencana pengembangan.
 Target jumlah konten adalah usulan cakupan rilis, bukan fitur yang sudah tersedia.
 Tanggal rilis ditentukan setelah implementasi dan pengujian setiap versi.
 
@@ -54,7 +54,7 @@ Fondasi implementasi:
 Syarat selesai: setiap slot terisolasi, save/load saat combat tetap utuh, backup
 bisa dipulihkan, dan UI dapat dimainkan dengan keyboard pada 980 x 680.
 
-## 1.3 - Arts of Battle
+## 1.3 - Arts of Battle (selesai)
 
 Tujuan: pilihan strategi menentukan hasil pertarungan dan identitas tiap kelas.
 
@@ -197,6 +197,5 @@ paket mandiri bisa dipasang, dijalankan, diperbarui, dan dihapus dengan benar.
 
 ## Langkah pertama yang disarankan
 
-Lanjutkan ke 1.3 dengan memisahkan CombatService dan mendefinisikan aturan status
-effect sebelum menambah skill baru. Fondasi slot, backup, tutorial, inventory,
-pengaturan, dan lokalisasi UI 1.2 sudah tersedia.
+Lanjutkan ke 1.4 dengan mendefinisikan area, NPC, dan quest bercabang sebagai
+data tervalidasi. Fondasi 1.2 dan combat/build/difficulty 1.3 sudah tersedia.

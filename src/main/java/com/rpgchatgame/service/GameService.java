@@ -20,9 +20,12 @@ public class GameService {
         if(!saves.any()) migrateLegacy();
     }
     public GameState startNewStory() { return startNewStory("Kael","Fighter"); }
-    public GameState startNewStory(String name,String klass) {
+    public GameState startNewStory(String name,String klass) { return startNewStory(name,klass,"STANDARD"); }
+    public GameState startNewStory(String name,String klass,String difficulty) {
+        if(!Set.of("STANDARD","STORY").contains(difficulty))throw new IllegalArgumentException("Unknown difficulty");
         GameState state=new GameState();
         state.setCharacter(characters.createCharacter(name,klass));
+        state.getCampaign().setDifficulty(difficulty);
         state.setInventory(inventory.createStarterInventory());
         state.setCurrentLocation("Burned Village");state.getCampaign().getVisited().add("Burned Village");
         state.getCampaign().getJournal().add("A village in ashes. Rescue its people and discover why the northern road burns.");
@@ -132,8 +135,33 @@ public class GameService {
         if(entry==null||!ItemCatalog.owns(next,id))return "Item not found.";
         if(entry.item().getType()==Item.ItemType.WEAPON)next.getCampaign().setWeapon(id);
         else if(entry.item().getType()==Item.ItemType.ARMOR)next.getCampaign().setArmor(id);
+        else if(entry.item().getType()==Item.ItemType.ACCESSORY)next.getCampaign().setAccessory(id);
         else return "This item cannot be equipped.";
         return record(next,"Equipped "+entry.item().getName()+". Attack "+ItemCatalog.attack(next)+", Defense "+ItemCatalog.defense(next)+".");
+    }
+    public String upgradeSkill(String id) {
+        GameState next=copy();
+        if(next.getCampaign().getEnemy()!=null||!next.getCampaign().getEnding().isBlank())return "Change your build outside combat before the ending.";
+        if(SkillCatalog.find(next,id)==null)return "This skill belongs to another class.";
+        int rank=SkillCatalog.rank(next,id);
+        if(rank>=3)return "Maximum rank reached.";
+        if(SkillCatalog.points(next)<1)return "No skill points available.";
+        next.getCampaign().getSkillRanks().put(id,rank+1);
+        return record(next,"Upgraded "+SkillCatalog.find(next,id).name()+" to rank "+(rank+1)+".");
+    }
+    public String resetBuild() {
+        if(!canShop())return "Reset your build at Survivor Camp outside combat.";
+        GameState next=copy();
+        if(next.getCampaign().getSkillRanks().isEmpty())return "No allocated points to reset.";
+        if(next.getCharacter().getGold()<20)return "Not enough gold.";
+        next.getCharacter().setGold(next.getCharacter().getGold()-20);next.getCampaign().getSkillRanks().clear();
+        return record(next,"Build reset for 20 gold. All allocated skill points were refunded; HP and MP are unchanged.");
+    }
+    public String setDifficulty(String difficulty) {
+        if(!Set.of("STANDARD","STORY").contains(difficulty))throw new IllegalArgumentException("Unknown difficulty");
+        if(!canShop())return "Change difficulty at Survivor Camp outside combat.";
+        GameState next=copy();next.getCampaign().setDifficulty(difficulty);
+        return record(next,"Difficulty changed to "+difficulty+". Rewards and quest progress stay unchanged.");
     }
     public boolean canShop() { var state=getCurrentState();return state.getCurrentLocation().equals("Survivor Camp")&&state.getCampaign().getEnemy()==null&&state.getCampaign().getEnding().isBlank(); }
     public String buyItem(String id) {

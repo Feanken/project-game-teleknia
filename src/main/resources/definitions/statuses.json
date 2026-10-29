@@ -1,0 +1,30 @@
+[
+  {
+    "id": "burn",
+    "name": "Burn",
+    "duration": 3,
+    "potency": 4,
+    "description": "Damage at the end of each valid round. Bypasses armor and shields. Reapplying refreshes duration; potency uses the higher value, never adds."
+  },
+  {
+    "id": "poison",
+    "name": "Poison",
+    "duration": 3,
+    "potency": 5,
+    "description": "Damage at the end of each valid round. Bypasses armor and shields. Reapplying refreshes duration; potency uses the higher value, never adds."
+  },
+  {
+    "id": "stun",
+    "name": "Stun",
+    "duration": 1,
+    "potency": 0,
+    "description": "Skips the affected enemy counteraction this round, then expires. Cooldowns prevent consecutive stun locks."
+  },
+  {
+    "id": "shield",
+    "name": "Shield",
+    "duration": 2,
+    "potency": 20,
+    "description": "Absorbs direct hits until capacity is exhausted or two rounds pass. Damage over time bypasses it. No additive stacking."
+  }
+]

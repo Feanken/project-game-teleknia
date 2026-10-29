@@ -27,8 +27,8 @@ public final class SettingsController {
         VBox content=new VBox(18,PixelAssets.heading("journal","PREFERENCES","Display, language and audio settings apply to every save."),
                 text("Language"),language,text("Text size"),scale,fullscreen,text("Audio"),new AudioControls(app.getAudio()),
                 text("Shortcuts"),text("F1 Help / F5 Save slots / F9 Load slots / F11 Fullscreen / Esc Settings or Back"),
-                text("1-8 select a story action when you are not typing. Tab and Enter navigate controls."),
-                text("Changes are saved automatically. Story narration and lore remain in English in 1.2."),back);
+                text("1-9, 0 select a story action when you are not typing. Tab and Enter navigate controls."),
+                text("Changes are saved automatically. Story narration and lore remain in English in 1.3."),back);
         content.setPadding(new Insets(24));
         ScrollPane scroll=new ScrollPane(content);scroll.setFitToWidth(true);scroll.getStyleClass().add("plain-scroll");
         BorderPane root=new BorderPane(scroll);root.getStyleClass().add("app-root");return root;

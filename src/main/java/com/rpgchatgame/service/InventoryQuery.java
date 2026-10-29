@@ -17,8 +17,13 @@ public final class InventoryQuery {
     }
     public static String comparison(GameState state,String id){
         var entry=ItemCatalog.entry(id);if(entry==null)return "";
-        if(entry.item().getType()==Item.ItemType.WEAPON){int before=ItemCatalog.attack(state);int after=state.getCharacter().getStrength()+entry.attack();return "Attack: "+before+" -> "+after+" ("+signed(after-before)+")";}
-        if(entry.item().getType()==Item.ItemType.ARMOR){int before=ItemCatalog.defense(state);int after=state.getCharacter().getDefense()+entry.defense();return "Defense: "+before+" -> "+after+" ("+signed(after-before)+")";}
+        if(entry.item().getType()==Item.ItemType.WEAPON){int before=ItemCatalog.attack(state);int after=state.getCharacter().getStrength()+entry.attack()+ItemCatalog.accessoryAttack(state);return "Attack: "+before+" -> "+after+" ("+signed(after-before)+")";}
+        if(entry.item().getType()==Item.ItemType.ARMOR){int before=ItemCatalog.defense(state);int after=state.getCharacter().getDefense()+entry.defense()+ItemCatalog.accessoryDefense(state);return "Defense: "+before+" -> "+after+" ("+signed(after-before)+")";}
+        if(entry.item().getType()==Item.ItemType.ACCESSORY){
+            int attack=ItemCatalog.attack(state)-ItemCatalog.accessoryAttack(state)+entry.attack();
+            int defense=ItemCatalog.defense(state)-ItemCatalog.accessoryDefense(state)+entry.defense();
+            return "Attack: "+ItemCatalog.attack(state)+" -> "+attack+" / Defense: "+ItemCatalog.defense(state)+" -> "+defense+" / Critical every "+(entry.critical()>0?3:4)+" turns";
+        }
         return "";
     }
     private static String signed(int value){return value>0?"+"+value:Integer.toString(value);}

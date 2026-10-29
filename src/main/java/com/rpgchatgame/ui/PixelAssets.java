@@ -46,7 +46,8 @@ public final class PixelAssets {
             case "rusty_sword", "small_potion", "old_map", "ash_fang" -> id;
             case "iron_sword", "ember_blade" -> "rusty_sword";
             case "mana_potion" -> "mana";
-            case "silver_locket", "sun_sigil" -> "experience";
+            case "silver_locket", "sun_sigil", "duelist_charm" -> "experience";
+            case "warding_charm" -> "mana";
             default -> "backpack";
         };
     }

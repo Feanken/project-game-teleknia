@@ -6,15 +6,14 @@ import java.util.*;
 /** Offline campaign with explicit action IDs, gated quests, and deterministic turn combat. */
 public class LocalStoryGeneratorService implements StoryGeneratorService {
     public static final List<String> LOCATIONS = List.of("Burned Village", "Northern Gate", "Emberwood Trail", "Survivor Camp", "Emberwood Shrine", "Sunken Ruins", "Cinder Tower");
+    private final CombatService combat=new CombatService();
     private final InventoryService inventory = new InventoryService();
     private static Choice c(String label,String action) { return new Choice(ActionDefinitions.label(action,label),action); }
 
     public List<Choice> choices(GameState state) {
         var world=state.getCampaign();
         if (!world.getEnding().isBlank()) return List.of(c("Reflect on your journey", "look"));
-        if (world.getEnemy()!=null) return List.of(c("Attack", "attack"), c(skillName(state)+" / 6 MP", "skill"),
-                c("Arcane Bolt / 10 MP", "spell"), c("Guard / recover 6 MP", "guard"), c("Mend / 8 MP", "heal"),
-                c("Drink HP potion", "potion"), c("Drink mana draught", "mana"), c("Retreat / lose up to 5 gold", "flee"));
+        if (world.getEnemy()!=null) return combat.choices(state);
         List<Choice> actions=new ArrayList<>();
         switch(state.getCurrentLocation()) {
             case "Burned Village" -> {
@@ -108,7 +107,7 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
         if (action.equals("look")) {
             response.setNarration(describe(state));
         } else if (offered) {
-            if(state.getCampaign().getEnemy()!=null)combat(state,action,response);
+            if(state.getCampaign().getEnemy()!=null)combat.resolve(state,action,response);
             else explore(state,action,response);
         }
         response.setChoices(choices(state));
@@ -118,7 +117,7 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
     public String describe(GameState state) {
         if(!state.getCampaign().getEnding().isBlank())return "Your journey is complete: "+state.getCampaign().getEnding()+". Your journal preserves the people and places you changed. Start a new story from Home to try another ending.";
         var enemy=state.getCampaign().getEnemy();
-        if(enemy!=null)return enemy.getName()+" blocks your path. Every third enemy turn is a heavy attack: Guard halves incoming damage and restores 6 MP. Skills cost 6 MP, Arcane Bolt 10, Mend 8. Potions spend a turn. Retreat returns you to camp without a victory reward.";
+        if(enemy!=null)return enemy.getName()+" blocks your path. Read the intent, status effects and cooldowns. Guard halves direct damage and restores 6 MP. Invalid actions spend no turn. Fatigue increases enemy power after turn 12.";
         return switch(state.getCurrentLocation()) {
             case "Burned Village" -> "Smoke rises from the homes you once knew. Mira calls from beneath a fallen beam. Tracks lead north, but someone must tend to those left behind.";
             case "Northern Gate" -> state.getCampaign().has("wolf")?"The gate is quiet. Claw marks point toward the shrine in the Old Map.":"An ash wolf guards the northern road. Its eyes burn with a light that does not belong to it.";
@@ -196,8 +195,8 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
     }
 
     private void begin(GameState state,StoryResponse response,Enemy enemy) {
-        state.getCampaign().setEnemy(enemy);state.getCampaign().setTurn(0);
-        response.setNarration(enemy.getName()+" steps into your path. Combat begins. Strike, use your class skill, or Guard to recover mana. Every third enemy turn is a heavy attack.");
+        combat.begin(state,enemy);
+        response.setNarration(enemy.getName()+" steps into your path. Combat begins. Strike, use your class skill, or Guard to recover mana. Read the enemy intent before each action; every third turn is heavy.");
     }
     private void finish(GameState state,StoryResponse response,String ending,String text) {
         state.getCampaign().setEnding(ending);
@@ -213,90 +212,4 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
         return "Save the survivors and clear the Northern Gate";
     }
 
-    private void combat(GameState state,String action,StoryResponse response) {
-        var world=state.getCampaign();var enemy=world.getEnemy();var hero=state.getCharacter();
-        StringBuilder text=new StringBuilder();
-        int damage=0; boolean guarding=false;
-        switch(action) {
-            case "flee" -> {
-                world.setEnemy(null);world.setTurn(0);
-                response.setGoldChange(-Math.min(5,hero.getGold()));
-                travel(state,response,"Survivor Camp");
-                response.setNarration("You escape to camp, dropping up to 5 gold. The enemy remains undefeated and will recover before your next attempt.");return;
-            }
-            case "attack" -> {
-                boolean critical=(world.getTurn()+1)%4==0&&hero.getAgility()>=10;
-                damage=Math.max(1,ItemCatalog.attack(state)-enemy.getDefense());
-                if(critical)damage+=hero.getAgility()/2;
-                text.append(critical?"Critical strike! ":"You strike. ");
-            }
-            case "skill" -> {
-                if(hero.getMp()<6){response.setNarration("Not enough MP. Guard to recover mana; the enemy waits.");return;}
-                response.setMpChange(-6);
-                damage=switch(hero.getCharacterClass()) {
-                    case "Mage" -> hero.getIntelligence()*2+hero.getLevel()*2;
-                    case "Rogue" -> ItemCatalog.attack(state)+hero.getAgility()-enemy.getDefense()/2;
-                    default -> ItemCatalog.attack(state)*2-enemy.getDefense();
-                };
-                text.append(skillName(state)).append("! ");
-            }
-            case "spell" -> {
-                if(hero.getMp()<10){response.setNarration("Arcane Bolt needs 10 MP. Guard to recover mana; the enemy waits.");return;}
-                response.setMpChange(-10);damage=hero.getIntelligence()*2+12;
-                text.append("Arcane Bolt ignores armor. ");
-            }
-            case "guard" -> {guarding=true;response.setMpChange(Math.min(6,hero.getMaxMp()-hero.getMp()));text.append("You brace behind your guard and recover mana. ");}
-            case "heal" -> {
-                if(hero.getMp()<8){response.setNarration("Mend needs 8 MP. The enemy waits.");return;}
-                if(hero.getHp()==hero.getMaxHp()){response.setNarration("HP is full. Mend was not cast; the enemy waits.");return;}
-                response.setMpChange(-8);response.setHpChange(Math.min(hero.getMaxHp()-hero.getHp(),25+hero.getIntelligence()));
-                text.append("Mend restores ").append(response.getHpChange()).append(" HP. ");
-            }
-            case "potion", "mana" -> {
-                String item=action.equals("potion")?"small_potion":"mana_potion";
-                if(!ItemCatalog.owns(state,item)){response.setNarration("No "+ItemCatalog.equippedName(item)+" remains. The enemy waits.");return;}
-                boolean hp=action.equals("potion");
-                int amount=hp?Math.min(35,hero.getMaxHp()-hero.getHp()):Math.min(25,hero.getMaxMp()-hero.getMp());
-                if(amount==0){response.setNarration("That resource is already full. Item kept; the enemy waits.");return;}
-                inventory.remove(state.getInventory(),item);
-                if(hp)response.setHpChange(amount);else response.setMpChange(amount);
-                text.append("You drink ").append(ItemCatalog.equippedName(item)).append(". ");
-            }
-            default -> {response.setNarration("Choose a combat action.");return;}
-        }
-        damage=Math.max(0,damage);
-        enemy.setHp(Math.max(0,enemy.getHp()-damage));
-        if(damage>0)text.append(enemy.getName()).append(" takes ").append(damage).append(" damage. ");
-        if(enemy.getHp()==0) {
-            world.setEnemy(null);world.setTurn(0);
-            world.mark(enemy.getId(),"Defeated "+enemy.getName()+".");
-            response.setExpGain(switch(enemy.getId()){case "wolf"->65;case "guardian"->95;default->130;});
-            response.setGoldChange(switch(enemy.getId()){case "wolf"->25;case "guardian"->45;default->80;});
-            if(enemy.getId().equals("wolf"))response.getItemsGained().add(ItemCatalog.stack("ash_fang",1));
-            if(enemy.getId().equals("guardian"))response.getItemsGained().add(ItemCatalog.stack("ember_blade",1));
-            text.append("Victory! ").append(switch(enemy.getId()) {
-                case "wolf" -> "The wolf's burning eyes grow quiet. Its fang points toward Emberwood. The northern road is open.";
-                case "guardian" -> "The guardian lowers its blade and entrusts it to you. Restore the Sun Sigil, then seek the archive below.";
-                default -> "The Warden kneels. The Crown waits for your judgment. Return for the sigil and archive if you wish to purify it.";
-            });
-            response.setQuestUpdate(quest(state));
-        } else {
-            int turn=world.getTurn()+1;world.setTurn(turn);
-            boolean heavy=turn%3==0;
-            int incoming=Math.max(1,enemy.getAttack()+(heavy?8:0)-ItemCatalog.defense(state));
-            if(guarding)incoming=Math.max(1,incoming/2);
-            response.setHpChange(response.getHpChange()-incoming);
-            text.append(heavy?"Heavy attack! ":"Counterattack! ").append("You take ").append(incoming).append(" damage. ");
-            if(hero.getHp()+response.getHpChange()<=0) {
-                world.setEnemy(null);world.setTurn(0);
-                world.mark("fallen","Camp scouts brought you home after a defeat.");
-                response.setHpChange(Math.max(1,hero.getMaxHp()/2)-hero.getHp());
-                response.setMpChange(Math.max(1,hero.getMaxMp()/2)-hero.getMp());
-                response.setGoldChange(-hero.getGold()/5);
-                travel(state,response,"Survivor Camp");
-                text.append("You collapse. Scouts carry you to camp with half HP and MP; 20% of your gold was lost. No victory reward was earned.");
-            } else if((turn+1)%3==0)text.append("The enemy winds up a heavy attack. Guard next turn!");
-        }
-        response.setNarration(text.toString());
-    }
 }

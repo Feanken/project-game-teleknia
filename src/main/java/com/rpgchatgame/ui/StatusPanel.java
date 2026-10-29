@@ -48,7 +48,8 @@ public class StatusPanel extends VBox {
 
     public void setCombatMode(boolean combat) {
         portrait.setVisible(!combat); portrait.setManaged(!combat);
-        setSpacing(combat ? 8 : 12);
+        for (javafx.scene.Node node : new javafx.scene.Node[]{goldLabel, expLabel, expBar}) { node.setVisible(!combat); node.setManaged(!combat); }
+        setSpacing(combat ? 6 : 12);
     }
 
     public void update(Character character) {

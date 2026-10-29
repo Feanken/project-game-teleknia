@@ -1,5 +1,33 @@
 # Catatan Rilis Teleknia
 
+## 1.3 / Arts of Battle - 29 Oktober 2026
+
+Nomor build Maven: `1.3.0`. Versi skema snapshot: `3`.
+
+- Tiga skill khas per kelas: Shield Bash/Rally, Venom Cut/Evasion, Frost Bind/Mana
+  Ward melengkapi skill awal. MP, cooldown, tooltip, dan preview rank tersedia.
+- Skill point per level sejak level 1; rank 0-3; reset di camp seharga 20 gold
+  tanpa mengubah HP/MP. Build terkunci saat combat.
+- Burn, Poison, Stun, Shield dengan aturan durasi, non-stacking, dan cooldown yang
+  tersimpan. Status dibersihkan ketika encounter berakhir.
+- Wolf charge, Guardian defensive stance, Warden fase II, serta fatigue untuk
+  mencegah loop Guard/heal tanpa batas. Intent terlihat sebelum aksi.
+- Sentinel Plate, Duelist Charm, Warding Charm; satu slot aksesori aktif dan
+  critical deterministik berdasarkan giliran.
+- Difficulty Story/Standard saat pembuatan karakter dan di camp. Story mengurangi
+  damage dan penalti gold tanpa mengurangi reward.
+- Tab Skills & Build, statistik aksesori/critical, badge status, tombol cooldown,
+  serta shortcut 1-9 dan 0 untuk sepuluh aksi combat.
+- CombatService dipisahkan dari generator cerita; definisi skill/status memakai
+  JSON. Skema 1/2 tetap dapat dibaca dengan default Standard dan point sesuai level;
+  progres, HP musuh, serta giliran tidak direset.
+
+Validasi: 217 pemeriksaan campaign, 75 essentials, 93 combat/build, dan 43 UI.
+Pemeriksaan mencakup sembilan skill,
+rank/reset, durasi/non-stacking, cooldown, intent, difficulty, replay, migrasi, dan
+playthrough tiga kelas pada kedua difficulty. UI diperiksa pada 980 x 680 dan
+teks 120%, termasuk upgrade/reset, perubahan difficulty, shield, burn, serta CD.
+
 ## 1.2 / Traveler's Essentials - 29 Oktober 2026
 
 Nomor build Maven: `1.2.0`. Versi skema snapshot: `2`.

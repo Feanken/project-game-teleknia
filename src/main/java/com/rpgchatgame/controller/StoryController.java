@@ -116,11 +116,16 @@ public class StoryController {
         Label health = new Label("HP " + enemy.getHp() + " / " + enemy.getMaxHp());
         javafx.scene.control.ProgressBar bar = new javafx.scene.control.ProgressBar((double) enemy.getHp() / enemy.getMaxHp());
         bar.getStyleClass().add("hp-bar"); bar.setMaxWidth(Double.MAX_VALUE);
-        boolean heavy = (state.getCampaign().getTurn() + 1) % 3 == 0;
-        Label intent = new Label(heavy ? "NEXT: HEAVY ATTACK / Guard!" : "Next: normal counterattack");
+        var next = com.rpgchatgame.service.CombatService.intent(state);
+        Label intent = new Label("Next: " + com.rpgchatgame.util.UiText.tr(next.name()));
+        intent.setTooltip(new javafx.scene.control.Tooltip(next.description()));
         intent.setWrapText(true);
         VBox card = new VBox(10, new Label("IN COMBAT / TURN " + (state.getCampaign().getTurn() + 1)), name, health, bar, intent);
-        card.getStyleClass().addAll("card", "enemy-card"); return card;
+        card.getStyleClass().addAll("card", "enemy-card");
+        Label effects = new Label(com.rpgchatgame.service.CombatService.effects(state.getCampaign().getEnemyEffects())); effects.setWrapText(true);
+        if (!state.getCampaign().getEnemyEffects().isEmpty()) card.getChildren().add(effects);
+        if (enemy.getId().equals("warden")) card.getChildren().add(new Label(enemy.getHp() <= enemy.getMaxHp() / 2 ? "Phase II" : "Phase I"));
+        return card;
     }
 
     private VBox locationCard() {
@@ -139,6 +144,10 @@ public class StoryController {
     private void refresh() {
         GameState state = gameService.getCurrentState();
         statusPanel.update(state.getCharacter());
+        if (state.getCampaign().getEnemy() != null && !state.getCampaign().getPlayerEffects().isEmpty()) {
+            Label effects = new Label(com.rpgchatgame.service.CombatService.effects(state.getCampaign().getPlayerEffects())); effects.setWrapText(true);
+            statusPanel.getChildren().add(3, effects);
+        }
         chatLog.getChildren().clear();
         int first = Math.max(0, state.getStoryLogs().size() - 80);
         if (first > 0) chatLog.getChildren().add(new Label("Showing the latest 80 messages. Full history remains saved."));
@@ -150,6 +159,14 @@ public class StoryController {
             Button choiceButton = new Button(choice.getLabel());
             choiceButton.getStyleClass().addAll("choice-button", "game-button");
             choiceButton.setMaxWidth(Double.MAX_VALUE);
+            String tip = "";
+            if (state.getCampaign().getEnemy() != null) {
+                tip = com.rpgchatgame.util.UiText.tr(com.rpgchatgame.service.CombatService.unavailable(state, choice.getAction()));
+                choiceButton.setDisable(!tip.isBlank());
+                var skill = com.rpgchatgame.service.SkillCatalog.find(state, choice.getAction());
+                if (skill != null) tip += (tip.isBlank() ? "" : "\n") + com.rpgchatgame.util.UiText.tr(skill.description());
+            }
+            if (!tip.isBlank()) choiceButton.setTooltip(new javafx.scene.control.Tooltip(tip));
             choiceButton.setOnAction(event -> app.runSafely(() -> submitAction(choice.getAction())));
             choicesBox.getChildren().add(choiceButton);
         }

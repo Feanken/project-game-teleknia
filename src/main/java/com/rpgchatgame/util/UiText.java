@@ -19,12 +19,13 @@ public final class UiText {
     }
     private static List<Template> templates(){
         List<Template> result=new ArrayList<>();
-        ID.forEach((key,value)->{
+        List<String> keys=new ArrayList<>(ID.keySet());keys.sort(Comparator.comparingInt(String::length).reversed());
+        for(String key:keys){String value=ID.get(key);
             Matcher matcher=Pattern.compile("\\{\\d+}").matcher(key);
             int end=0;StringBuilder regex=new StringBuilder("^");List<String> slots=new ArrayList<>();
             while(matcher.find()){regex.append(Pattern.quote(key.substring(end,matcher.start()))).append("(.*?)");slots.add(matcher.group());end=matcher.end();}
             if(!slots.isEmpty()){regex.append(Pattern.quote(key.substring(end))).append("$");result.add(new Template(Pattern.compile(regex.toString()),value,slots));}
-        });
+        }
         return result;
     }
     public static void setLanguage(String value){if(!value.equals("en")&&!value.equals("id"))throw new IllegalArgumentException("Unsupported UI language");language=value;}

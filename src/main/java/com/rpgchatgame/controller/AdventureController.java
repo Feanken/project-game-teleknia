@@ -26,7 +26,7 @@ public class AdventureController {
         HBox nav=new HBox(10,title,spacer,button("Home",app::showHome),button("Story",app::showStory),button("Inventory",app::showInventory),button("Profile",app::showProfile));
         nav.setAlignment(Pos.CENTER_LEFT);nav.setPadding(new Insets(16,22,12,22));nav.getStyleClass().add("top-nav");root.setTop(nav);
         TabPane tabs=new TabPane();tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabs.getTabs().addAll(new Tab("WORLD MAP",scroll(map(state))),new Tab("QUEST JOURNAL",scroll(journal(state))),new Tab("CAMP MARKET",scroll(market(state))));
+        tabs.getTabs().addAll(new Tab("WORLD MAP",scroll(map(state))),new Tab("QUEST JOURNAL",scroll(journal(state))),new Tab("CAMP MARKET",scroll(market(state))),new Tab("SKILLS & BUILD",scroll(build(state))));
         tabs.getSelectionModel().select(selectedTab);root.setCenter(tabs);return root;
     }
     private ScrollPane scroll(Parent content) {
@@ -80,8 +80,37 @@ public class AdventureController {
         if(!world.getEnding().isBlank())box.getChildren().add(text("ENDING UNLOCKED / "+world.getEnding()));
         box.getChildren().add(text("FIELD NOTES"));
         for(String entry:world.getJournal())box.getChildren().add(text("- "+entry));
-        box.getChildren().add(text("COMBAT GUIDE / Attack uses your equipped weapon. Class skills cost 6 MP. Arcane Bolt ignores armor for 10 MP. Guard halves damage and restores 6 MP. Mend costs 8 MP. Every third enemy turn is heavy. Potion use spends a turn. Defeat returns you to camp with half HP/MP and costs 20% gold."));
+        box.getChildren().add(text("COMBAT GUIDE / Attack uses your equipped weapon. Each class has three skills with individual MP costs and cooldowns. Arcane Bolt ignores armor for 10 MP. Guard halves damage and restores 6 MP. Mend costs 8 MP. Every third enemy turn is heavy; other intents include charge and defensive stance. Potion use spends a turn. Defeat returns you to camp with half HP/MP and costs 20% gold."));
         box.getChildren().add(text("ENDING GUIDE / Purification needs the restored Sun Sigil and keeper's archive. Sealing and claiming are always available after the Warden falls. Returning for missed clues remains possible before choosing an ending."));
+        return box;
+    }
+    private VBox build(GameState state) {
+        VBox box=section("experience","SKILLS & BUILD","One skill point per level, including level 1. Every skill works at rank 0; upgrades improve its strength, not cooldown or duration.");
+        Label feedback=text("");feedback.getStyleClass().add("feedback-label");box.getChildren().add(feedback);
+        box.getChildren().add(text("Skill points: "+SkillCatalog.points(state)));
+        ComboBox<String> difficulty=new ComboBox<>();difficulty.getItems().addAll("STANDARD","STORY");difficulty.setValue(state.getCampaign().getDifficulty());difficulty.setId("build-difficulty");
+        difficulty.setConverter(new javafx.util.StringConverter<>() {
+            public String toString(String value){return UiText.tr(value.equals("STORY")?"Story difficulty":"Standard difficulty");}
+            public String fromString(String value){return value;}
+        });
+        difficulty.setDisable(!game.canShop());
+        difficulty.setOnAction(event->app.runSafely(()->app.showAdventure(3,game.setDifficulty(difficulty.getValue()))));
+        box.getChildren().addAll(text("Difficulty"),difficulty,text("Story: 35% less incoming damage, 10% gold loss on defeat, retreat costs up to 2 gold. Standard: normal damage, 20% loss, up to 5 gold. Change only at camp; rewards are identical."));
+        for(var skill:SkillCatalog.forClass(state.getCharacter().getCharacterClass())) {
+            int rank=SkillCatalog.rank(state,skill.id());
+            Label title=text(skill.name()+" / Rank "+rank+" / 3");title.getStyleClass().add("panel-title");
+            Button upgrade=button("Upgrade / 1 point",()->app.showAdventure(3,game.upgradeSkill(skill.id())));upgrade.setId("upgrade-"+skill.id());
+            upgrade.setDisable(SkillCatalog.points(state)<1||rank>=3||state.getCampaign().getEnemy()!=null||!state.getCampaign().getEnding().isBlank());
+            VBox card=new VBox(9,title,text(skill.description()),text(skill.mp()+" MP / Cooldown: "+skill.cooldown()+" other actions"),
+                    text("Current: "+UiText.tr(SkillCatalog.preview(state,skill,rank))));
+            if(rank<3)card.getChildren().add(text("Next rank: "+UiText.tr(SkillCatalog.preview(state,skill,rank+1))));
+            card.getChildren().add(upgrade);card.getStyleClass().add("card");box.getChildren().add(card);
+        }
+        Button reset=button("Reset build / 20 gold",()->{
+            if(app.confirm("Reset build?","Refund allocated points for 20 gold. HP, MP and character levels do not change."))app.showAdventure(3,game.resetBuild());
+        });reset.setDisable(!game.canShop()||state.getCharacter().getGold()<20||state.getCampaign().getSkillRanks().isEmpty());box.getChildren().add(reset);
+        box.getChildren().add(text("STATUS RULES / Damage over time ticks at the end of valid rounds, including its application round, then duration decreases. Stun skips this round's enemy action. Shield absorbs direct damage only. Effects refresh duration and keep the higher potency; they never add stacks. Cooldowns require the shown number of OTHER valid actions. Combat exit clears all effects and cooldowns."));
+        box.getChildren().add(text("FATIGUE / After turn 12, enemy direct attacks gain 1 power every two turns. Guard and healing cannot stall a fight forever."));
         return box;
     }
     private VBox market(GameState state) {

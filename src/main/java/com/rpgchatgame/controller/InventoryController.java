@@ -45,7 +45,7 @@ public class InventoryController {
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("plain-scroll");
 
-        filter.getItems().addAll("All items", "WEAPON", "ARMOR", "CONSUMABLE", "QUEST");
+        filter.getItems().addAll("All items", "WEAPON", "ARMOR", "ACCESSORY", "CONSUMABLE", "QUEST");
         filter.setValue("All items"); filter.setId("inventory-filter");
         sorting.getItems().addAll("Name", "Rarity", "Quantity"); sorting.setValue("Name"); sorting.setId("inventory-sort");
         javafx.util.StringConverter<String> converter = new javafx.util.StringConverter<>() {
@@ -99,10 +99,12 @@ ScrollPane sideScroll = new ScrollPane(side); sideScroll.setFitToWidth(true); si
         description.setWrapText(true);
         Label effect = new Label(item.getEffect());
         effect.getStyleClass().add("item-effect");
+        effect.setWrapText(true);
+        effect.setTooltip(new javafx.scene.control.Tooltip(com.rpgchatgame.util.UiText.tr(item.getEffect())));
 
         var state = gameService.getCurrentState();
-        boolean equipment = item.getType() == Item.ItemType.WEAPON || item.getType() == Item.ItemType.ARMOR;
-        boolean equipped = state.getCampaign().getWeapon().equals(item.getId()) || state.getCampaign().getArmor().equals(item.getId());
+        boolean equipment = item.getType() == Item.ItemType.WEAPON || item.getType() == Item.ItemType.ARMOR || item.getType() == Item.ItemType.ACCESSORY;
+        boolean equipped = state.getCampaign().getWeapon().equals(item.getId()) || state.getCampaign().getArmor().equals(item.getId()) || state.getCampaign().getAccessory().equals(item.getId());
         Button useButton = new Button(equipped ? "Equipped" : equipment ? "Equip" : "Use");
         useButton.getStyleClass().addAll("game-button", "secondary-button");
         useButton.setDisable(equipped || item.getType() == Item.ItemType.QUEST || state.getCampaign().getEnemy() != null || !state.getCampaign().getEnding().isBlank());

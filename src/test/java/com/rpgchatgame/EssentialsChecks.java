@@ -92,7 +92,7 @@ public final class EssentialsChecks {
         check(JsonUtil.toJson(repo.load(1).orElseThrow()).equals(original),"1.1 payload migrated exactly into manual slot 1");
         check(JsonUtil.toJson(repo.load().orElseThrow()).equals(original),"1.1 payload migrated into autosave");
         check(value(db,"SELECT payload FROM campaign_save WHERE id=1").equals(original),"Original 1.1 retained before migration");
-        check(value(db,"SELECT version FROM save_slots WHERE slot=1").equals("2"),"Sequential envelope schema upgraded");
+        check(value(db,"SELECT version FROM save_slots WHERE slot=1").equals(Integer.toString(SaveGameRepository.SCHEMA)),"Sequential envelope schema upgraded");
         imported.loadSlot(0);imported.performAction("guard");String changed=JsonUtil.toJson(imported.getCurrentState());
         check(JsonUtil.toJson(new GameService(db).continueStory().orElseThrow()).equals(changed),"Import never repeats over new progress");
         sql(db,"UPDATE save_slots SET version=99 WHERE slot=1");
@@ -132,7 +132,7 @@ public final class EssentialsChecks {
         check(InventoryQuery.comparison(state,"iron_sword").equals("Attack: 12 -> 18 (+6)"),"Weapon comparison replaces bonus");
         check(InventoryQuery.comparison(state,"ranger_armor").equals("Defense: 8 -> 13 (+5)"),"Armor comparison");
         check(state.getCampaign().getWeapon().equals("rusty_sword"),"Preview never equips");
-        check(ItemCatalog.shop().size()==4&&ItemCatalog.entry("small_potion").hp()==35,"External item definitions retain rules");
+        check(ItemCatalog.shop().size()==7&&ItemCatalog.entry("small_potion").hp()==35,"External item definitions retain rules");
         check(ActionDefinitions.label("attack","fallback").equals("Attack"),"External action label available");
     }
     public static void main(String[] args)throws Exception{

@@ -98,7 +98,7 @@ public class HomeController {
         var name = new javafx.scene.control.TextField("Kael");
         name.getStyleClass().add("custom-action");
         var klass = new javafx.scene.control.ComboBox<String>();
-        klass.getItems().addAll("Fighter", "Rogue", "Mage"); klass.setValue("Fighter");
+        klass.getItems().addAll("Fighter", "Rogue", "Mage"); klass.setValue("Fighter"); klass.setId("character-class");
         Label details = new Label(); details.setWrapText(true); details.setMaxWidth(440);
         Runnable update = () -> details.setText(switch (klass.getValue()) {
             case "Rogue" -> "88 HP / 30 MP. High agility. Shadow Strike combines weapon power and agility; attacks on every fourth combat turn can critically strike.";
@@ -106,11 +106,17 @@ public class HomeController {
             default -> "100 HP / 30 MP. Strong defense. Power Strike doubles your equipped attack before enemy armor.";
         });
         klass.valueProperty().addListener((o,b,a) -> update.run()); update.run();
+        var difficulty = new javafx.scene.control.ComboBox<String>();
+        difficulty.getItems().addAll("STANDARD", "STORY"); difficulty.setValue("STANDARD"); difficulty.setId("new-difficulty");
+        difficulty.setConverter(new javafx.util.StringConverter<>() {
+            public String toString(String value) { return com.rpgchatgame.util.UiText.tr(value.equals("STORY") ? "Story difficulty" : "Standard difficulty"); }
+            public String fromString(String value) { return value; }
+        });
         Label notice = new Label("This replaces autosave only. Manual slots stay safe.");
         notice.setWrapText(true); notice.setMaxWidth(440);
         var tutorial = new javafx.scene.control.CheckBox("Show the beginner tutorial");
         tutorial.setSelected(!app.getSettings().tutorialSeen());
-        VBox form = new VBox(12, new Label("Character name (1-24 characters)"), name, new Label("Class"), klass, details, notice, tutorial);
+        VBox form = new VBox(12, new Label("Character name (1-24 characters)"), name, new Label("Class"), klass, details, new Label("Difficulty"), difficulty, new Label("Story reduces incoming damage and gold penalties. Standard keeps the normal combat rules."), notice, tutorial);
         form.setPadding(new Insets(20));
         dialog.getDialogPane().setContent(form);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource("/styles/fantasy.css").toExternalForm());
@@ -123,7 +129,7 @@ public class HomeController {
         klass.setOnAction(event -> { update.run(); com.rpgchatgame.ui.UiLocalization.apply(dialog.getDialogPane()); });
         dialog.setResultConverter(type -> type == start);
         dialog.showAndWait().filter(Boolean::booleanValue).ifPresent(ok -> app.runSafely(() -> {
-            gameService.startNewStory(name.getText(), klass.getValue()); app.showStory();
+            gameService.startNewStory(name.getText(), klass.getValue(), difficulty.getValue()); app.showStory();
             if (tutorial.isSelected()) app.showHelp();
         }));
     }

@@ -10,7 +10,7 @@ import javafx.scene.layout.*;
 
 public final class TutorialController {
     private static final String[][] STEPS={
-        {"old_map","Choose your next move","Read the narration, then choose an available action. Your location and completed quests unlock new routes. Unknown actions grant no rewards. Use 1-8 or Tab and Enter to select a choice."},
+        {"old_map","Choose your next move","Read the narration, then choose an available action. Your location and completed quests unlock new routes. Unknown actions grant no rewards. Use 1-9, 0 or Tab and Enter to select a choice."},
         {"rusty_sword","Watch the enemy","Attack uses your equipped weapon. Every third enemy turn is heavy: Guard halves damage and restores mana. Skills cost MP. Potions spend a turn; invalid actions spend none."},
         {"backpack","Equip before fighting","Open Inventory to filter and sort items. Compare the attack or defense preview, then Equip. Buying equipment does not equip it automatically. Full-resource potions are kept."},
         {"campfire","Find shelter and supplies","At Survivor Camp you can buy supplies and rest. Your first stay is free. Defeat returns you to camp with half HP/MP and costs 20% gold. Retreat costs up to 5 gold."},

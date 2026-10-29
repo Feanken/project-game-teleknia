@@ -1,10 +1,10 @@
-# Teleknia 1.2: Ashes of the Northern Gate
+# Teleknia 1.3: Ashes of the Northern Gate
 
 Game RPG desktop dark fantasy berbasis chat. Petualangan offline terdiri dari
 **3 bab, 7 lokasi, 3 encounter utama, dan 3 ending**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.2** (build Maven `1.2.0`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.3** (build Maven `1.3.0`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 2.0 tersedia di [ROADMAP.md](ROADMAP.md).
 
@@ -40,18 +40,18 @@ dibuka lagi kapan saja melalui **Help / F1**.
 - **Rogue:** 88 HP, 30 MP, Shadow Strike berbasis attack dan agility; critical pada
   serangan di setiap giliran tempur keempat jika agility minimal 10.
 - **Mage:** 80 HP, 55 MP, Ember Surge berbasis intelligence dan mengabaikan armor.
-- **Combat:** attack, class skill (6 MP), Arcane Bolt (10 MP), Guard, Mend (8 MP),
-  potion, mana draught, dan retreat. Musuh membalas setiap aksi tempur yang valid.
+- **Combat:** attack, tiga skill per kelas, Arcane Bolt (10 MP), Guard, Mend (8 MP, cooldown 2),
+  potion, mana draught, dan retreat. Aksi valid menjalankan pola musuh; charge, bertahan, atau stun dapat melewati serangannya.
 - **Heavy attack:** setiap giliran musuh ketiga. Guard membagi dua damage (minimum 1)
   dan memulihkan hingga 6 MP. Intent musuh terlihat di panel combat.
 - **Pemulihan:** Small Potion +35 HP, Mana Draught +25 MP. Tidak dikonsumsi saat
   resource penuh. Di combat, meminum potion menggunakan satu giliran.
-- **Kalah:** kembali ke camp dengan setengah HP/MP, kehilangan 20% gold, tanpa hadiah.
-  Retreat kehilangan hingga 5 gold. Musuh pulih saat encounter dimulai lagi.
+- **Kalah:** kembali ke camp dengan setengah HP/MP, kehilangan 20% gold pada Standard atau 10% pada Story, tanpa hadiah.
+  Retreat kehilangan hingga 5 gold pada Standard atau 2 pada Story. Musuh pulih saat encounter dimulai lagi.
 - **Level up:** setiap 100 EXP; menaikkan statistik dan memulihkan HP/MP.
-- **Equipment:** sword dan armor benar-benar memengaruhi damage/defense; pilih Equip
+- **Equipment:** sword, armor, dan aksesori benar-benar memengaruhi damage/defense; pilih Equip
   di Inventory. Equipment dan penggunaan item bebas tidak tersedia selama combat.
-- **Market:** empat barang dijual di Survivor Camp; transaksi memeriksa gold,
+- **Market:** tujuh barang dijual di Survivor Camp; transaksi memeriksa gold,
   kepemilikan equipment, lokasi, dan status combat.
 - **Rest:** istirahat pertama gratis, berikutnya 8 gold untuk pemulihan penuh.
   Jika gold kurang, rough rest gratis memulihkan hingga setengah maksimum HP/MP.
@@ -69,7 +69,50 @@ Klik **World** dari Story, Inventory, atau Profile untuk membuka tab **World Map
 terbatas seperti `serang`, `bertahan`, `lari`, `sembuh`, `istirahat`, dan `help`.
 Hanya aksi yang tersedia pada kondisi saat ini yang dijalankan.
 
-## Fitur baru 1.2 - Traveler's Essentials
+## Fitur baru 1.3 - Arts of Battle
+
+| Kelas | Skill awal | Skill tambahan |
+| --- | --- | --- |
+| Fighter | Power Strike (6 MP) | Shield Bash (8 MP, CD 3), Rally (8 MP, CD 4) |
+| Rogue | Shadow Strike (6 MP) | Venom Cut (8 MP, CD 2), Evasion (7 MP, CD 3) |
+| Mage | Ember Surge (6 MP) | Frost Bind (9 MP, CD 3), Mana Ward (7 MP, CD 3) |
+
+Buka **World -> Skills & Build** atau **Profile -> Manage skills**. Semua skill
+tersedia pada rank 0. Dapatkan satu skill point untuk setiap level, termasuk
+level 1; tingkatkan hingga rank 3 dengan preview sebelum/sesudah. Upgrade menambah
+kekuatan, bukan durasi atau pengurangan cooldown. Reset di camp berbiaya 20 gold,
+mengembalikan point tanpa memulihkan HP/MP. Build terkunci selama combat.
+
+- **Burn/Poison:** damage berkala di akhir giliran valid, termasuk giliran aplikasi,
+  lalu durasi berkurang. Menembus armor dan shield. Venom Cut memberi Poison;
+  Ember Surge memberi Burn. Heavy attack Warden fase II juga memberi Burn.
+- **Stun:** Shield Bash/Frost Bind melewati aksi musuh pada giliran aplikasi,
+  kemudian stun kedaluwarsa. Cooldown menghalangi stun beruntun tanpa jeda.
+- **Shield:** menyerap damage langsung sampai kapasitas habis atau durasi selesai.
+  Evasion/Mana Ward bertahan dua giliran termasuk giliran aplikasi.
+- Efek sejenis memperbarui durasi dan mempertahankan potensi tertinggi, tidak
+  menjumlahkan stack. Menang, kalah, atau retreat membersihkan efek dan cooldown.
+- **Cooldown N** berarti lakukan N aksi valid LAIN sebelum skill siap kembali.
+  Aksi gagal dan `help` tidak memajukan cooldown, efek, atau giliran.
+- Wolf punya charge tanpa serangan langsung; Guardian memasang shield untuk dua
+  giliran berikutnya; Warden memasuki fase II saat HP separuh. Intent dipilih
+  sebelum aksi pemain sehingga perpindahan fase tidak mengejutkan pada giliran itu.
+- **Fatigue:** setelah giliran 12, attack musuh bertambah 1 setiap dua giliran.
+  Guard/heal tidak dapat mempertahankan pertarungan tanpa batas.
+- **Story difficulty:** damage masuk dikalikan 65% dan dibulatkan ke atas sebelum
+  Guard/Shield; penalti kalah 10%, retreat hingga 2 gold. Standard memakai damage
+  normal, penalti 20%, retreat hingga 5 gold. Hadiah sama pada kedua difficulty.
+  Pilih saat karakter dibuat atau ubah di camp melalui halaman build.
+- Market menambah Sentinel Plate (+8 Defense), Duelist Charm (+2 Attack dan
+  critical pada giliran ketiga), serta Warding Charm (+3 Defense). Satu aksesori
+  aktif; bonus lama dilepas saat diganti. Critical biasa pada setiap giliran
+  keempat membutuhkan Agility 10; Duelist Charm menggantinya menjadi ketiga.
+- Combat deterministik: giliran, status, cooldown, ranks, equipment, dan difficulty
+  disimpan. Tidak ada randomness tersembunyi yang berubah setelah load.
+- Tombol **1-9, lalu 0** memilih seluruh sepuluh aksi combat. UI menampilkan MP,
+  cooldown, intent, dan status aktif; aksi yang tidak bisa dilakukan dinonaktifkan.
+
+## Fitur 1.2 - Traveler's Essentials
 
 - **Tiga slot manual + satu autosave** dengan nama, kelas, level, lokasi, dan waktu
   simpan. Aksi game memperbarui autosave, bukan checkpoint manual.
@@ -80,9 +123,9 @@ Hanya aksi yang tersedia pada kondisi saat ini yang dijalankan.
 - **Inventory:** filter tipe, sorting nama/rarity/jumlah, dan perbandingan attack
   atau defense sebelum equip. Preview tidak mengubah statistik karakter.
 - **Settings:** bahasa UI Indonesia/Inggris, teks 90-120%, fullscreen, dan audio.
-  Bahasa narasi, nama dunia, deskripsi item, dan lore tetap Inggris pada 1.2.
+  Bahasa narasi, nama dunia, deskripsi item, dan lore tetap Inggris pada 1.3.
 - **Keyboard:** F1 bantuan, F5 slot simpan, F9 slot muat, F11 fullscreen; Esc keluar
-  fullscreen, kembali dari halaman utilitas, atau membuka Settings. Tombol 1-8
+  fullscreen, kembali dari halaman utilitas, atau membuka Settings. Tombol 1-9 dan 0
   memilih aksi cerita saat tidak sedang mengetik. Tab/Enter menavigasi kontrol.
 
 Pengaturan UI/window/tutorial tersimpan di `data/ui.properties`, terpisah dari
@@ -92,14 +135,19 @@ karakter. Pengaturan audio tetap di `data/audio.properties`.
 
 Save SQLite: `data/rpg_chat_game.db`, relatif terhadap folder aplikasi dijalankan.
 Tabel `save_slots` menyimpan slot 0 (auto) serta 1-3 (manual). `save_backups`
-menyimpan backup per slot. Snapshot skema 2 mencakup karakter, inventory,
-equipment, flags, combat, quest, ending, dan seluruh riwayat chat.
+menyimpan backup per slot. Snapshot skema 3 mencakup karakter, inventory,
+equipment, flags, combat, skill ranks, cooldown, status, difficulty, quest, ending,
+dan seluruh riwayat chat.
 
 Penulisan primary dan backup dilakukan dalam transaksi yang sama. Data primary
 harus lolos validasi sebelum dijadikan backup. Kegagalan commit mempertahankan
 save sebelumnya, backup, dan state aktif. Save manual yang bermasalah harus
 pulih dari backup sebelum dapat ditimpa. Pemulihan backup menjaga checkpoint
 manual lain; hasil pemulihan yang dimuat menjadi autosave aktif.
+
+Save skema 1/2 dimuat dengan default 1.3: Standard, ranks kosong, dan efek/cooldown
+kosong. HP musuh dan giliran aktif dipertahankan; level menentukan point tersedia.
+Slot diperbarui ke skema 3 saat ditulis atau dipulihkan; backup asal tetap tersedia.
 
 Save 1.1 diimpor sekali ke **slot manual 1 dan autosave**, termasuk kondisi combat.
 Payload asli `campaign_save` dipertahankan. Save 1.0 tetap mempertahankan karakter,
@@ -136,12 +184,13 @@ Dengan JDK 21 dan dependensi Maven yang sudah terunduh:
 ```
 
 Runner ini mengompilasi main/test source dan menjalankan `CampaignChecks` serta
-`EssentialsChecks` tanpa
+`EssentialsChecks` dan `BattleChecks` tanpa
 JUnit/Surefire tambahan. Pemeriksaan menjalankan semua kombinasi kelas/ending,
 batas transaksi, combat, recovery, quest gates, save/load pertarungan, migrasi
 legacy, isolasi slot, checksum rusak, backup, settings, lokalisasi, filter/sorting,
-dan kegagalan commit memakai trigger SQLite. Database uji terisolasi di
-`target/campaign-checks` dan `target/essentials-checks`; save pemain tidak disentuh.
+status/cooldown, semua kelas pada kedua difficulty, replay deterministik, serta
+kegagalan commit memakai trigger SQLite. Database uji terisolasi di
+`target/campaign-checks`, `target/essentials-checks`, dan `target/battle-checks`; save pemain tidak disentuh.
 Workflow `.github/workflows/game-checks.yml` menjalankan pemeriksaan ini pada push
 atau pull request menggunakan JDK 21, tanpa membuka UI atau memakai perangkat audio.
 

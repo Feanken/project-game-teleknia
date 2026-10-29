@@ -1,0 +1,83 @@
+[
+  {
+    "id": "skill",
+    "name": "Power Strike",
+    "characterClass": "Fighter",
+    "mp": 6,
+    "cooldown": 0,
+    "kind": "POWER",
+    "description": "Double equipped attack minus armor. Each rank adds 4 damage."
+  },
+  {
+    "id": "shield_bash",
+    "name": "Shield Bash",
+    "characterClass": "Fighter",
+    "mp": 8,
+    "cooldown": 3,
+    "kind": "BASH",
+    "description": "Strike and stun for this round. Each rank adds 3 damage. Cooldown: 3 other actions."
+  },
+  {
+    "id": "rally",
+    "name": "Rally",
+    "characterClass": "Fighter",
+    "mp": 8,
+    "cooldown": 4,
+    "kind": "RALLY",
+    "description": "Restore 20 + Intelligence HP. Each rank restores 5 more. Cooldown: 4 other actions."
+  },
+  {
+    "id": "skill",
+    "name": "Shadow Strike",
+    "characterClass": "Rogue",
+    "mp": 6,
+    "cooldown": 0,
+    "kind": "SHADOW",
+    "description": "Attack + Agility against half armor. Each rank adds 4 damage."
+  },
+  {
+    "id": "venom_cut",
+    "name": "Venom Cut",
+    "characterClass": "Rogue",
+    "mp": 8,
+    "cooldown": 2,
+    "kind": "VENOM",
+    "description": "Half attack and Poison 5/round for 3 rounds. Each rank adds 2 poison damage."
+  },
+  {
+    "id": "evasion",
+    "name": "Evasion",
+    "characterClass": "Rogue",
+    "mp": 7,
+    "cooldown": 3,
+    "kind": "EVASION",
+    "description": "Shield absorbs 18 direct damage across 2 rounds. Each rank adds 4 capacity."
+  },
+  {
+    "id": "skill",
+    "name": "Ember Surge",
+    "characterClass": "Mage",
+    "mp": 6,
+    "cooldown": 0,
+    "kind": "EMBER",
+    "description": "Intelligence x2 + Level x2, ignores armor. Burn 4/round for 3 rounds. Each rank adds 3 direct damage."
+  },
+  {
+    "id": "frost_bind",
+    "name": "Frost Bind",
+    "characterClass": "Mage",
+    "mp": 9,
+    "cooldown": 3,
+    "kind": "FROST",
+    "description": "Intelligence damage, ignores armor and stuns this round. Each rank adds 3 damage."
+  },
+  {
+    "id": "mana_ward",
+    "name": "Mana Ward",
+    "characterClass": "Mage",
+    "mp": 7,
+    "cooldown": 3,
+    "kind": "WARD",
+    "description": "Shield absorbs 20 direct damage across 2 rounds. Each rank adds 4 capacity."
+  }
+]

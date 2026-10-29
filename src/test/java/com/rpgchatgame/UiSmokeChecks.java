@@ -23,7 +23,7 @@ public final class UiSmokeChecks {
  static Button button(String text){return button(root(),text);}
  static boolean label(String text){root().applyCss();root().layout();return root().lookupAll(".label").stream().anyMatch(n->n instanceof Label l&&l.getText().equals(text));}
  static void key(KeyCode code){Event.fireEvent(stage.getScene(),new KeyEvent(KeyEvent.KEY_PRESSED,"","",code,false,false,false,false));}
- static void later(Runnable action){var pause=new javafx.animation.PauseTransition(javafx.util.Duration.millis(180));pause.setOnFinished(e->{try{action.run();}catch(Throwable error){finish(error);}});pause.play();}
+ static void later(Runnable action){var pause=new javafx.animation.PauseTransition(javafx.util.Duration.millis(180));pause.setOnFinished(e->Platform.runLater(()->{try{action.run();}catch(Throwable error){finish(error);}}));pause.play();}
  static void capture(String file)throws Exception{
   root().applyCss();root().layout();
   for(var node:root().lookupAll(".chat-scroll"))if(node instanceof ScrollPane pane)pane.setVvalue(1);
@@ -32,12 +32,12 @@ public final class UiSmokeChecks {
   ImageIO.write(out,"png",new File(file+".png"));
  }
  static Parent dialog(){return Window.getWindows().stream().filter(w->w!=stage&&w.isShowing()).findFirst().orElseThrow().getScene().getRoot();}
- static void answerConfirm(){Platform.runLater(()->{try{button(dialog(),"Confirm").fire();}catch(Throwable error){finish(error);}});}
+ static void answerConfirm(){Platform.runLater(()->{try{button(dialog(),com.rpgchatgame.util.UiText.tr("Confirm")).fire();}catch(Throwable error){finish(error);}});}
  @SuppressWarnings("unchecked") static void create(String name,boolean tutorial){
   Platform.runLater(()->{try{
    var form=dialog();form.applyCss();form.layout();TextField field=(TextField)form.lookup(".text-field");field.setText("");
    Button begin=button(form,"Begin adventure");check(begin.isDisabled(),"Blank name cannot start");field.setText(name);
-   ((ComboBox<String>)form.lookup(".combo-box")).getSelectionModel().select("Mage");
+   ((ComboBox<String>)form.lookup("#character-class")).getSelectionModel().select("Mage");
    ((CheckBox)form.lookup(".check-box")).setSelected(tutorial);check(!begin.isDisabled(),"Valid name can start");begin.fire();
   }catch(Throwable error){finish(error);}});
   button("Start New Story").fire();
@@ -92,7 +92,27 @@ public final class UiSmokeChecks {
     check(button("Serang")!=null,"Combat choices localized");
     app.showInventory();capture("inventory-id-120-minimum");
     app.showSaves(false,"");capture("saves-id-120-minimum");
-    check(label("PENGELOLA SAVE"),"Save manager localized");finish(null);
+    check(label("PENGELOLA SAVE"),"Save manager localized");
+    game.performAction("flee");app.showAdventure(3,"");
+    check(label("SKILL & BUILD"),"Build tab localized");
+    ((Button)root().lookup("#upgrade-mana_ward")).fire();
+    check(SkillCatalog.rank(game.getCurrentState(),"mana_ward")==1&&SkillCatalog.points(game.getCurrentState())==0,"Upgrade through build UI");
+    answerConfirm();button("Reset build / 20 gold").fire();
+    check(SkillCatalog.points(game.getCurrentState())==1,"Reset through build UI");
+    ((ComboBox<String>)root().lookup("#build-difficulty")).getSelectionModel().select("STORY");
+    check(CombatService.storyMode(game.getCurrentState()),"Difficulty selection at camp");capture("build-id-120-minimum");
+    game.performAction("go_gate");game.performAction("fight_wolf");
+    game.getCurrentState().getCampaign().setEnemy(new com.rpgchatgame.model.Enemy("wolf","Ash Wolf",200,14,2));app.showStory();
+    button("Mana Ward / 7 MP").fire();
+    check(game.getCurrentState().getCampaign().getPlayerEffects().containsKey("shield"),"Shield applied through UI");
+    check(button("Mana Ward / 7 MP / CD 3").isDisabled(),"Cooldown disabled button shown");capture("ward-cooldown-id");
+    button("Ember Surge / 6 MP").fire();
+    check(game.getCurrentState().getCampaign().getEnemyEffects().containsKey("burn"),"Burn shown through UI");capture("burn-id");
+    game.saveSlot(3);game.loadSlot(3);app.showStory();
+    check(button("Mana Ward / 7 MP / CD 2").isDisabled(),"Loaded cooldown preserved in UI");
+    ((Parent)root().lookup(".choices-box")).getChildrenUnmodifiable().getFirst().requestFocus();key(KeyCode.DIGIT0);
+    check(game.getCurrentState().getCampaign().getEnemy()==null,"Zero hotkey selects tenth action retreat");
+    finish(null);
    }catch(Throwable error){finish(error);}});
   }catch(Throwable error){finish(error);}});
  }
