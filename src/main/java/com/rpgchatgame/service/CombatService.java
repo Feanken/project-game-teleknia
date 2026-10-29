@@ -7,15 +7,17 @@ import java.util.*;
 public final class CombatService {
     public record Intent(String name,String description,int bonus,boolean strike,boolean defend) {}
     private final InventoryService inventory=new InventoryService();
+    private static String pattern(Enemy enemy){var data=WorldContent.MONSTERS.get(enemy.getId());return data==null?"normal":data.pattern();}
+    private static boolean phaseEnemy(Enemy enemy){return pattern(enemy).equals("warden")||pattern(enemy).equals("captain");}
     public static boolean storyMode(GameState state){return state.getCampaign().getDifficulty().equals("STORY");}
     public static Intent intent(GameState state){
         var enemy=state.getCampaign().getEnemy();if(enemy==null)return new Intent("","",0,false,false);
         int turn=state.getCampaign().getTurn()+1;
         if(turn%3==0)return new Intent("Heavy attack","A charged strike. Guard, stun or shield can help.",8,true,false);
-        if(enemy.getId().equals("wolf")&&turn%3==2)return new Intent("Charge","The wolf charges; no direct attack this round.",0,false,false);
-        if(enemy.getId().equals("guardian")&&turn%4==0)return new Intent("Defensive stance","The guardian raises a 16-point shield for two rounds after your action.",0,false,true);
-        boolean phase=enemy.getId().equals("warden")&&enemy.getHp()<=enemy.getMaxHp()/2;
-        return new Intent(phase?"Crown fury":"Counterattack",phase?"Phase II: direct attacks gain 5 damage; heavy attacks inflict Burn.":"A normal direct counterattack.",0,true,false);
+        if(pattern(enemy).equals("wolf")&&turn%3==2)return new Intent("Charge","The wolf charges; no direct attack this round.",0,false,false);
+        if(pattern(enemy).equals("guardian")&&turn%4==0)return new Intent("Defensive stance","The guardian raises a 16-point shield for two rounds after your action.",0,false,true);
+        boolean phase=phaseEnemy(enemy)&&enemy.getHp()<=enemy.getMaxHp()/2;
+        return new Intent(phase?(pattern(enemy).equals("captain")?"Drowned fury":"Crown fury"):"Counterattack",phase?(pattern(enemy).equals("captain")?"Phase II: direct attacks gain 5 damage; heavy attacks inflict Poison.":"Phase II: direct attacks gain 5 damage; heavy attacks inflict Burn."):"A normal direct counterattack.",0,true,false);
     }
     public static int cooldown(GameState state,String id){return state.getCampaign().getCooldowns().getOrDefault(id,0);}
     public static String unavailable(GameState state,String action){
@@ -43,7 +45,7 @@ public final class CombatService {
                 new Choice("Drink HP potion","potion"),new Choice("Drink mana draught","mana"),new Choice("Retreat / lose up to 5 gold","flee")));
         return choices;
     }
-    public static void clear(GameState state){var w=state.getCampaign();w.getPlayerEffects().clear();w.getEnemyEffects().clear();w.getCooldowns().clear();w.setTurn(0);}
+    public static void clear(GameState state){var w=state.getCampaign();w.getPlayerEffects().clear();w.getEnemyEffects().clear();w.getCooldowns().clear();w.setDialogueNode("");w.setTurn(0);}
     public void begin(GameState state,Enemy enemy){clear(state);state.getCampaign().setEnemy(enemy);}
     public static void applyEffect(Map<String,StatusEffect> effects,String id,int turns,int potency){
         var previous=effects.get(id);
@@ -116,16 +118,16 @@ public final class CombatService {
         if(world.getEnemyEffects().containsKey("stun"))text.append(enemy.getName()).append(" is stunned and cannot act. ");
         else if(selected.defend()){
             applyEffect(world.getEnemyEffects(),"shield",SkillCatalog.effect("shield").duration()+1,16); // Tick below leaves two full future rounds.
-            text.append("The guardian raises a 16-point shield for two rounds. ");
+            text.append("The foe raises a 16-point shield for two rounds. ");
         }else if(selected.strike()){
-            int phaseBonus=enemy.getId().equals("warden")&&wasPhase?5:0;
+            int phaseBonus=phaseEnemy(enemy)&&wasPhase?5:0;
             int fatigue=Math.max(0,turn-12)/2;
             int incoming=Math.max(1,enemy.getAttack()+selected.bonus()+phaseBonus+fatigue-ItemCatalog.defense(state));
             if(storyMode(state))incoming=(int)Math.ceil(incoming*.65);
             if(guard)incoming=Math.max(1,incoming/2);
             incoming=absorb(world.getPlayerEffects(),incoming);hp-=incoming;
             text.append(selected.name()).append("! You take ").append(incoming).append(" damage. ");
-            if(enemy.getId().equals("warden")&&wasPhase&&selected.bonus()>0)applyEffect(world.getPlayerEffects(),"burn",2,4);
+            if(phaseEnemy(enemy)&&wasPhase&&selected.bonus()>0)applyEffect(world.getPlayerEffects(),enemy.getId().equals("drowned_captain")?"poison":"burn",2,4);
             if(fatigue>0)text.append("Battle fatigue adds ").append(fatigue).append(" enemy power. ");
         }else text.append("The wolf charges its next heavy attack. ");
         hp-=dot(world.getPlayerEffects(),storyMode(state),hero.getName(),text);
@@ -137,7 +139,7 @@ public final class CombatService {
             int penalty=storyMode(state)?10:20;response.setGoldChange(-hero.getGold()*penalty/100);camp(state,response);
             text.append("You fall. Scouts return you to camp with half HP/MP; ").append(penalty).append("% gold was lost. No victory reward.");
         }else if(enemy.getHp()==0)victory(state,response,enemy,text);
-        else if(enemy.getId().equals("warden")&&!wasPhase&&enemy.getHp()<=enemy.getMaxHp()/2)text.append("The Crown fractures. Phase II begins next round!");
+        else if(phaseEnemy(enemy)&&!wasPhase&&enemy.getHp()<=enemy.getMaxHp()/2)text.append("The Crown fractures. Phase II begins next round!");
         finishDelta(hero,hp,mp,response,text);
     }
     private void finishDelta(com.rpgchatgame.model.Character hero,int hp,int mp,StoryResponse response,StringBuilder text){
@@ -147,15 +149,12 @@ public final class CombatService {
     private void victory(GameState state,StoryResponse response,Enemy enemy,StringBuilder text){
         var world=state.getCampaign();world.setEnemy(null);clear(state);
         if(!world.mark(enemy.getId(),"Defeated "+enemy.getName()+"."))return;
-        response.setExpGain(switch(enemy.getId()){case "wolf"->65;case "guardian"->95;default->130;});
-        response.setGoldChange(switch(enemy.getId()){case "wolf"->25;case "guardian"->45;default->80;});
-        if(enemy.getId().equals("wolf"))response.getItemsGained().add(ItemCatalog.stack("ash_fang",1));
-        if(enemy.getId().equals("guardian"))response.getItemsGained().add(ItemCatalog.stack("ember_blade",1));
-        text.append("Victory! ").append(switch(enemy.getId()){
-            case "wolf"->"The northern road opens. The wolf's fang points toward Emberwood.";
-            case "guardian"->"The guardian entrusts its blade to you. Restore the Sun Sigil, then seek the archive.";
-            default->"The Warden kneels. The Crown awaits your judgment. Missed clues can still be recovered.";
-        });
+        var data=WorldContent.MONSTERS.get(enemy.getId());
+        if(data==null)throw new IllegalStateException("Missing encounter definition");
+        response.setExpGain(data.exp());response.setGoldChange(data.gold());
+        for(var item:data.items())response.getItemsGained().add(ItemCatalog.stack(item.id(),item.quantity()));
+        for(String flag:data.flags())world.mark(flag,"");WorldService.reputation(state,data.reputation());world.getCodex().add("enemy:"+enemy.getId());
+        text.append("Victory! ").append(enemy.getName()).append(" is defeated. Your journal records the outcome.");
     }
     public static String effects(Map<String,StatusEffect> effects){
         if(effects.isEmpty())return "No active effects";

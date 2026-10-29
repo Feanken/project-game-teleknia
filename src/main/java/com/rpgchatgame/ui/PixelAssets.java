@@ -33,21 +33,17 @@ public final class PixelAssets {
     }
 
     public static String location(String location) {
-        if (location == null) return "village";
-        if (location.contains("Camp")) return "campfire";
-        if (location.contains("Ruins") || location.contains("Tower")) return "gate";
-        if (location.contains("Gate")) return "gate";
-        if (location.contains("Emberwood") || location.contains("Shrine")) return "shrine";
-        return "village";
+        return location == null ? "village" : com.rpgchatgame.service.WorldContent.location(location).sprite();
     }
 
     public static String item(String id) {
         return switch (id) {
-            case "rusty_sword", "small_potion", "old_map", "ash_fang" -> id;
-            case "iron_sword", "ember_blade" -> "rusty_sword";
+            case "frost_blade", "glacier_mail", "tide_ring", "rusty_sword", "small_potion", "old_map", "ash_fang", "frost_lens", "rune_tablet", "caravan_crate", "tide_medicine", "star_chart", "captains_bell" -> id;
+            case "iron_sword", "ember_blade", "prospectors_blade" -> "rusty_sword";
             case "mana_potion" -> "mana";
             case "silver_locket", "sun_sigil", "duelist_charm" -> "experience";
-            case "warding_charm" -> "mana";
+            case "warding_charm", "rime_sigil" -> "mana";
+            case "frost_lantern" -> "frost_lens";
             default -> "backpack";
         };
     }

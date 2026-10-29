@@ -1,0 +1,787 @@
+[
+  {
+    "id": "find_lens",
+    "label": "Recover the signal lens",
+    "location": "glacier",
+    "text": "You free an undamaged lens from the frozen signal station. Sera can guide travelers again.",
+    "requires": [],
+    "absent": [
+      "lens_found"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "lens_found"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [
+      {
+        "id": "frost_lens",
+        "quantity": 1
+      }
+    ],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "find_crate",
+    "label": "Recover the caravan crate",
+    "location": "frostveil",
+    "text": "Beneath a fallen sled you find the caravan's sealed supplies. Sera knows who is waiting for them.",
+    "requires": [],
+    "absent": [
+      "crate_found"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "crate_found"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [
+      {
+        "id": "caravan_crate",
+        "quantity": 1
+      }
+    ],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "find_tablet",
+    "label": "Read the buried oath tablet",
+    "location": "frostveil",
+    "text": "You uncover the original glacier oath: protect the road, not the relic. Orin will understand its meaning.",
+    "requires": [],
+    "absent": [
+      "tablet_found"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "tablet_found"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [
+      {
+        "id": "rune_tablet",
+        "quantity": 1
+      }
+    ],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "repair_signal",
+    "label": "Restore the mountain beacon",
+    "location": "frostveil",
+    "text": "Sera sets the lens above the fire. A ribbon of light crosses the pass. Both camp travelers and keeper pilgrims can follow it home.",
+    "requires": [],
+    "absent": [
+      "q_signal"
+    ],
+    "items": [
+      "frost_lens"
+    ],
+    "consume": [
+      "frost_lens"
+    ],
+    "flags": [
+      "q_signal"
+    ],
+    "exp": 25,
+    "gold": 18,
+    "reputation": {
+      "camp": 1,
+      "keepers": 1
+    },
+    "rewards": [
+      {
+        "id": "frost_lantern",
+        "quantity": 1
+      }
+    ],
+    "node": "sera",
+    "npc": "sera",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "return_crate",
+    "label": "Return the supplies to the survivors",
+    "location": "frostveil",
+    "text": "Sera sends the supplies to the camp and entrusts you with the caravan's blade. Word of your kindness travels ahead of you.",
+    "requires": [],
+    "absent": [
+      "q_caravan"
+    ],
+    "items": [
+      "caravan_crate"
+    ],
+    "consume": [
+      "caravan_crate"
+    ],
+    "flags": [
+      "q_caravan",
+      "caravan_returned"
+    ],
+    "exp": 25,
+    "gold": 15,
+    "reputation": {
+      "camp": 2
+    },
+    "rewards": [
+      {
+        "id": "prospectors_blade",
+        "quantity": 1
+      }
+    ],
+    "node": "sera",
+    "npc": "sera",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "keep_crate",
+    "label": "Claim the supplies for yourself",
+    "location": "frostveil",
+    "text": "You sell the supplies to a passing trader. Sera says nothing, but the camp learns whose hunger you chose to answer.",
+    "requires": [],
+    "absent": [
+      "q_caravan"
+    ],
+    "items": [
+      "caravan_crate"
+    ],
+    "consume": [
+      "caravan_crate"
+    ],
+    "flags": [
+      "q_caravan",
+      "caravan_claimed"
+    ],
+    "exp": 25,
+    "gold": 45,
+    "reputation": {
+      "camp": -1
+    },
+    "rewards": [],
+    "node": "sera",
+    "npc": "sera",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "study_oath",
+    "label": "Ask Orin to translate the oath",
+    "location": "glacier",
+    "text": "Orin reads the tablet aloud. The sentinel was ordered to keep the pass safe, but grief turned its watch into a prison.",
+    "requires": [
+      "tablet_found"
+    ],
+    "absent": [
+      "oath_read"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "oath_read"
+    ],
+    "exp": 15,
+    "gold": 0,
+    "reputation": {
+      "keepers": 2
+    },
+    "rewards": [],
+    "node": "orin",
+    "npc": "orin",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "parley_rime",
+    "label": "Invoke the keeper oath / Keepers 3",
+    "location": "glacier",
+    "text": "You speak the oath as a keeper, not a conqueror. The sentinel lowers its sword. Orin offers you glacier mail, and the sentinel releases its sigil.",
+    "requires": [
+      "oath_read"
+    ],
+    "absent": [
+      "rime_resolved"
+    ],
+    "items": [
+      "rune_tablet"
+    ],
+    "consume": [],
+    "flags": [
+      "q_oath",
+      "rime_resolved",
+      "rime_peace"
+    ],
+    "exp": 60,
+    "gold": 35,
+    "reputation": {
+      "keepers": 1
+    },
+    "rewards": [
+      {
+        "id": "glacier_mail",
+        "quantity": 1
+      },
+      {
+        "id": "rime_sigil",
+        "quantity": 1
+      }
+    ],
+    "node": "orin",
+    "npc": "orin",
+    "keeperMin": 3,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "fight_rime",
+    "label": "Challenge the Rime Sentinel",
+    "location": "glacier",
+    "text": "The Rime Sentinel raises its greatsword. Orin steps back; you have chosen to settle the oath in combat.",
+    "requires": [],
+    "absent": [
+      "rime_resolved"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "rime_sentinel"
+  },
+  {
+    "id": "find_medicine",
+    "label": "Recover medicine from the tide",
+    "location": "coast",
+    "text": "You lift Marin's waterproof parcels from a stranded boat. Mira can put them to use at Survivor Camp.",
+    "requires": [],
+    "absent": [
+      "medicine_found"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "medicine_found"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [
+      {
+        "id": "tide_medicine",
+        "quantity": 1
+      }
+    ],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "deliver_medicine",
+    "label": "Deliver Marin's medicine",
+    "location": "camp",
+    "text": "Mira distributes the medicine among the sick. The camp promises shelter to the coast's stranded crews, and your name becomes an assurance of safe harbor.",
+    "requires": [
+      "survivors"
+    ],
+    "absent": [
+      "q_medicine"
+    ],
+    "items": [
+      "tide_medicine"
+    ],
+    "consume": [
+      "tide_medicine"
+    ],
+    "flags": [
+      "q_medicine"
+    ],
+    "exp": 30,
+    "gold": 25,
+    "reputation": {
+      "camp": 2
+    },
+    "rewards": [
+      {
+        "id": "small_potion",
+        "quantity": 2
+      }
+    ],
+    "node": "mira",
+    "npc": "mira",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "find_chart",
+    "label": "Recover the nautical star chart",
+    "location": "coast",
+    "text": "A waxed chart survives inside a broken navigator's case. Ilyra can restore the lighthouse with it.",
+    "requires": [],
+    "absent": [
+      "chart_found"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "chart_found"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [
+      {
+        "id": "star_chart",
+        "quantity": 1
+      }
+    ],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "find_bell",
+    "label": "Salvage the captain's bell",
+    "location": "coast",
+    "text": "You recover a silver bell from the wreck. The names etched along its rim match the crews named in Marin's ledger.",
+    "requires": [],
+    "absent": [
+      "bell_found"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "bell_found"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [
+      {
+        "id": "captains_bell",
+        "quantity": 1
+      }
+    ],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_ledger",
+    "label": "Ask Marin about the lost crew",
+    "location": "coast",
+    "text": "Marin opens his old shipping ledger. The captain stayed behind to save the last boat. Ring his bell, and speak of a harbor that still welcomes his people.",
+    "requires": [],
+    "absent": [
+      "captain_ledger"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [
+      "captain_ledger"
+    ],
+    "exp": 10,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "marin",
+    "npc": "marin",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "chart_keepers",
+    "label": "Guide the keeper pilgrims",
+    "location": "lighthouse",
+    "text": "Ilyra copies the chart for the keepers and repairs the beacon. Pilgrim ships answer the light. The coast's last watch can now be resolved.",
+    "requires": [],
+    "absent": [
+      "q_chart"
+    ],
+    "items": [
+      "star_chart"
+    ],
+    "consume": [
+      "star_chart"
+    ],
+    "flags": [
+      "q_chart",
+      "chart_keepers"
+    ],
+    "exp": 30,
+    "gold": 35,
+    "reputation": {
+      "keepers": 2
+    },
+    "rewards": [
+      {
+        "id": "mana_potion",
+        "quantity": 1
+      }
+    ],
+    "node": "ilyra",
+    "npc": "ilyra",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "chart_camp",
+    "label": "Guide the survivor supply ships",
+    "location": "lighthouse",
+    "text": "Ilyra marks the camp's supply routes and repairs the beacon. Boats carrying food follow its light. The coast's last watch can now be resolved.",
+    "requires": [],
+    "absent": [
+      "q_chart"
+    ],
+    "items": [
+      "star_chart"
+    ],
+    "consume": [
+      "star_chart"
+    ],
+    "flags": [
+      "q_chart",
+      "chart_camp"
+    ],
+    "exp": 30,
+    "gold": 35,
+    "reputation": {
+      "camp": 2
+    },
+    "rewards": [
+      {
+        "id": "mana_potion",
+        "quantity": 1
+      }
+    ],
+    "node": "ilyra",
+    "npc": "ilyra",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "parley_captain",
+    "label": "Offer safe harbor / Camp 4",
+    "location": "lighthouse",
+    "text": "You ring the bell and promise shelter for the captain's remembered crew. The ghost lowers his anchor. Ilyra watches the tide carry the last of their grief away.",
+    "requires": [
+      "q_chart",
+      "captain_ledger"
+    ],
+    "absent": [
+      "captain_resolved"
+    ],
+    "items": [
+      "captains_bell"
+    ],
+    "consume": [
+      "captains_bell"
+    ],
+    "flags": [
+      "q_captain",
+      "captain_resolved",
+      "captain_peace"
+    ],
+    "exp": 70,
+    "gold": 45,
+    "reputation": {
+      "camp": 1
+    },
+    "rewards": [
+      {
+        "id": "tide_ring",
+        "quantity": 1
+      }
+    ],
+    "node": "ilyra",
+    "npc": "ilyra",
+    "keeperMin": 0,
+    "campMin": 4,
+    "enemy": ""
+  },
+  {
+    "id": "fight_captain",
+    "label": "Confront the Drowned Captain",
+    "location": "lighthouse",
+    "text": "The repaired beacon reveals a figure beneath the cliffs. The Drowned Captain lifts his spectral anchor and accepts your challenge.",
+    "requires": [
+      "q_chart"
+    ],
+    "absent": [
+      "captain_resolved"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "drowned_captain"
+  },
+  {
+    "id": "back_sera",
+    "label": "Back to your questions",
+    "location": "frostveil",
+    "text": "The mountain still remembers its travelers. Help me light the beacon, and decide what becomes of the caravan's supplies.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "sera",
+    "npc": "sera",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "back_orin",
+    "label": "Back to your questions",
+    "location": "glacier",
+    "text": "The sentinel has forgotten why it guards this road. Bring me the original oath. Keeper trust may settle what a sword cannot.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "orin",
+    "npc": "orin",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "back_marin",
+    "label": "Back to your questions",
+    "location": "coast",
+    "text": "The tide took our trade, but not our obligations. The camp needs medicine; the lighthouse needs a chart. Ask me what happened to the captain.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "marin",
+    "npc": "marin",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "back_ilyra",
+    "label": "Back to your questions",
+    "location": "lighthouse",
+    "text": "Every ship deserves a light home. Choose who will receive the chart, then help me end the captain's vigil.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "ilyra",
+    "npc": "ilyra",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "back_mira",
+    "label": "Back to your questions",
+    "location": "camp",
+    "text": "The camp grows with every act of kindness. Marin's medicine could save the people still too weak to travel.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "mira",
+    "npc": "mira",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_signal",
+    "label": "Where can I find the signal lens?",
+    "location": "frostveil",
+    "text": "The old signal station inside Glacier Sanctum still has a usable lens. Bring it here, and I can light the road for travelers and keeper pilgrims.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "sera_signal",
+    "npc": "sera",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_caravan",
+    "label": "Who owns the caravan supplies?",
+    "location": "frostveil",
+    "text": "The supplies beneath the fallen sled belong to hungry survivors. Return them and the camp will trust you; claim their value and that trust will suffer.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "sera_caravan",
+    "npc": "sera",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_oath",
+    "label": "Can the sentinel be spared?",
+    "location": "glacier",
+    "text": "Find the buried tablet in Frostveil Pass and let me translate it. Restoring Sera's beacon and understanding the oath earn keeper trust. With three trust, you can invoke the pact instead of fighting.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "orin_oath",
+    "npc": "orin",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_medicine",
+    "label": "Who needs the coastal medicine?",
+    "location": "coast",
+    "text": "Medicine parcels are caught beside the stranded boat. Rescue Mira in the village if you have not already; she will distribute them at Survivor Camp. People remember who brings help across a border.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "marin_medicine",
+    "npc": "marin",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_beacon",
+    "label": "Which ships should the beacon guide?",
+    "location": "lighthouse",
+    "text": "The chart in the stranded navigator's case can guide either keeper pilgrims or survivor supply ships. The choice earns their trust. To spare the captain, learn his story from Marin, bring his bell, and earn four camp trust.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "ilyra_beacon",
+    "npc": "ilyra",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  },
+  {
+    "id": "ask_camp",
+    "label": "How can I earn the camp's trust?",
+    "location": "camp",
+    "text": "Return Sera's caravan supplies, restore the beacon, or deliver Marin's medicine. At three trust the market offers a twenty-percent discount. At four, our promise of shelter can reach even the drowned captain.",
+    "requires": [],
+    "absent": [],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "mira_camp",
+    "npc": "mira",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": ""
+  }
+]

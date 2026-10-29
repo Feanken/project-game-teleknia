@@ -5,8 +5,8 @@
 
     <groupId>com.rpgchatgame</groupId>
     <artifactId>interactive-rpg-chat-story-game</artifactId>
-    <version>1.3.0</version>
-    <name>Interactive RPG Chat Story Game</name>
+    <version>1.4.0</version>
+    <name>Teleknia - Beyond Emberwood</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

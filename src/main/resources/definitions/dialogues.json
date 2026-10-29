@@ -1,0 +1,114 @@
+[
+  {
+    "id": "sera",
+    "npc": "sera",
+    "text": "The mountain still remembers its travelers. Help me light the beacon, and decide what becomes of the caravan's supplies.",
+    "actions": [
+      "ask_signal",
+      "ask_caravan",
+      "repair_signal",
+      "return_crate",
+      "keep_crate"
+    ]
+  },
+  {
+    "id": "orin",
+    "npc": "orin",
+    "text": "The sentinel has forgotten why it guards this road. Bring me the original oath. Keeper trust may settle what a sword cannot.",
+    "actions": [
+      "ask_oath",
+      "study_oath",
+      "parley_rime",
+      "fight_rime"
+    ]
+  },
+  {
+    "id": "marin",
+    "npc": "marin",
+    "text": "The tide took our trade, but not our obligations. The camp needs medicine; the lighthouse needs a chart. Ask me what happened to the captain.",
+    "actions": [
+      "ask_medicine",
+      "ask_ledger"
+    ]
+  },
+  {
+    "id": "ilyra",
+    "npc": "ilyra",
+    "text": "Every ship deserves a light home. Choose who will receive the chart, then help me end the captain's vigil.",
+    "actions": [
+      "ask_beacon",
+      "chart_keepers",
+      "chart_camp",
+      "parley_captain",
+      "fight_captain"
+    ]
+  },
+  {
+    "id": "mira",
+    "npc": "mira",
+    "text": "The camp grows with every act of kindness. Marin's medicine could save the people still too weak to travel.",
+    "actions": [
+      "ask_camp",
+      "deliver_medicine"
+    ]
+  },
+  {
+    "id": "sera_signal",
+    "npc": "sera",
+    "text": "The old signal station inside Glacier Sanctum still has a usable lens. Bring it here, and I can light the road for travelers and keeper pilgrims.",
+    "actions": [
+      "repair_signal",
+      "back_sera"
+    ]
+  },
+  {
+    "id": "sera_caravan",
+    "npc": "sera",
+    "text": "The supplies beneath the fallen sled belong to hungry survivors. Return them and the camp will trust you; claim their value and that trust will suffer.",
+    "actions": [
+      "return_crate",
+      "keep_crate",
+      "back_sera"
+    ]
+  },
+  {
+    "id": "orin_oath",
+    "npc": "orin",
+    "text": "Find the buried tablet in Frostveil Pass and let me translate it. Restoring Sera's beacon and understanding the oath earn keeper trust. With three trust, you can invoke the pact instead of fighting.",
+    "actions": [
+      "study_oath",
+      "parley_rime",
+      "fight_rime",
+      "back_orin"
+    ]
+  },
+  {
+    "id": "marin_medicine",
+    "npc": "marin",
+    "text": "Medicine parcels are caught beside the stranded boat. Rescue Mira in the village if you have not already; she will distribute them at Survivor Camp. People remember who brings help across a border.",
+    "actions": [
+      "ask_ledger",
+      "back_marin"
+    ]
+  },
+  {
+    "id": "ilyra_beacon",
+    "npc": "ilyra",
+    "text": "The chart in the stranded navigator's case can guide either keeper pilgrims or survivor supply ships. The choice earns their trust. To spare the captain, learn his story from Marin, bring his bell, and earn four camp trust.",
+    "actions": [
+      "chart_keepers",
+      "chart_camp",
+      "parley_captain",
+      "back_ilyra"
+    ]
+  },
+  {
+    "id": "mira_camp",
+    "npc": "mira",
+    "text": "Return Sera's caravan supplies, restore the beacon, or deliver Marin's medicine. At three trust the market offers a twenty-percent discount. At four, our promise of shelter can reach even the drowned captain.",
+    "actions": [
+      "deliver_medicine",
+      "back_mira"
+    ]
+  }
+]

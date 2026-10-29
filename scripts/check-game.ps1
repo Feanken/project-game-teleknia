@@ -15,4 +15,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Essentials checks failed.' }
     & java -cp $classpath com.rpgchatgame.BattleChecks
     if ($LASTEXITCODE -ne 0) { throw 'Battle checks failed.' }
+    & java -cp $classpath com.rpgchatgame.WorldChecks
+    if ($LASTEXITCODE -ne 0) { throw 'World checks failed.' }
 } finally { Pop-Location }

@@ -107,7 +107,7 @@ ScrollPane sideScroll = new ScrollPane(side); sideScroll.setFitToWidth(true); si
         boolean equipped = state.getCampaign().getWeapon().equals(item.getId()) || state.getCampaign().getArmor().equals(item.getId()) || state.getCampaign().getAccessory().equals(item.getId());
         Button useButton = new Button(equipped ? "Equipped" : equipment ? "Equip" : "Use");
         useButton.getStyleClass().addAll("game-button", "secondary-button");
-        useButton.setDisable(equipped || item.getType() == Item.ItemType.QUEST || state.getCampaign().getEnemy() != null || !state.getCampaign().getEnding().isBlank());
+        useButton.setDisable(equipped || item.getType() == Item.ItemType.QUEST || state.getCampaign().getEnemy() != null || state.getCampaign().epilogueClosed());
         useButton.setOnAction(event -> app.runSafely(() -> {
             int before = gameService.getCurrentState().getInventory().stream().filter(i -> i.getItem().getId().equals(item.getId())).mapToInt(InventoryItem::getQuantity).sum();
             feedback.setText(equipment ? gameService.equipItem(item.getId()) : gameService.useItem(item.getId()));

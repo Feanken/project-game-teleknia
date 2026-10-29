@@ -1,5 +1,32 @@
 # Catatan Rilis Teleknia
 
+## 1.4 / Beyond Emberwood - 29 Oktober 2026
+
+Nomor build Maven: `1.4.0`. Versi skema snapshot: `4`.
+
+- Dua kawasan/empat lokasi baru: Frostveil Pass, Glacier Sanctum, Drowned Coast,
+  Tidewatch Lighthouse. Empat NPC penting: Sera, Orin, Marin, Ilyra.
+- Enam side quest, dialog pertanyaan bercabang, pilihan distribusi persediaan/peta,
+  serta dua boss opsional dengan jalur combat dan damai.
+- Reputasi Survivor Camp/Ember Keepers memengaruhi harga dan resolusi alternatif.
+- Dua belas item baru, codex berbasis penemuan, pin quest, serta Chronicle read-only.
+- Input chat custom dihapus. Layar bermain diganti HUD RPG, adegan lokasi,
+  portrait NPC/musuh yang bisa diklik, kartu aksi berkategori, HP/intent musuh,
+  hasil aksi, dan dialog pembaca narasi lengkap. Esc menutup percakapan NPC.
+- Tiga puluh dua sprite baru 64x64, dua musik kawasan, serta SFX discovery dan
+  quest completion. Aset gambar memakai built-in imagegen; sumber prompt dicatat
+  di `sprites/GENERATION-1.4.md`. Musik dan SFX disintesis dari source proyek.
+- Definisi dunia dipisahkan ke JSON tervalidasi: lokasi/rute, NPC, quest, dialog,
+  aksi, event/reward, dan monster. Aksi berhadiah memerlukan flag sekali ambil.
+- Migrasi skema 1-3 mempertahankan progres. Reputasi awal mengikuti milestone
+  lama. Save tamat bisa membuka borderlands tanpa mengubah ending.
+
+Validasi: 641 pemeriksaan game dan 53 pemeriksaan UI lulus. Cakupan meliputi
+semua kelas/difficulty, delapan playthrough ekspansi, enam side
+quest, kedua cabang distribusi, resolusi damai, rollback transaksi quest, migrasi,
+reputasi/diskon, codex, dimensi sprite, WAV offline, serta interaksi UI di jendela
+980 x 680 pada teks 120%. Riwayat save pemain dipisahkan dari database pengujian.
+
 ## 1.3 / Arts of Battle - 29 Oktober 2026
 
 Nomor build Maven: `1.3.0`. Versi skema snapshot: `3`.

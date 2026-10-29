@@ -9,6 +9,10 @@ Format: 22,050 Hz, mono, signed 16-bit PCM WAV.
 | --- | --- |
 | embers.wav | 16-bar A-minor menu loop, 88 BPM |
 | journey.wav | 16-bar A-minor exploration loop, 104 BPM |
+| frostveil.wav | 16-bar D-minor mountain loop, 84 BPM |
+| drowned.wav | 16-bar E-minor coast loop, 96 BPM |
+| discovery.wav | Location/codex discovery |
+| quest_complete.wav | Quest milestone completed |
 | click.wav | Button activation |
 | action.wav | Story action |
 | damage.wav | Incoming damage |

@@ -96,7 +96,7 @@ public class HomeController {
         var start = new javafx.scene.control.ButtonType("Begin adventure", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(start, javafx.scene.control.ButtonType.CANCEL);
         var name = new javafx.scene.control.TextField("Kael");
-        name.getStyleClass().add("custom-action");
+        name.getStyleClass().add("form-field");
         var klass = new javafx.scene.control.ComboBox<String>();
         klass.getItems().addAll("Fighter", "Rogue", "Mage"); klass.setValue("Fighter"); klass.setId("character-class");
         Label details = new Label(); details.setWrapText(true); details.setMaxWidth(440);

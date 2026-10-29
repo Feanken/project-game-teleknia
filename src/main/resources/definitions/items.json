@@ -209,5 +209,209 @@
     "mp": 0,
     "sold": true,
     "critical": 0
+  },
+  {
+    "item": {
+      "id": "frost_lens",
+      "name": "Signal Lens",
+      "type": "QUEST",
+      "rarity": "RARE",
+      "description": "A cut crystal from the glacier sanctuary.",
+      "effect": "Repair Sera's beacon"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "rune_tablet",
+      "name": "Glacier Oath Tablet",
+      "type": "QUEST",
+      "rarity": "RARE",
+      "description": "The original pact between the sentinel and the keepers.",
+      "effect": "Evidence for keeper diplomacy"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "caravan_crate",
+      "name": "Caravan Supplies",
+      "type": "QUEST",
+      "rarity": "UNCOMMON",
+      "description": "Medicine and food belonging to the mountain caravan.",
+      "effect": "Choose its rightful owner"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "tide_medicine",
+      "name": "Coastal Medicine",
+      "type": "QUEST",
+      "rarity": "UNCOMMON",
+      "description": "Waterproof medicine parcels recovered for Marin.",
+      "effect": "Deliver to Mira"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "star_chart",
+      "name": "Nautical Star Chart",
+      "type": "QUEST",
+      "rarity": "RARE",
+      "description": "A chart showing safe channels through the drowned coast.",
+      "effect": "Restore the lighthouse"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "captains_bell",
+      "name": "Captain's Bell",
+      "type": "QUEST",
+      "rarity": "RARE",
+      "description": "A silver bell inscribed with the names of a lost crew.",
+      "effect": "A peaceful offering to the captain"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "frost_lantern",
+      "name": "Scout's Lantern",
+      "type": "ACCESSORY",
+      "rarity": "RARE",
+      "description": "Sera's gratitude, carried as a light against the cold.",
+      "effect": "+3 Defense"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 3,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "prospectors_blade",
+      "name": "Caravan Blade",
+      "type": "WEAPON",
+      "rarity": "RARE",
+      "description": "A blade entrusted to those who return the caravan supplies.",
+      "effect": "+10 Attack"
+    },
+    "price": 0,
+    "attack": 10,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "glacier_mail",
+      "name": "Glacier Mail",
+      "type": "ARMOR",
+      "rarity": "EPIC",
+      "description": "Keeper armor awarded for honoring an ancient promise.",
+      "effect": "+7 Defense"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 7,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "frost_blade",
+      "name": "Sentinel's Edge",
+      "type": "WEAPON",
+      "rarity": "EPIC",
+      "description": "A crystalline weapon recovered from the Rime Sentinel.",
+      "effect": "+14 Attack"
+    },
+    "price": 0,
+    "attack": 14,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "rime_sigil",
+      "name": "Rime Sigil",
+      "type": "ACCESSORY",
+      "rarity": "EPIC",
+      "description": "The sentinel's seal, freely offered or won in battle.",
+      "effect": "+4 Attack"
+    },
+    "price": 0,
+    "attack": 4,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
+  },
+  {
+    "item": {
+      "id": "tide_ring",
+      "name": "Harbor Oath Ring",
+      "type": "ACCESSORY",
+      "rarity": "EPIC",
+      "description": "A ring binding the living harbor to its remembered dead.",
+      "effect": "+4 Defense"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 4,
+    "hp": 0,
+    "mp": 0,
+    "sold": false,
+    "critical": 0
   }
 ]

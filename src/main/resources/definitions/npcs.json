@@ -1,0 +1,49 @@
+[
+  {
+    "id": "mira",
+    "name": "Mira",
+    "location": "camp",
+    "sprite": "ilyra",
+    "requires": [
+      "survivors"
+    ],
+    "dialogue": "mira",
+    "lore": "A survivor rebuilding a home for those the Crown displaced."
+  },
+  {
+    "id": "sera",
+    "name": "Sera, Mountain Scout",
+    "location": "frostveil",
+    "sprite": "sera",
+    "requires": [],
+    "dialogue": "sera",
+    "lore": "Her signal fire once guided caravans through the pass. She puts people before relics."
+  },
+  {
+    "id": "orin",
+    "name": "Brother Orin",
+    "location": "glacier",
+    "sprite": "orin",
+    "requires": [],
+    "dialogue": "orin",
+    "lore": "The last reader of the glacier oath. He believes the sentinel can remember its purpose."
+  },
+  {
+    "id": "marin",
+    "name": "Marin, Tide Broker",
+    "location": "coast",
+    "sprite": "marin",
+    "requires": [],
+    "dialogue": "marin",
+    "lore": "A former smuggler who now moves medicine instead of contraband."
+  },
+  {
+    "id": "ilyra",
+    "name": "Keeper Ilyra",
+    "location": "lighthouse",
+    "sprite": "ilyra",
+    "requires": [],
+    "dialogue": "ilyra",
+    "lore": "She preserves a coastal beacon and the names of the sailors it could not save."
+  }
+]

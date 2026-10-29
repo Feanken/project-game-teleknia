@@ -1,0 +1,64 @@
+{
+  "supplies": {
+    "text": "You salvage a coin pouch and sealed medicine from the burned homes. The supplies here are exhausted.",
+    "exp": 10,
+    "gold": 18,
+    "reputation": {}
+  },
+  "survivors": {
+    "text": "You free Mira and two children from a collapsed house. They establish a camp west of Emberwood. Mira asks you to find her brother's silver locket.",
+    "exp": 25,
+    "gold": 12,
+    "reputation": {
+      "camp": 2
+    }
+  },
+  "mira_story": {
+    "text": "Mira remembers a sun sigil above the shrine. Her brother followed the old keepers into the ruins. 'If the Crown can be healed, let our village be the last to burn.'",
+    "exp": 15,
+    "gold": 0,
+    "reputation": {}
+  },
+  "herbs": {
+    "text": "You harvest the last healthy moonroot and brew two mana draughts. The rest must be left to regrow.",
+    "exp": 15,
+    "gold": 0,
+    "reputation": {}
+  },
+  "runes": {
+    "text": "The shrine's runes warn: the Warden was a protector, not a conqueror. Restore the Sun Sigil and learn the keeper's oath before touching the Crown.",
+    "exp": 25,
+    "gold": 0,
+    "reputation": {
+      "keepers": 1
+    }
+  },
+  "sigil": {
+    "text": "You fit the altar's fragments together. The Sun Sigil answers with a pale dawn, gentle enough to hold in your hands.",
+    "exp": 25,
+    "gold": 0,
+    "reputation": {}
+  },
+  "archive": {
+    "text": "The last keeper's archive reveals the oath: offer the flame a home, never a throne. With the Sun Sigil, you may purify the Crown instead of simply burying it.",
+    "exp": 35,
+    "gold": 15,
+    "reputation": {
+      "keepers": 1
+    }
+  },
+  "locket": {
+    "text": "In the flooded quarters you find Mira's silver locket and a final note: her brother stayed behind to evacuate the keepers. His kindness outlived the fire.",
+    "exp": 20,
+    "gold": 12,
+    "reputation": {}
+  },
+  "locket_returned": {
+    "text": "Mira closes the locket around her neck. The camp shares its savings and armor with you. A small part of the village has come home.",
+    "exp": 30,
+    "gold": 30,
+    "reputation": {
+      "camp": 1
+    }
+  }
+}

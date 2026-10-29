@@ -1,0 +1,93 @@
+[
+  {
+    "id": "survivors",
+    "title": "People Before Ashes",
+    "description": "Rescue Mira and the survivors in Burned Village.",
+    "npc": "mira",
+    "region": "Ashen Reach"
+  },
+  {
+    "id": "wolf",
+    "title": "The Northern Road",
+    "description": "Defeat the Ash Wolf at Northern Gate.",
+    "npc": "",
+    "region": "Ashen Reach"
+  },
+  {
+    "id": "guardian",
+    "title": "The Hollow Protector",
+    "description": "Defeat the guardian at Emberwood Shrine.",
+    "npc": "",
+    "region": "Emberwood"
+  },
+  {
+    "id": "sigil",
+    "title": "A Fragment of Dawn",
+    "description": "Read the runes and restore the Sun Sigil.",
+    "npc": "",
+    "region": "Emberwood"
+  },
+  {
+    "id": "archive",
+    "title": "The Keeper's Oath",
+    "description": "Read the archive in Sunken Ruins.",
+    "npc": "",
+    "region": "Emberwood"
+  },
+  {
+    "id": "locket_returned",
+    "title": "A Brother Remembered",
+    "description": "Find the locket in Sunken Ruins and return it to Mira.",
+    "npc": "mira",
+    "region": "Emberwood"
+  },
+  {
+    "id": "warden",
+    "title": "The Cinder Crown",
+    "description": "Defeat the Warden and choose an ending.",
+    "npc": "",
+    "region": "Emberwood"
+  },
+  {
+    "id": "q_signal",
+    "title": "A Light Through Snow",
+    "description": "Recover a signal lens in Glacier Sanctum and restore Sera's beacon.",
+    "npc": "sera",
+    "region": "Frostveil"
+  },
+  {
+    "id": "q_caravan",
+    "title": "What the Mountain Kept",
+    "description": "Find the caravan crate. Decide whether its supplies belong to the camp or to you.",
+    "npc": "sera",
+    "region": "Frostveil"
+  },
+  {
+    "id": "q_oath",
+    "title": "The Sentinel's Promise",
+    "description": "Read the glacier oath and settle the sentinel's vigil through combat or keeper diplomacy.",
+    "npc": "orin",
+    "region": "Frostveil"
+  },
+  {
+    "id": "q_medicine",
+    "title": "Salt and Mercy",
+    "description": "Recover Marin's medicine on the coast and deliver it to Mira at camp.",
+    "npc": "mira",
+    "region": "Drowned Coast"
+  },
+  {
+    "id": "q_chart",
+    "title": "Stars Above the Tide",
+    "description": "Find the star chart and choose whose ships the repaired beacon will guide.",
+    "npc": "ilyra",
+    "region": "Drowned Coast"
+  },
+  {
+    "id": "q_captain",
+    "title": "The Last Harbor Bell",
+    "description": "Resolve the drowned captain's watch. Camp reputation and his old bell open a peaceful path.",
+    "npc": "ilyra",
+    "region": "Drowned Coast"
+  }
+]

@@ -32,6 +32,7 @@ public class GameService {
         String opening="You wake in the ashes of your village. A strange roar echoes from the northern gate. Beneath a fallen beam, a woman named Mira calls for help. This time, your choices will leave a mark.";
         state.setCurrentStorySummary(opening);state.setCurrentQuest(story.quest(state));
         state.getCharacter().setCurrentQuest(state.getCurrentQuest());
+        WorldService.prepare(state);
         state.setCurrentChoices(story.choices(state));
         state.getStoryLogs().add(new StoryLog(StoryLog.Speaker.GAME_MASTER,opening));
         commit(state);return currentState;
@@ -40,7 +41,7 @@ public class GameService {
     public Optional<GameState> loadSlot(int slot) {
         Optional<GameState> saved=saves.load(slot);
         if(saved.isPresent()) {
-            GameState next=saved.get();next.setCurrentChoices(story.choices(next));
+            GameState next=saved.get();WorldService.prepare(next);next.setCurrentChoices(story.choices(next));
             if(slot!=0)saves.save(next);
             currentState=next;
         }
@@ -53,7 +54,7 @@ public class GameService {
     }
     public java.util.List<SaveGameRepository.SlotInfo> saveSlots() { return saves.slots(); }
     public void restoreBackup(int slot) {
-        GameState next=saves.restore(slot);next.setCurrentChoices(story.choices(next));
+        GameState next=saves.restore(slot);WorldService.prepare(next);next.setCurrentChoices(story.choices(next));
         if(slot!=0)saves.save(next);
         currentState=next;
     }
@@ -76,7 +77,7 @@ public class GameService {
         migrated.getStoryLogs().add(new StoryLog(StoryLog.Speaker.SYSTEM,message));
         migrated.getCampaign().getJournal().add(message);migrated.setCurrentStorySummary(message);
         migrated.setCurrentQuest(story.quest(migrated));migrated.getCharacter().setCurrentQuest(migrated.getCurrentQuest());
-        migrated.setCurrentChoices(story.choices(migrated));saves.importState(migrated);
+        WorldService.prepare(migrated);migrated.setCurrentChoices(story.choices(migrated));saves.importState(migrated);
     }
     public GameState getCurrentState() {
         if(currentState==null) {
@@ -102,6 +103,7 @@ public class GameService {
         if(response.getNewLocation()!=null)next.setCurrentLocation(response.getNewLocation());
         next.getCharacter().setCurrentLocation(next.getCurrentLocation());
         next.setCurrentQuest(story.quest(next));next.getCharacter().setCurrentQuest(next.getCurrentQuest());
+        WorldService.prepare(next);
         next.setCurrentChoices(story.choices(next));
         next.setCurrentStorySummary(response.getNarration());
         next.getStoryLogs().add(new StoryLog(StoryLog.Speaker.GAME_MASTER,response.getNarration()));
@@ -125,13 +127,13 @@ public class GameService {
     public String useItem(String id) {
         GameState next=copy();
         if(next.getCampaign().getEnemy()!=null)return "Use combat potions from Story; drinking one spends your turn.";
-        if(!next.getCampaign().getEnding().isBlank())return "Your journey is complete. Start a new story to play again.";
+        if(next.getCampaign().epilogueClosed())return "Your journey is complete. Start a new story to play again.";
         return record(next,inventory.useItem(next.getInventory(),next.getCharacter(),id));
     }
     public String equipItem(String id) {
         GameState next=copy();var entry=ItemCatalog.entry(id);
         if(next.getCampaign().getEnemy()!=null)return "Equipment cannot be changed during combat.";
-        if(!next.getCampaign().getEnding().isBlank())return "Your journey is complete.";
+        if(next.getCampaign().epilogueClosed())return "Your journey is complete.";
         if(entry==null||!ItemCatalog.owns(next,id))return "Item not found.";
         if(entry.item().getType()==Item.ItemType.WEAPON)next.getCampaign().setWeapon(id);
         else if(entry.item().getType()==Item.ItemType.ARMOR)next.getCampaign().setArmor(id);
@@ -139,9 +141,13 @@ public class GameService {
         else return "This item cannot be equipped.";
         return record(next,"Equipped "+entry.item().getName()+". Attack "+ItemCatalog.attack(next)+", Defense "+ItemCatalog.defense(next)+".");
     }
+    public void trackQuest(String id) {
+        if(!WorldContent.QUESTS.containsKey(id))throw new IllegalArgumentException("Unknown quest");
+        GameState next=copy();next.getCampaign().setTrackedQuest(id);commit(next);
+    }
     public String upgradeSkill(String id) {
         GameState next=copy();
-        if(next.getCampaign().getEnemy()!=null||!next.getCampaign().getEnding().isBlank())return "Change your build outside combat before the ending.";
+        if(next.getCampaign().getEnemy()!=null||next.getCampaign().epilogueClosed())return "Change your build outside combat before the ending.";
         if(SkillCatalog.find(next,id)==null)return "This skill belongs to another class.";
         int rank=SkillCatalog.rank(next,id);
         if(rank>=3)return "Maximum rank reached.";
@@ -163,15 +169,16 @@ public class GameService {
         GameState next=copy();next.getCampaign().setDifficulty(difficulty);
         return record(next,"Difficulty changed to "+difficulty+". Rewards and quest progress stay unchanged.");
     }
-    public boolean canShop() { var state=getCurrentState();return state.getCurrentLocation().equals("Survivor Camp")&&state.getCampaign().getEnemy()==null&&state.getCampaign().getEnding().isBlank(); }
+    public boolean canShop() { var state=getCurrentState();return state.getCurrentLocation().equals("Survivor Camp")&&state.getCampaign().getEnemy()==null&&!state.getCampaign().epilogueClosed(); }
     public String buyItem(String id) {
         if(!canShop())return "The market is at Survivor Camp. Finish combat before trading.";
         GameState next=copy();var entry=ItemCatalog.entry(id);
         if(entry==null||!ItemCatalog.shop().contains(entry))return "This item is not for sale.";
         if(entry.item().getType()!=Item.ItemType.CONSUMABLE&&ItemCatalog.owns(next,id))return "You already own this equipment.";
-        if(next.getCharacter().getGold()<entry.price())return "Not enough gold.";
-        next.getCharacter().setGold(next.getCharacter().getGold()-entry.price());
+        if(next.getCharacter().getGold()<WorldService.price(next,entry))return "Not enough gold.";
+        int price=WorldService.price(next,entry);
+        next.getCharacter().setGold(next.getCharacter().getGold()-price);
         inventory.addItem(next.getInventory(),ItemCatalog.stack(id,1));
-        return record(next,"Bought "+entry.item().getName()+" for "+entry.price()+" gold.");
+        return record(next,"Bought "+entry.item().getName()+" for "+price+" gold.");
     }
 }

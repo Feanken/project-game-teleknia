@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 
 /** Three manual slots plus independent autosave; valid previous snapshots survive bad writes. */
 public final class SaveGameRepository {
-    public static final int SCHEMA = 3;
+    public static final int SCHEMA = 4;
     public record SlotInfo(int slot, boolean occupied, boolean corrupt, boolean backup,
                            String name, String characterClass, int level, String location, String savedAt) {}
     public static final class SaveProblem extends IllegalStateException {
@@ -45,6 +45,24 @@ public final class SaveGameRepository {
         if(world.getDifficulty()==null||!Set.of("STANDARD","STORY").contains(world.getDifficulty())||world.getAccessory()==null
                 ||world.getSkillRanks()==null||world.getCooldowns()==null||world.getPlayerEffects()==null||world.getEnemyEffects()==null)
             throw new IllegalStateException("Invalid combat/build data");
+        if(world.getReputation()==null||world.getCodex()==null||world.getDialogueNode()==null||world.getTrackedQuest()==null)throw new IllegalStateException("Invalid world state");
+        for(var reputation:world.getReputation().entrySet())if(!Set.of("camp","keepers").contains(reputation.getKey())||reputation.getValue()==null||reputation.getValue()<0||reputation.getValue()>10)throw new IllegalStateException("Invalid reputation");
+        if(!world.getDialogueNode().isBlank()&&(!com.rpgchatgame.service.WorldContent.DIALOGUES.containsKey(world.getDialogueNode())||world.getEnemy()!=null))throw new IllegalStateException("Invalid active dialogue");
+        if(!world.getTrackedQuest().isBlank()&&!com.rpgchatgame.service.WorldContent.QUESTS.containsKey(world.getTrackedQuest()))throw new IllegalStateException("Invalid tracked quest");
+        if(!world.getDialogueNode().isBlank()){
+            var node=com.rpgchatgame.service.WorldContent.DIALOGUES.get(world.getDialogueNode());
+            var npc=com.rpgchatgame.service.WorldContent.NPCS.get(node.npc());
+            if(!com.rpgchatgame.service.WorldContent.location(state.getCurrentLocation()).id().equals(npc.location()))throw new IllegalStateException("Dialogue is outside its NPC location");
+        }
+        for(String entry:world.getCodex()){
+            if(entry==null||!entry.contains(":"))throw new IllegalStateException("Invalid codex entry");
+            String[] key=entry.split(":",2);boolean known=switch(key[0]){
+                case "location"->com.rpgchatgame.service.WorldContent.LOCATIONS.containsKey(key[1]);
+                case "npc"->com.rpgchatgame.service.WorldContent.NPCS.containsKey(key[1]);
+                case "enemy"->com.rpgchatgame.service.WorldContent.MONSTERS.containsKey(key[1]);default->false;
+            };
+            if(!known)throw new IllegalStateException("Unknown codex entry");
+        }
         int spent=0;
         for(var rank:world.getSkillRanks().entrySet()){
             if(SkillCatalog.find(state,rank.getKey())==null||rank.getValue()==null||rank.getValue()<1||rank.getValue()>3)throw new IllegalStateException("Invalid skill rank");
@@ -75,7 +93,7 @@ public final class SaveGameRepository {
         GameState state=JsonUtil.fromJson(data.payload(),GameState.class);
         // Sequential v1 -> v2: gameplay payload is unchanged; slots, timestamp and checksum move into the envelope.
         int version=data.version();
-        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else throw new IllegalStateException("Missing save migration"); }
+        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else if(version==3)version=4;else throw new IllegalStateException("Missing save migration"); }
         validate(state);return state;
     }
     private Snapshot read(Connection connection,String table,int slot) throws SQLException {

@@ -1,0 +1,274 @@
+[
+  {
+    "id": "village",
+    "name": "Burned Village",
+    "region": "Ashen Reach",
+    "sprite": "field_village",
+    "description": "Smoke rises from the homes you once knew. Mira calls from beneath a fallen beam. Tracks lead north.",
+    "npcs": [],
+    "routes": [
+      {
+        "to": "gate",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": [
+          "survivors"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gate",
+    "name": "Northern Gate",
+    "region": "Ashen Reach",
+    "sprite": "field_gate",
+    "description": "Ash drifts beneath the ruined arch. Claw marks lead to Emberwood and an old mountain road.",
+    "npcs": [],
+    "routes": [
+      {
+        "to": "village",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": []
+      },
+      {
+        "to": "trail",
+        "requires": [
+          "wolf"
+        ]
+      },
+      {
+        "to": "frostveil",
+        "requires": [
+          "wolf"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "trail",
+    "name": "Emberwood Trail",
+    "region": "Emberwood",
+    "sprite": "field_trail",
+    "description": "Moonroot grows between blackened trees. Lanterns mark the path to camp and the forgotten shrine.",
+    "npcs": [],
+    "routes": [
+      {
+        "to": "gate",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": []
+      },
+      {
+        "to": "shrine",
+        "requires": []
+      },
+      {
+        "to": "ruins",
+        "requires": [
+          "guardian"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "camp",
+    "name": "Survivor Camp",
+    "region": "Ashen Reach",
+    "sprite": "field_camp",
+    "description": "A smith and herbalist tend the campfire. Return medicine and keepsakes, trade, or prepare your next journey.",
+    "npcs": [
+      "mira"
+    ],
+    "routes": [
+      {
+        "to": "village",
+        "requires": []
+      },
+      {
+        "to": "gate",
+        "requires": []
+      },
+      {
+        "to": "trail",
+        "requires": [
+          "wolf"
+        ]
+      },
+      {
+        "to": "ruins",
+        "requires": [
+          "guardian"
+        ]
+      },
+      {
+        "to": "frostveil",
+        "requires": [
+          "wolf"
+        ]
+      },
+      {
+        "to": "coast",
+        "requires": [
+          "guardian"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shrine",
+    "name": "Emberwood Shrine",
+    "region": "Emberwood",
+    "sprite": "field_shrine",
+    "description": "Runes surround a fractured sun altar. A hollow protector guards the keeper's oath.",
+    "npcs": [],
+    "routes": [
+      {
+        "to": "trail",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": []
+      },
+      {
+        "to": "ruins",
+        "requires": [
+          "guardian"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ruins",
+    "name": "Sunken Ruins",
+    "region": "Emberwood",
+    "sprite": "field_ruins",
+    "description": "Water covers the library floor. The keeper's archive and Mira's locket lie among the ruined quarters.",
+    "npcs": [],
+    "routes": [
+      {
+        "to": "shrine",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": []
+      },
+      {
+        "to": "tower",
+        "requires": []
+      },
+      {
+        "to": "coast",
+        "requires": [
+          "guardian"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tower",
+    "name": "Cinder Tower",
+    "region": "Emberwood",
+    "sprite": "field_tower",
+    "description": "A crown of living flame burns above the Warden. Your choice will decide what rises from these ashes.",
+    "npcs": [],
+    "routes": [
+      {
+        "to": "ruins",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": []
+      }
+    ]
+  },
+  {
+    "id": "frostveil",
+    "name": "Frostveil Pass",
+    "region": "Frostveil",
+    "sprite": "frostveil",
+    "description": "Sera watches a dead signal fire above a frozen caravan. A sanctuary bell rings through the snow.",
+    "npcs": [
+      "sera"
+    ],
+    "routes": [
+      {
+        "to": "gate",
+        "requires": []
+      },
+      {
+        "to": "camp",
+        "requires": []
+      },
+      {
+        "to": "glacier",
+        "requires": []
+      }
+    ]
+  },
+  {
+    "id": "glacier",
+    "name": "Glacier Sanctum",
+    "region": "Frostveil",
+    "sprite": "glacier",
+    "description": "Brother Orin shelters beneath a wall of blue ice. A sentinel guards the last intact keeper seal.",
+    "npcs": [
+      "orin"
+    ],
+    "routes": [
+      {
+        "to": "frostveil",
+        "requires": []
+      }
+    ]
+  },
+  {
+    "id": "coast",
+    "name": "Drowned Coast",
+    "region": "Drowned Coast",
+    "sprite": "coast",
+    "description": "Marin counts stranded boats beneath a broken sea wall. Medicine and old charts drift in with the tide.",
+    "npcs": [
+      "marin"
+    ],
+    "routes": [
+      {
+        "to": "camp",
+        "requires": []
+      },
+      {
+        "to": "ruins",
+        "requires": []
+      },
+      {
+        "to": "lighthouse",
+        "requires": []
+      }
+    ]
+  },
+  {
+    "id": "lighthouse",
+    "name": "Tidewatch Lighthouse",
+    "region": "Drowned Coast",
+    "sprite": "lighthouse",
+    "description": "Keeper Ilyra tends a dark beacon. Below the cliffs, a drowned captain waits for the bell that once called his crew home.",
+    "npcs": [
+      "ilyra"
+    ],
+    "routes": [
+      {
+        "to": "coast",
+        "requires": []
+      }
+    ]
+  }
+]

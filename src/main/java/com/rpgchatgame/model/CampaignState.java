@@ -12,6 +12,19 @@ public class CampaignState {
     private String weapon = "rusty_sword";
     private String armor = "";
     private String ending = "";
+    private Map<String,Integer> reputation = new LinkedHashMap<>();
+    private Set<String> codex = new LinkedHashSet<>();
+    private String dialogueNode = "";
+    private String trackedQuest = "";
+    public Map<String,Integer> getReputation(){return reputation;}
+    public void setReputation(Map<String,Integer> value){reputation=value;}
+    public Set<String> getCodex(){return codex;}
+    public void setCodex(Set<String> value){codex=value;}
+    public String getDialogueNode(){return dialogueNode;}
+    public void setDialogueNode(String value){dialogueNode=value;}
+    public String getTrackedQuest(){return trackedQuest;}
+    public void setTrackedQuest(String value){trackedQuest=value;}
+    public boolean epilogueClosed(){return !ending.isBlank()&&!has("borderlands_reopened");}
     private String difficulty = "STANDARD";
     private String accessory = "";
     private Map<String,Integer> skillRanks = new LinkedHashMap<>();

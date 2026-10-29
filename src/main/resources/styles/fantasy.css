@@ -32,8 +32,8 @@
 .action-panel { -fx-padding: 14; }
 .choice-button { -fx-background-color: #21363f; -fx-border-color: #45615f #243d45 #101c26 #45615f; -fx-alignment: center-left; -fx-wrap-text: true; }
 .choice-button:hover { -fx-background-color: #32564f; -fx-text-fill: #fff1c5; }
-.custom-action { -fx-background-color: #0d1922; -fx-background-radius: 0; -fx-border-color: #35514f; -fx-border-width: 2; -fx-text-fill: #edf0dc; -fx-prompt-text-fill: #7d9796; -fx-padding: 12; -fx-highlight-fill: #31534f; }
-.custom-action:focused { -fx-border-color: #79bba8; }
+.form-field { -fx-background-color: #0d1922; -fx-background-radius: 0; -fx-border-color: #35514f; -fx-border-width: 2; -fx-text-fill: #edf0dc; -fx-prompt-text-fill: #7d9796; -fx-padding: 12; -fx-highlight-fill: #31534f; }
+.form-field:focused { -fx-border-color: #79bba8; }
 .send-button { -fx-min-width: 96; }
 .progress-bar { -fx-background-radius: 0; -fx-padding: 2; -fx-background-color: #080f17; -fx-border-color: #35514f; -fx-border-width: 1; }
 .progress-bar > .track { -fx-background-color: #080f17; -fx-background-radius: 0; }
@@ -84,3 +84,28 @@
 .check-box .box { -fx-background-color: #223942; -fx-background-radius: 0; -fx-border-color: #52756b; }
 .check-box:selected .mark { -fx-background-color: #d8bb74; }
 .combo-box-popup .list-cell:selected { -fx-background-color: #31534f; }
+
+.rpg-root { -fx-background-color: #0b141c; }
+.rpg-scene { -fx-background-color: #162a31; -fx-border-color: #648273 #263e46 #263e46 #648273; -fx-border-width: 3; -fx-padding: 8 12; }
+.region-frostveil { -fx-background-color: #1c2c40; -fx-border-color: #87a8bf #344b64 #344b64 #87a8bf; }
+.region-drowned-coast { -fx-background-color: #142c36; -fx-border-color: #5c9ca0 #244650 #244650 #5c9ca0; }
+.scene-vista { -fx-background-color: #101820; -fx-padding: 0; -fx-border-color: #35514f; -fx-border-width: 2; }
+.actor-name { -fx-font-size: 1em; -fx-font-weight: bold; -fx-text-fill: #f1d9a0; -fx-alignment: center; -fx-text-alignment: center; }
+.intent-label { -fx-font-size: .8571em; -fx-text-fill: #e8a86b; -fx-text-alignment: center; }
+.status-badge { -fx-text-fill: #99d6c0; -fx-font-size: .8571em; -fx-padding: 4; -fx-background-color: #203b40; }
+.narration-card { -fx-padding: 10 12; -fx-background-color: #14212b; -fx-border-color: #35514f; -fx-border-width: 0 0 0 3; }
+.narration-text { -fx-font-size: 1em; -fx-line-spacing: 3; }
+.outcome-label { -fx-text-fill: #d8bb74; -fx-font-size: .8571em; }
+.rpg-actions { -fx-padding: 8; -fx-background-color: #101c26; -fx-border-color: #35514f; -fx-border-width: 2; }
+.action-filter { -fx-background-color: #1d303b; -fx-border-color: #35514f; -fx-padding: 6 12; }
+.action-filter:selected { -fx-background-color: #385c54; -fx-border-color: #8bbaa0; }
+.choice-button:hover, .scene-vista:hover { -fx-border-color: #e5c382; }
+
+.chronicle-entry { -fx-padding: 12; -fx-background-color: #15232d; -fx-border-color: #35514f; -fx-border-width: 0 0 1 0; }
+
+.actor-portrait { -fx-padding: 0; -fx-border-width: 1; -fx-background-color: #101820; }
+.actor-portrait:hover { -fx-border-color: #e5c382; }
+.narration-card { -fx-padding: 8 10; }
+
+.read-scene-button { -fx-padding: 3 8; -fx-font-size: .8571em; -fx-border-width: 1 1 2 1; }
+.actor-portrait:disabled { -fx-opacity: 1; }

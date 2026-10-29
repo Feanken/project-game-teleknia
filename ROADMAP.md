@@ -1,7 +1,7 @@
 # Roadmap Teleknia: 1.2 sampai 2.0
 
-Status: versi 1.2 dan 1.3 sudah diimplementasikan. Versi game aktif adalah 1.3.
-Bagian 1.4 sampai 2.0 tetap merupakan rencana pengembangan.
+Status: versi 1.2, 1.3, dan 1.4 sudah diimplementasikan. Versi game aktif adalah 1.4.
+Bagian 1.5 sampai 2.0 tetap merupakan rencana pengembangan.
 Target jumlah konten adalah usulan cakupan rilis, bukan fitur yang sudah tersedia.
 Tanggal rilis ditentukan setelah implementasi dan pengujian setiap versi.
 
@@ -86,7 +86,7 @@ Syarat selesai: semua kelas dapat menamatkan campaign pada kedua difficulty;
 status, cooldown, dan giliran tersimpan konsisten; tidak ada kombinasi yang
 menghasilkan invulnerability, heal, atau giliran tak terbatas.
 
-## 1.4 - Beyond Emberwood
+## 1.4 - Beyond Emberwood (selesai)
 
 Tujuan: memperluas eksplorasi dan membuat pilihan terasa berpengaruh.
 
@@ -197,5 +197,6 @@ paket mandiri bisa dipasang, dijalankan, diperbarui, dan dihapus dengan benar.
 
 ## Langkah pertama yang disarankan
 
-Lanjutkan ke 1.4 dengan mendefinisikan area, NPC, dan quest bercabang sebagai
-data tervalidasi. Fondasi 1.2 dan combat/build/difficulty 1.3 sudah tersedia.
+Lanjutkan ke 1.5 dengan merancang companion dan aturan pergantian anggota sebelum
+mengembangkan quest pribadi serta crafting. Fondasi world/data/quest/codex 1.4 dan
+UI RPG berbasis pilihan sudah tersedia; input chat custom sudah dihapus.

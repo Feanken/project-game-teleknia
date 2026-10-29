@@ -1,0 +1,111 @@
+[
+  {
+    "id": "wolf",
+    "name": "Ash Wolf",
+    "hp": 38,
+    "attack": 14,
+    "defense": 2,
+    "exp": 65,
+    "gold": 25,
+    "sprite": "field_wolf",
+    "pattern": "wolf",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "ash_fang",
+        "quantity": 1
+      }
+    ],
+    "lore": "Ash Wolf guards a broken promise. Its intent reveals when to defend, strike, or seek another answer."
+  },
+  {
+    "id": "guardian",
+    "name": "Hollow Guardian",
+    "hp": 86,
+    "attack": 19,
+    "defense": 5,
+    "exp": 95,
+    "gold": 45,
+    "sprite": "field_guardian",
+    "pattern": "guardian",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "ember_blade",
+        "quantity": 1
+      }
+    ],
+    "lore": "Hollow Guardian guards a broken promise. Its intent reveals when to defend, strike, or seek another answer."
+  },
+  {
+    "id": "warden",
+    "name": "Cinder Warden",
+    "hp": 150,
+    "attack": 25,
+    "defense": 8,
+    "exp": 130,
+    "gold": 80,
+    "sprite": "field_warden",
+    "pattern": "warden",
+    "flags": [],
+    "reputation": {},
+    "items": [],
+    "lore": "Cinder Warden guards a broken promise. Its intent reveals when to defend, strike, or seek another answer."
+  },
+  {
+    "id": "rime_sentinel",
+    "name": "Rime Sentinel",
+    "hp": 135,
+    "attack": 24,
+    "defense": 9,
+    "exp": 85,
+    "gold": 40,
+    "sprite": "rime_sentinel",
+    "pattern": "guardian",
+    "flags": [
+      "q_oath",
+      "rime_resolved"
+    ],
+    "reputation": {
+      "keepers": 1
+    },
+    "items": [
+      {
+        "id": "frost_blade",
+        "quantity": 1
+      },
+      {
+        "id": "rime_sigil",
+        "quantity": 1
+      }
+    ],
+    "lore": "Rime Sentinel guards a broken promise. Its intent reveals when to defend, strike, or seek another answer."
+  },
+  {
+    "id": "drowned_captain",
+    "name": "Drowned Captain",
+    "hp": 165,
+    "attack": 26,
+    "defense": 8,
+    "exp": 100,
+    "gold": 55,
+    "sprite": "drowned_captain",
+    "pattern": "captain",
+    "flags": [
+      "q_captain",
+      "captain_resolved"
+    ],
+    "reputation": {
+      "camp": 1
+    },
+    "items": [
+      {
+        "id": "tide_ring",
+        "quantity": 1
+      }
+    ],
+    "lore": "Drowned Captain guards a broken promise. Its intent reveals when to defend, strike, or seek another answer."
+  }
+]

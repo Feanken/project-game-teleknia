@@ -36,11 +36,17 @@ def write(name, samples):
         output.writeframes(b"".join(struct.pack("<h", round(x * 32767)) for x in samples))
 
 
-def music(name, adventurous=False):
-    beat = 60 / (104 if adventurous else 88)
+def music(name, adventurous=False, region=None):
+    beat = 60 / (84 if region == "frost" else 96 if region == "coast" else 104 if adventurous else 88)
     track = [0.0] * round(16 * 4 * beat * RATE)
     chords = [(45, 52, 57, 60), (41, 48, 53, 57), (48, 55, 60, 64), (43, 50, 55, 59)]
     melody = [76, 72, 71, 69, 72, 76, 79, 76, 77, 76, 72, 69, 67, 71, 72, 71]
+    if region == "frost":
+        chords = [(38,45,50,53),(34,41,46,50),(41,48,53,57),(36,43,48,52)]
+        melody = [74,77,76,74,69,72,74,77,79,77,74,72,69,65,69,72]
+    elif region == "coast":
+        chords = [(40,47,52,55),(36,43,48,52),(43,50,55,59),(38,45,50,54)]
+        melody = [71,76,79,78,76,74,71,67,69,74,78,76,74,71,69,66]
     for bar in range(16):
         chord = chords[bar % 4]
         offset = bar * 4 * beat
@@ -71,10 +77,14 @@ def effect(name, pitches, spacing=0.09, duration=0.14, voice="pulse"):
 
 music("embers")
 music("journey", True)
+music("frostveil", region="frost")
+music("drowned", True, region="coast")
 effect("click", [76], 0.02, 0.09)
 effect("action", [57, 64, 69])
 effect("potion", [72, 76, 79, 84], 0.075, 0.18, "triangle")
 effect("reward", [76, 79, 84], 0.10, 0.20)
 effect("level_up", [69, 72, 76, 81, 76, 81, 84], 0.12, 0.23)
 effect("damage", [45, 40, 33], 0.055, 0.16)
+effect("discovery", [76, 81, 83, 88], 0.10, 0.22, "triangle")
+effect("quest_complete", [72, 76, 79, 84, 88], 0.10, 0.25)
 print(f"Generated {len(list(OUT.glob('*.wav')))} original WAV assets in {OUT}")

@@ -1,10 +1,11 @@
-# Teleknia 1.3: Ashes of the Northern Gate
+# Teleknia 1.4: Ashes of the Northern Gate
 
-Game RPG desktop dark fantasy berbasis chat. Petualangan offline terdiri dari
-**3 bab, 7 lokasi, 3 encounter utama, dan 3 ending**. Cerita memakai aturan dan
+Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
+yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
+5 encounter (2 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.3** (build Maven `1.3.0`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.4** (build Maven `1.4.0`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 2.0 tersedia di [ROADMAP.md](ROADMAP.md).
 
@@ -64,12 +65,51 @@ dibuka lagi kapan saja melalui **Help / F1**.
 - **Hadiah sekali ambil:** pencarian, quest, dan encounter tidak bisa diulang untuk
   menggandakan gold, EXP, atau item. Aksi tak dikenal tidak memberi hadiah.
 
-Klik **World** dari Story, Inventory, atau Profile untuk membuka tab **World Map**,
-**Quest Journal**, dan **Camp Market**. Input bebas mendukung ID aksi serta alias
-terbatas seperti `serang`, `bertahan`, `lari`, `sembuh`, `istirahat`, dan `help`.
-Hanya aksi yang tersedia pada kondisi saat ini yang dijalankan.
+Klik **World** untuk membuka peta, jurnal, market, build, codex, dan kronik.
+Halaman bermain tidak lagi memakai antarmuka chat atau input aksi bebas. Klik
+portrait NPC untuk dialog, portrait musuh untuk Attack, atau gambar lokasi untuk
+membuka peta. Pilih kartu aksi dan gunakan filter All/Interact/Travel atau
+All/Skills/Items saat combat. **Read scene** membuka narasi lengkap tanpa memakai
+giliran. Tombol 1-9 dan 0 memilih kartu yang terlihat; Tab/Enter tetap didukung.
 
-## Fitur baru 1.3 - Arts of Battle
+## Fitur baru 1.4 - Beyond Emberwood
+
+- **Frostveil Pass dan Glacier Sanctum:** Sera, Brother Orin, suar pegunungan,
+  karavan, tablet sumpah, serta Rime Sentinel.
+- **Drowned Coast dan Tidewatch Lighthouse:** Marin, Keeper Ilyra, pengiriman obat,
+  peta bintang, lonceng pelabuhan, dan Drowned Captain.
+- **Enam side quest baru:** A Light Through Snow, What the Mountain Kept,
+  The Sentinel's Promise, Salt and Mercy, Stars Above the Tide, The Last Harbor Bell.
+- **Dialog bercabang:** tanyakan petunjuk, pilih siapa yang menerima persediaan
+  atau peta, dan selesaikan kedua boss opsional lewat combat atau diplomasi.
+- **Reputasi 0-10:** Survivor Camp 3 memberi diskon market 20% (dibulatkan ke bawah,
+  minimum 1 gold); Camp 4 membuka parley captain jika petunjuk/bell tersedia.
+  Ember Keepers 3 membuka parley sentinel setelah tablet diterjemahkan.
+- **12 item baru:** enam item quest dan enam equipment, termasuk Sentinel's Edge,
+  Glacier Mail, Rime Sigil, dan Harbor Oath Ring. Hadiah mengikuti cabang yang
+  dipilih dan tidak bisa diambil lagi lewat cabang alternatif.
+- **Codex:** lokasi, NPC, dan monster terbuka sesuai penemuan. Jurnal punya 13
+  milestone dan tombol Track quest yang memperbarui tracker pada HUD.
+- **UI RPG:** panel karakter/HP/MP, adegan berbasis sprite, portrait interaktif,
+  intent/HP musuh, kartu aksi, filter, hasil aksi, dan pembaca narasi lengkap.
+  Riwayat lama tetap tersimpan sebagai Chronicle yang hanya bisa dibaca.
+- **32 sprite baru bersumber 64x64**, termasuk figur kelas, seluruh lokasi,
+  encounter lama, NPC/boss baru, dan ikon item penting. Semua dirender tanpa
+  smoothing pada skala integer.
+- **Musik/SFX:** dua loop kawasan baru dan efek discovery/quest-complete; total
+  empat track musik dan delapan SFX, seluruhnya original dan offline.
+
+Akses Frostveil dari Northern Gate atau camp setelah Ash Wolf dikalahkan. Akses
+Drowned Coast dari Sunken Ruins atau camp setelah Hollow Guardian dikalahkan.
+Selesaikan pertanyaan lewat dialog NPC; Esc meninggalkan percakapan. Di akhir
+campaign lama, pilih **Explore the borderlands** untuk membuka eksplorasi opsional.
+Ending yang sudah dipilih tetap dipertahankan.
+
+Definisi lokasi/rute, quest, NPC, dialog, aksi, event/reward, serta monster berada
+di `src/main/resources/definitions`. Validasi memeriksa koneksi peta, ID referensi,
+syarat unlock, item konsumsi/reward, dan syarat sekali ambil untuk aksi berhadiah.
+
+## Fitur 1.3 - Arts of Battle
 
 | Kelas | Skill awal | Skill tambahan |
 | --- | --- | --- |
@@ -123,10 +163,10 @@ mengembalikan point tanpa memulihkan HP/MP. Build terkunci selama combat.
 - **Inventory:** filter tipe, sorting nama/rarity/jumlah, dan perbandingan attack
   atau defense sebelum equip. Preview tidak mengubah statistik karakter.
 - **Settings:** bahasa UI Indonesia/Inggris, teks 90-120%, fullscreen, dan audio.
-  Bahasa narasi, nama dunia, deskripsi item, dan lore tetap Inggris pada 1.3.
+  Bahasa narasi, nama dunia, deskripsi item, dan lore tetap Inggris pada 1.4.
 - **Keyboard:** F1 bantuan, F5 slot simpan, F9 slot muat, F11 fullscreen; Esc keluar
   fullscreen, kembali dari halaman utilitas, atau membuka Settings. Tombol 1-9 dan 0
-  memilih aksi cerita saat tidak sedang mengetik. Tab/Enter menavigasi kontrol.
+  memilih kartu aksi yang tampil. Tab/Enter menavigasi kontrol.
 
 Pengaturan UI/window/tutorial tersimpan di `data/ui.properties`, terpisah dari
 karakter. Pengaturan audio tetap di `data/audio.properties`.
@@ -135,9 +175,9 @@ karakter. Pengaturan audio tetap di `data/audio.properties`.
 
 Save SQLite: `data/rpg_chat_game.db`, relatif terhadap folder aplikasi dijalankan.
 Tabel `save_slots` menyimpan slot 0 (auto) serta 1-3 (manual). `save_backups`
-menyimpan backup per slot. Snapshot skema 3 mencakup karakter, inventory,
+menyimpan backup per slot. Snapshot skema 4 mencakup karakter, inventory,
 equipment, flags, combat, skill ranks, cooldown, status, difficulty, quest, ending,
-dan seluruh riwayat chat.
+reputasi, codex, dialog aktif, quest yang dipantau, dan seluruh riwayat pilihan.
 
 Penulisan primary dan backup dilakukan dalam transaksi yang sama. Data primary
 harus lolos validasi sebelum dijadikan backup. Kegagalan commit mempertahankan
@@ -145,9 +185,11 @@ save sebelumnya, backup, dan state aktif. Save manual yang bermasalah harus
 pulih dari backup sebelum dapat ditimpa. Pemulihan backup menjaga checkpoint
 manual lain; hasil pemulihan yang dimuat menjadi autosave aktif.
 
-Save skema 1/2 dimuat dengan default 1.3: Standard, ranks kosong, dan efek/cooldown
+Save skema 1/2/3 tetap terbaca. Data lama mendapat default fitur combat/world yang
+belum ada, dengan difficulty Standard jika belum tersimpan. Reputasi awal berasal
+dari milestone yang sudah selesai dan hanya dihitung sekali. Default combat lama: Standard, ranks kosong, dan efek/cooldown
 kosong. HP musuh dan giliran aktif dipertahankan; level menentukan point tersedia.
-Slot diperbarui ke skema 3 saat ditulis atau dipulihkan; backup asal tetap tersedia.
+Slot diperbarui ke skema 4 saat ditulis atau dipulihkan; backup asal tetap tersedia.
 
 Save 1.1 diimpor sekali ke **slot manual 1 dan autosave**, termasuk kondisi combat.
 Payload asli `campaign_save` dipertahankan. Save 1.0 tetap mempertahankan karakter,
@@ -158,12 +200,12 @@ file database memerlukan salinan file dari luar aplikasi.
 
 ## Pixel art dan audio
 
-Enam belas sprite PNG sumber **64 x 64** berada di `src/main/resources/sprites`.
+Empat puluh delapan sprite PNG sumber **64 x 64** berada di `src/main/resources/sprites`.
 `PixelAssets` merender pada skala integer dengan smoothing dimatikan. Beberapa
 item/lokasi baru menggunakan sprite kategori yang sama. Prompt dan asal aset
 tercatat di `sprites/GENERATION.md`.
 
-Dua musik chiptune original (`embers`, `journey`) dan enam SFX diputar menggunakan
+Empat musik chiptune original (`embers`, `journey`, `frostveil`, `drowned`) dan delapan SFX diputar menggunakan
 Java Sound API. Playback berjalan di worker terpisah; audio dilepas saat keluar.
 Jika perangkat audio tidak tersedia, game tetap berjalan tanpa suara.
 Kontrol Music, SFX, dan Mute ada di semua halaman; pengaturan tersimpan di
@@ -184,13 +226,14 @@ Dengan JDK 21 dan dependensi Maven yang sudah terunduh:
 ```
 
 Runner ini mengompilasi main/test source dan menjalankan `CampaignChecks` serta
-`EssentialsChecks` dan `BattleChecks` tanpa
+`EssentialsChecks`, `BattleChecks`, dan `WorldChecks` tanpa
 JUnit/Surefire tambahan. Pemeriksaan menjalankan semua kombinasi kelas/ending,
 batas transaksi, combat, recovery, quest gates, save/load pertarungan, migrasi
 legacy, isolasi slot, checksum rusak, backup, settings, lokalisasi, filter/sorting,
 status/cooldown, semua kelas pada kedua difficulty, replay deterministik, serta
 kegagalan commit memakai trigger SQLite. Database uji terisolasi di
-`target/campaign-checks`, `target/essentials-checks`, dan `target/battle-checks`; save pemain tidak disentuh.
+`target/campaign-checks`, `target/essentials-checks`, `target/battle-checks`, serta
+`target/world-checks`; save pemain tidak disentuh.
 Workflow `.github/workflows/game-checks.yml` menjalankan pemeriksaan ini pada push
 atau pull request menggunakan JDK 21, tanpa membuka UI atau memakai perangkat audio.
 

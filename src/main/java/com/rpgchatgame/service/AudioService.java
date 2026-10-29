@@ -16,7 +16,7 @@ import java.util.concurrent.RejectedExecutionException;
 public final class AudioService implements AutoCloseable {
     public enum Sound {
         CLICK("click"), ACTION("action"), DAMAGE("damage"), POTION("potion"),
-        REWARD("reward"), LEVEL_UP("level_up");
+        REWARD("reward"), LEVEL_UP("level_up"), DISCOVERY("discovery"), QUEST_COMPLETE("quest_complete");
         final String file;
         Sound(String file) { this.file = file; }
     }
@@ -69,9 +69,10 @@ public final class AudioService implements AutoCloseable {
     }
     public void setMuted(boolean value) { muted = value; updateSettings(); }
 
-    public void playMusic(boolean home) {
+    public void playMusic(boolean home) { playTrack(home ? "embers" : "journey"); }
+    public void playRegion(String region) { playTrack(region.equals("Frostveil") ? "frostveil" : region.equals("Drowned Coast") ? "drowned" : "journey"); }
+    private void playTrack(String next) {
         submit(() -> {
-            String next = home ? "embers" : "journey";
             if (!next.equals(currentMusic)) {
                 Clip previous = clips.get(currentMusic);
                 if (previous != null) previous.stop();
@@ -143,7 +144,7 @@ public final class AudioService implements AutoCloseable {
         submit(() -> {
             updateMusic();
             for (var entry : clips.entrySet()) {
-                if (entry.getKey().equals("embers") || entry.getKey().equals("journey")) continue;
+                if (java.util.Set.of("embers","journey","frostveil","drowned").contains(entry.getKey())) continue;
                 if (muted || effectsVolume == 0) entry.getValue().stop();
                 else gain(entry.getValue(), effectsVolume);
             }
