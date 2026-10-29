@@ -1,11 +1,11 @@
-# Teleknia 1.4: Ashes of the Northern Gate
+# Teleknia 1.4.1: Ashes of the Northern Gate
 
 Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
 yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
 5 encounter (2 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.4** (build Maven `1.4.0`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.4.1** (build Maven `1.4.1`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 2.0 tersedia di [ROADMAP.md](ROADMAP.md).
 
@@ -97,7 +97,7 @@ giliran. Tombol 1-9 dan 0 memilih kartu yang terlihat; Tab/Enter tetap didukung.
   encounter lama, NPC/boss baru, dan ikon item penting. Semua dirender tanpa
   smoothing pada skala integer.
 - **Musik/SFX:** dua loop kawasan baru dan efek discovery/quest-complete; total
-  empat track musik dan delapan SFX, seluruhnya original dan offline.
+  musik per wilayah dan delapan SFX offline (musik diperbarui pada 1.4.1).
 
 Akses Frostveil dari Northern Gate atau camp setelah Ash Wolf dikalahkan. Akses
 Drowned Coast dari Sunken Ruins atau camp setelah Hollow Guardian dikalahkan.
@@ -205,13 +205,14 @@ Empat puluh delapan sprite PNG sumber **64 x 64** berada di `src/main/resources/
 item/lokasi baru menggunakan sprite kategori yang sama. Prompt dan asal aset
 tercatat di `sprites/GENERATION.md`.
 
-Empat musik chiptune original (`embers`, `journey`, `frostveil`, `drowned`) dan delapan SFX diputar menggunakan
-Java Sound API. Playback berjalan di worker terpisah; audio dilepas saat keluar.
-Jika perangkat audio tidak tersedia, game tetap berjalan tanpa suara.
-Kontrol Music, SFX, dan Mute ada di semua halaman; pengaturan tersimpan di
-`data/audio.properties`. Semua audio offline dan tanpa sampel pihak ketiga.
+Sepuluh lagu MP3 yang disediakan di `src/main/resources/audio_frieren` menggantikan
+seluruh musik bawaan lama. JavaFX Media memutar musik langsung; delapan SFX WAV
+menggunakan Java Sound. Musik dan SFX memiliki volume terpisah serta mute; settings
+disimpan di `data/audio.properties`. Pergantian wilayah/battle mengganti tema,
+kemudian kembali ke tema wilayah setelah battle. Semua playback offline.
+Pemetaan lengkap ada di [panduan audio](src/main/resources/audio/README.md).
 
-Regenerasi WAV dengan Python standard library:
+Regenerasi efek suara (tidak membuat ulang musik lama):
 
 ```powershell
 python scripts/generate_audio.py
@@ -260,3 +261,16 @@ navigasi Back bertumpuk, fullscreen, serta ukuran jendela minimum.
 - `src/test/java/`: integration checks tanpa dependensi test tambahan.
 
 `OpenAiStoryGeneratorService` tetap placeholder dan tidak dipakai runtime.
+
+### Musik update 1.4.1
+
+Empat wilayah memiliki musik eksplorasi sendiri. Battle memakai tema wilayah atau
+musuh khusus, lalu kembali ke musik eksplorasi. Semua 10 MP3 di `audio_frieren`
+digunakan; musik WAV lama dihapus. Tidak perlu menyalin ke `data/music`.
+Lihat [pemetaan lagu](src/main/resources/audio/README.md).
+
+Untuk memeriksa decoding semua MP3 di desktop tanpa suara:
+
+```powershell
+./scripts/check-audio.ps1
+```

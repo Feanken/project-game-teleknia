@@ -74,7 +74,7 @@ public class MainApp extends Application {
     public void applyPreferences(){UiText.setLanguage(settings.language());primaryStage.setFullScreen(settings.fullscreen());refreshUi();}
     public void setFullscreen(boolean value){settings.setFullscreen(value);primaryStage.setFullScreen(value);}
     public void showHome(){setView("HOME",new HomeController(this,gameService).createView());audio.playMusic(true);}
-    public void showStory(){setView("STORY",new StoryController(this,gameService).createView());audio.playRegion(WorldContent.location(gameService.getCurrentState().getCurrentLocation()).region());}
+    public void showStory(){setView("STORY",new StoryController(this,gameService).createView());audio.playScene(WorldContent.location(gameService.getCurrentState().getCurrentLocation()).region(),gameService.getCurrentState().getCampaign().getEnemy()==null?null:gameService.getCurrentState().getCampaign().getEnemy().getId());}
     public void showInventory(){setView("INVENTORY",new InventoryController(this,gameService).createView());}
     public void showProfile(){setView("PROFILE",new ProfileController(this,gameService).createView());}
     public void showAdventure(){showAdventure(0,"");}

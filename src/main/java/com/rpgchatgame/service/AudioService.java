@@ -12,13 +12,51 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
-/** All decoding, audio device access and settings IO run off the JavaFX thread. */
+/** Streaming MP3 music on JavaFX; short WAV effects and settings IO on a worker. */
 public final class AudioService implements AutoCloseable {
     public enum Sound {
         CLICK("click"), ACTION("action"), DAMAGE("damage"), POTION("potion"),
         REWARD("reward"), LEVEL_UP("level_up"), DISCOVERY("discovery"), QUEST_COMPLETE("quest_complete");
         final String file;
         Sound(String file) { this.file = file; }
+    }
+    public static final java.util.Set<String> MUSIC_TRACKS = java.util.Set.of(
+        "embers", "ashen", "journey", "frostveil", "drowned",
+        "battle_ashen", "battle_emberwood", "battle_frostveil", "battle_drowned",
+        "boss_wolf", "boss_guardian", "boss_warden", "boss_rime_sentinel", "boss_drowned_captain");
+
+    /** Pure selector shared by playback and checks; encounters always take priority. */
+    public static String sceneTrack(String region, String enemyId) {
+        if (enemyId != null && MUSIC_TRACKS.contains("boss_" + enemyId)) return "boss_" + enemyId;
+        String zone = switch (region == null ? "" : region) {
+            case "Ashen Reach" -> "ashen";
+            case "Frostveil" -> "frostveil";
+            case "Drowned Coast" -> "drowned";
+            default -> "emberwood";
+        };
+        if (enemyId != null) return "battle_" + zone;
+        return zone.equals("emberwood") ? "journey" : zone;
+    }
+    public void playScene(String region, String enemyId) { playTrack(sceneTrack(region, enemyId)); }
+    public static final Map<String, String> MUSIC_FILES = Map.ofEntries(
+        Map.entry("embers", "Journey of a Lifetime - Frieren Beyond Journey's End OST Disc 1 - 1.mp3"),
+        Map.entry("ashen", "The End of One Journey - Frieren Beyond Journey's End OST Disc 1 - 2.mp3"),
+        Map.entry("journey", "Departures - Frieren Beyond Journey's End OST Disc 1 - 8.mp3"),
+        Map.entry("frostveil", "For 1000 Years - Frieren Beyond Journey's End OST Disc 1 - 5.mp3"),
+        Map.entry("drowned", "Time Flows Ever Onward - Frieren Beyond Journey's End OST Disc 1 - 9.mp3"),
+        Map.entry("battle_ashen", "One Last Adventure - Frieren Beyond Journey's End OST Disc 1 - 6.mp3"),
+        Map.entry("battle_emberwood", "The Party of Heroes Returns - Frieren Beyond Journey's End OST Disc 1 - 3.mp3"),
+        Map.entry("battle_frostveil", "Farewell, My Friend - Frieren Beyond Journey's End OST Disc 1 - 7.mp3"),
+        Map.entry("battle_drowned", "A Well Earned Celebration - Frieren Beyond Journey's End OST disc 1 - 4.mp3"),
+        Map.entry("boss_wolf", "One Last Adventure - Frieren Beyond Journey's End OST Disc 1 - 6.mp3"),
+        Map.entry("boss_guardian", "Heiter's Request - Frieren Beyond Journey's End OST Disc 1 - 10.mp3"),
+        Map.entry("boss_warden", "The Party of Heroes Returns - Frieren Beyond Journey's End OST Disc 1 - 3.mp3"),
+        Map.entry("boss_rime_sentinel", "Farewell, My Friend - Frieren Beyond Journey's End OST Disc 1 - 7.mp3"),
+        Map.entry("boss_drowned_captain", "A Well Earned Celebration - Frieren Beyond Journey's End OST disc 1 - 4.mp3")
+    );
+    public static java.net.URL musicResource(String track) {
+        String file = MUSIC_FILES.get(track);
+        return file == null ? null : AudioService.class.getResource("/audio_frieren/" + file);
     }
     private static final System.Logger LOG = System.getLogger(AudioService.class.getName());
     private final ExecutorService worker = Executors.newSingleThreadExecutor(task -> {
@@ -33,6 +71,7 @@ public final class AudioService implements AutoCloseable {
     private volatile boolean muted;
     private volatile boolean closed;
     private String currentMusic;
+    private javafx.scene.media.MediaPlayer musicPlayer;
     private boolean unavailable;
 
     public AudioService() {
@@ -70,13 +109,31 @@ public final class AudioService implements AutoCloseable {
     public void setMuted(boolean value) { muted = value; updateSettings(); }
 
     public void playMusic(boolean home) { playTrack(home ? "embers" : "journey"); }
-    public void playRegion(String region) { playTrack(region.equals("Frostveil") ? "frostveil" : region.equals("Drowned Coast") ? "drowned" : "journey"); }
+    public void playRegion(String region) { playScene(region, null); }
+    private static void onFx(Runnable action) {
+        if (javafx.application.Platform.isFxApplicationThread()) action.run();
+        else javafx.application.Platform.runLater(action);
+    }
     private void playTrack(String next) {
-        submit(() -> {
+        if (closed) return;
+        onFx(() -> {
+            if (closed) return;
+            // Repainting the same scene must not restart the song.
             if (!next.equals(currentMusic)) {
-                Clip previous = clips.get(currentMusic);
-                if (previous != null) previous.stop();
+                if (musicPlayer != null) { musicPlayer.dispose(); musicPlayer = null; }
                 currentMusic = next;
+            }
+            if (musicPlayer == null && !muted && musicVolume > 0) {
+                try {
+                    var resource = musicResource(next);
+                    if (resource == null) throw new IllegalStateException("Missing music: " + next);
+                    musicPlayer = new javafx.scene.media.MediaPlayer(new javafx.scene.media.Media(resource.toExternalForm()));
+                    musicPlayer.setCycleCount(javafx.scene.media.MediaPlayer.INDEFINITE);
+                    var player = musicPlayer;
+                    player.setOnError(() -> LOG.log(System.Logger.Level.WARNING, "Music could not play: " + next, player.getError()));
+                } catch (Exception error) {
+                    LOG.log(System.Logger.Level.WARNING, "Music unavailable; SFX remain enabled", error);
+                }
             }
             updateMusic();
         });
@@ -94,18 +151,12 @@ public final class AudioService implements AutoCloseable {
         });
     }
 
+    /** Called only on JavaFX thread; only one streaming MP3 player exists. */
     private void updateMusic() {
-        if (currentMusic == null) return;
-        Clip clip = clips.get(currentMusic);
-        if (muted || musicVolume == 0) {
-            if (clip != null) clip.stop();
-            return;
-        }
-        if (clip == null) clip = clip(currentMusic);
-        if (clip != null) {
-            gain(clip, musicVolume);
-            if (!clip.isRunning()) clip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
+        if (musicPlayer == null) return;
+        musicPlayer.setVolume(musicVolume);
+        if (muted || musicVolume == 0) musicPlayer.pause();
+        else musicPlayer.play();
     }
 
     private Clip clip(String name) {
@@ -113,7 +164,7 @@ public final class AudioService implements AutoCloseable {
         if (clips.containsKey(name)) return clips.get(name);
         Clip opened = null;
         try {
-            var resource = AudioService.class.getResourceAsStream("/audio/" + name + ".wav");
+            var resource = openAudio(name);
             if (resource == null) throw new IllegalStateException("Missing audio: " + name);
             try (var stream = new BufferedInputStream(resource);
                  var audio = AudioSystem.getAudioInputStream(stream)) {
@@ -132,6 +183,10 @@ public final class AudioService implements AutoCloseable {
         }
     }
 
+    public static java.io.InputStream openAudio(String name) {
+        return AudioService.class.getResourceAsStream("/audio/" + name + ".wav");
+    }
+
     private static void gain(Clip clip, double volume) {
         if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -141,10 +196,10 @@ public final class AudioService implements AutoCloseable {
     }
 
     private void updateSettings() {
+        if (currentMusic != null) playTrack(currentMusic);
         submit(() -> {
-            updateMusic();
             for (var entry : clips.entrySet()) {
-                if (java.util.Set.of("embers","journey","frostveil","drowned").contains(entry.getKey())) continue;
+                if (MUSIC_TRACKS.contains(entry.getKey())) continue;
                 if (muted || effectsVolume == 0) entry.getValue().stop();
                 else gain(entry.getValue(), effectsVolume);
             }
@@ -169,6 +224,7 @@ public final class AudioService implements AutoCloseable {
     @Override public void close() {
         if (closed) return;
         closed = true;
+        onFx(() -> { if (musicPlayer != null) { musicPlayer.dispose(); musicPlayer = null; } });
         worker.execute(() -> { clips.values().forEach(clip -> { clip.stop(); clip.close(); }); clips.clear(); });
         worker.shutdown();
         try { if (!worker.awaitTermination(2, java.util.concurrent.TimeUnit.SECONDS)) worker.shutdownNow(); }

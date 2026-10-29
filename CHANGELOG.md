@@ -1,5 +1,17 @@
 # Catatan Rilis Teleknia
 
+## 1.4.1 / Sound of the Borderlands - 29 Oktober 2026
+
+- Musik eksplorasi berbeda untuk Ashen Reach, Emberwood, Frostveil, dan Drowned Coast.
+- Tema battle per wilayah dan tema khusus Wolf, Guardian, Warden, Rime Sentinel, Drowned Captain.
+- Musik otomatis kembali ke wilayah sesudah battle; memuat save dalam battle memakai tema encounter.
+- Semua 10 MP3 dari folder `audio_frieren` kini menjadi soundtrack menu, wilayah, dan battle.
+- Musik WAV lama dihapus; generator hanya membuat SFX. Delapan SFX tetap tersedia.
+- Pemutar JavaFX Media melakukan streaming MP3, loop, mute/volume terpisah, dan dispose player ketika tema berubah.
+- Pemetaan semua konteks diperiksa otomatis; tes desktop memverifikasi decoding/playback sepuluh MP3 tanpa suara.
+- Skema save tetap 4; kompatibel dengan progres 1.4.
+- Validasi: 694 pemeriksaan game/audio, 53 pemeriksaan UI, dan playback 10 MP3 lulus.
+
 ## 1.4 / Beyond Emberwood - 29 Oktober 2026
 
 Nomor build Maven: `1.4.0`. Versi skema snapshot: `4`.

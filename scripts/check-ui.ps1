@@ -7,7 +7,7 @@ try {
     $projectPath = (Get-Location).Path
     $repo = Join-Path $env:USERPROFILE '.m2/repository'
     $jars = Get-ChildItem -LiteralPath $repo -Filter '*.jar' -Recurse | Where-Object {
-        $_.FullName -match 'javafx-(base|graphics|controls).*21.0.5.*win.jar|sqlite-jdbc.*3.46.1.3|jackson-(databind|core|annotations).*2.17.2|slf4j-api'
+        $_.FullName -match 'javafx-(base|graphics|controls|media).*21.0.5.*win.jar|sqlite-jdbc.*3.46.1.3|jackson-(databind|core|annotations).*2.17.2|slf4j-api'
     } | ForEach-Object FullName
     $classpath = (@("$projectPath/target/classes", "$projectPath/target/test-classes") + $jars) -join ';'
     $casePath = Join-Path $projectPath ("target/ui-checks/run-" + [Guid]::NewGuid().ToString('N'))
