@@ -78,17 +78,19 @@ public class InventoryController {
         Label effect = new Label(item.getEffect());
         effect.getStyleClass().add("item-effect");
 
-        Button useButton = new Button("Use");
+        var state = gameService.getCurrentState();
+        boolean equipment = item.getType() == Item.ItemType.WEAPON || item.getType() == Item.ItemType.ARMOR;
+        boolean equipped = state.getCampaign().getWeapon().equals(item.getId()) || state.getCampaign().getArmor().equals(item.getId());
+        Button useButton = new Button(equipped ? "Equipped" : equipment ? "Equip" : "Use");
         useButton.getStyleClass().addAll("game-button", "secondary-button");
-        useButton.setDisable(item.getType() != Item.ItemType.CONSUMABLE);
-        useButton.setOnAction(event -> {
-            int quantityBefore = inventoryItem.getQuantity();
-            feedback.setText(gameService.useItem(item.getId()));
-            if (inventoryItem.getQuantity() < quantityBefore) {
-                app.getAudio().play(com.rpgchatgame.service.AudioService.Sound.POTION);
-            }
+        useButton.setDisable(equipped || item.getType() == Item.ItemType.QUEST || state.getCampaign().getEnemy() != null || !state.getCampaign().getEnding().isBlank());
+        useButton.setOnAction(event -> app.runSafely(() -> {
+            int before = gameService.getCurrentState().getInventory().stream().filter(i -> i.getItem().getId().equals(item.getId())).mapToInt(InventoryItem::getQuantity).sum();
+            feedback.setText(equipment ? gameService.equipItem(item.getId()) : gameService.useItem(item.getId()));
+            int after = gameService.getCurrentState().getInventory().stream().filter(i -> i.getItem().getId().equals(item.getId())).mapToInt(InventoryItem::getQuantity).sum();
+            if (after < before) app.getAudio().play(com.rpgchatgame.service.AudioService.Sound.POTION);
             refresh();
-        });
+        }));
 
         HBox header = new HBox(12, PixelAssets.view(PixelAssets.item(item.getId())), name, spacer(), useButton);
         header.setAlignment(Pos.CENTER_LEFT);
@@ -100,7 +102,7 @@ public class InventoryController {
     private HBox navBar(String titleText) {
         Label title = new Label(titleText);
         title.getStyleClass().add("screen-title");
-        HBox nav = new HBox(10, title, spacer(), navButton("Home", app::showHome), navButton("Story", app::showStory), navButton("Profile", app::showProfile));
+        HBox nav = new HBox(10, title, spacer(), navButton("World", app::showAdventure), navButton("Home", app::showHome), navButton("Story", app::showStory), navButton("Profile", app::showProfile));
         nav.setAlignment(Pos.CENTER_LEFT);
         nav.setPadding(new Insets(16, 22, 12, 22));
         nav.getStyleClass().add("top-nav");
@@ -116,7 +118,7 @@ public class InventoryController {
     private Button navButton(String text, Runnable action) {
         Button button = new Button(text);
         button.getStyleClass().addAll("game-button", "nav-button");
-        button.setOnAction(event -> action.run());
+        button.setOnAction(event -> app.runSafely(action));
         return button;
     }
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameState {
+    private CampaignState campaign = new CampaignState();
+    public CampaignState getCampaign() { return campaign; }
+    public void setCampaign(CampaignState value) { campaign = value; }
     private Character character;
     private List<InventoryItem> inventory = new ArrayList<>();
     private String currentStorySummary;

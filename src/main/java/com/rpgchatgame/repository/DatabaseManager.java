@@ -14,12 +14,17 @@ public class DatabaseManager {
     private final String databaseUrl;
 
     public DatabaseManager() {
+        this(Path.of(Constants.DATABASE_DIR, Constants.DATABASE_FILE));
+    }
+
+    public DatabaseManager(Path file) {
         try {
-            Files.createDirectories(Path.of(Constants.DATABASE_DIR));
+            Path parent = file.toAbsolutePath().getParent();
+            if (parent != null) Files.createDirectories(parent);
         } catch (IOException e) {
             throw new IllegalStateException("Unable to create data directory", e);
         }
-        this.databaseUrl = "jdbc:sqlite:" + Path.of(Constants.DATABASE_DIR, Constants.DATABASE_FILE);
+        this.databaseUrl = "jdbc:sqlite:" + file.toAbsolutePath();
     }
 
     public Connection getConnection() throws SQLException {
@@ -29,6 +34,7 @@ public class DatabaseManager {
     public void initialize() {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS campaign_save (id INTEGER PRIMARY KEY, version INTEGER NOT NULL, payload TEXT NOT NULL)");
             statement.executeUpdate("""
                     CREATE TABLE IF NOT EXISTS characters (
                         id INTEGER PRIMARY KEY,

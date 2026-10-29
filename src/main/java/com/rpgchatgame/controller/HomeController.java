@@ -29,7 +29,7 @@ public class HomeController {
         hero.setAlignment(Pos.CENTER);
         hero.setPadding(new Insets(32));
 
-        Label eyebrow = new Label("T E L E K N I A   /   CHAPTER I");
+        Label eyebrow = new Label("T E L E K N I A   /   THE CINDER CROWN");
         eyebrow.getStyleClass().add("eyebrow");
 
         Label title = new Label("ASHES OF THE\nNORTHERN GATE");
@@ -41,13 +41,12 @@ public class HomeController {
 
         Button startButton = primaryButton("Start New Story");
         startButton.setOnAction(event -> {
-            gameService.startNewStory();
-            app.showStory();
+            newAdventure();
         });
 
         Button continueButton = secondaryButton("Continue Story");
         continueButton.setDisable(!gameService.hasSavedGame());
-        continueButton.setOnAction(event -> {
+        continueButton.setOnAction(event -> app.runSafely(() -> {
             gameService.continueStory().ifPresentOrElse(
                     state -> app.showStory(),
                     () -> {
@@ -55,13 +54,13 @@ public class HomeController {
                         app.showStory();
                     }
             );
-        });
+        }));
 
         Button inventoryButton = secondaryButton("Inventory");
-        inventoryButton.setOnAction(event -> app.showInventory());
+        inventoryButton.setOnAction(event -> app.runSafely(app::showInventory));
 
         Button profileButton = secondaryButton("Character Profile");
-        profileButton.setOnAction(event -> app.showProfile());
+        profileButton.setOnAction(event -> app.runSafely(app::showProfile));
 
         HBox topButtons = new HBox(14, startButton, continueButton);
         topButtons.setAlignment(Pos.CENTER);
@@ -78,9 +77,46 @@ public class HomeController {
         scenery.getStyleClass().add("world-strip");
         Label footer = new Label("SINGLE PLAYER   /   OFFLINE ADVENTURE   /   AUTO SAVE");
         footer.getStyleClass().add("item-meta");
+        Button worldButton = secondaryButton("World Map & Quest Journal");
+        worldButton.setOnAction(event -> app.runSafely(app::showAdventure));
+        menuCard.getChildren().add(worldButton);
         hero.getChildren().addAll(eyebrow, scenery, title, subtitle, menuCard, footer);
-        root.setCenter(hero);
+        javafx.scene.control.ScrollPane scroll = new javafx.scene.control.ScrollPane(hero);
+        scroll.setFitToWidth(true);
+        scroll.getStyleClass().add("plain-scroll");
+        root.setCenter(scroll);
         return root;
+    }
+
+    private void newAdventure() {
+        javafx.scene.control.Dialog<Boolean> dialog = new javafx.scene.control.Dialog<>();
+        dialog.setTitle("New Adventure");
+        if (app.getAudio() != null) dialog.initOwner(javafx.stage.Window.getWindows().stream().filter(javafx.stage.Window::isShowing).findFirst().orElse(null));
+        var start = new javafx.scene.control.ButtonType("Begin adventure", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(start, javafx.scene.control.ButtonType.CANCEL);
+        var name = new javafx.scene.control.TextField("Kael");
+        name.getStyleClass().add("custom-action");
+        var klass = new javafx.scene.control.ComboBox<String>();
+        klass.getItems().addAll("Fighter", "Rogue", "Mage"); klass.setValue("Fighter");
+        Label details = new Label(); details.setWrapText(true); details.setMaxWidth(440);
+        Runnable update = () -> details.setText(switch (klass.getValue()) {
+            case "Rogue" -> "88 HP / 30 MP. High agility. Shadow Strike combines weapon power and agility; attacks on every fourth combat turn can critically strike.";
+            case "Mage" -> "80 HP / 55 MP. High intelligence. Ember Surge ignores armor. Mend restores more HP.";
+            default -> "100 HP / 30 MP. Strong defense. Power Strike doubles your equipped attack before enemy armor.";
+        });
+        klass.valueProperty().addListener((o,b,a) -> update.run()); update.run();
+        Label notice = new Label(gameService.hasSavedGame() ? "Beginning replaces the current campaign save." : "Three chapters, seven locations, three endings. Your progress saves automatically.");
+        notice.setWrapText(true); notice.setMaxWidth(440);
+        VBox form = new VBox(12, new Label("Character name (1-24 characters)"), name, new Label("Class"), klass, details, notice);
+        form.setPadding(new Insets(20));
+        dialog.getDialogPane().setContent(form);
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource("/styles/fantasy.css").toExternalForm());
+        dialog.getDialogPane().lookupButton(start).disableProperty().bind(javafx.beans.binding.Bindings.createBooleanBinding(
+                () -> name.getText().isBlank() || name.getText().trim().length() > 24, name.textProperty()));
+        dialog.setResultConverter(type -> type == start);
+        dialog.showAndWait().filter(Boolean::booleanValue).ifPresent(ok -> app.runSafely(() -> {
+            gameService.startNewStory(name.getText(), klass.getValue()); app.showStory();
+        }));
     }
 
     private Button primaryButton(String text) {

@@ -1,6 +1,7 @@
 package com.rpgchatgame;
 
 import com.rpgchatgame.controller.HomeController;
+import com.rpgchatgame.controller.AdventureController;
 import com.rpgchatgame.controller.InventoryController;
 import com.rpgchatgame.controller.ProfileController;
 import com.rpgchatgame.controller.StoryController;
@@ -65,6 +66,32 @@ public class MainApp extends Application {
 
     public void showProfile() {
         setView(new ProfileController(this, gameService).createView());
+    }
+
+    public void showAdventure() { showAdventure(0, ""); }
+
+    public void showAdventure(int tab, String message) {
+        Parent view = new AdventureController(this, gameService, tab).createView();
+        setView(view);
+        if (!message.isBlank()) {
+            javafx.application.Platform.runLater(() -> {
+                var feedback = view.lookup(".feedback-label");
+                if (feedback instanceof javafx.scene.control.Label label) label.setText(message);
+            });
+        }
+    }
+
+    public void runSafely(Runnable action) {
+        try { action.run(); }
+        catch (RuntimeException error) {
+            System.getLogger(MainApp.class.getName()).log(System.Logger.Level.ERROR, "Game action failed", error);
+            var alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.initOwner(primaryStage);
+            alert.setTitle("Unable to complete action");
+            alert.setHeaderText("Your previous save was kept.");
+            alert.setContentText(error.getMessage());
+            alert.showAndWait();
+        }
     }
 
     private void setView(Parent parent) {

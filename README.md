@@ -1,183 +1,122 @@
-# Interactive RPG Chat Story Game
+# Teleknia: Ashes of the Northern Gate
 
-MVP desktop game JavaFX bertema dark fantasy RPG. Player bermain melalui chat interaktif, sementara Game Master lokal menghasilkan narasi, pilihan aksi, dan konsekuensi sederhana tanpa API atau koneksi internet saat aplikasi berjalan.
+Game RPG desktop dark fantasy berbasis chat. Petualangan offline terdiri dari
+**3 bab, 7 lokasi, 3 encounter utama, dan 3 ending**. Cerita memakai aturan dan
+state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-## Tech Stack
+## Menjalankan
 
-- Java 21
-- Maven
-- JavaFX
-- SQLite
-- Jackson untuk JSON parsing pilihan cerita
+Butuh **JDK 21** dan Maven. Pastikan `java -version` dan `mvn -version` sama-sama
+menunjukkan Java 21, lalu jalankan dari folder proyek:
 
-## Cara Run
-
-Pastikan Java 21 dan Maven sudah tersedia di PATH.
-
-```bash
+```powershell
 mvn clean javafx:run
 ```
 
-Alternatif build:
+Maven mengunduh dependensi pada build pertama. Folder `target` otomatis dibuat.
 
-```bash
-mvn clean package
-```
+## Memulai petualangan
 
-Database save lokal otomatis dibuat di:
+1. Pilih **Start New Story**, isi nama (1-24 karakter), lalu pilih Fighter, Rogue, atau Mage.
+2. Cari persediaan dan selamatkan Mira di Burned Village.
+3. Pergi ke Northern Gate dan hadapi Ash Wolf untuk membuka jalan ke Emberwood.
+4. Kunjungi Survivor Camp untuk istirahat, berdagang, dan berbicara dengan Mira.
+5. Telusuri shrine, arsip di Sunken Ruins, dan Cinder Tower untuk menuntaskan misteri Crown.
 
-```text
-data/rpg_chat_game.db
-```
+Memulai cerita baru menggantikan satu slot campaign aktif; dialog memberitahukan
+hal tersebut sebelum karakter dibuat. **Continue Story** memuat progres terakhir,
+termasuk HP musuh dan giliran jika berhenti saat bertarung.
 
-Path tersebut relatif terhadap folder project, jadi tidak ada hardcoded absolute path.
+## Fitur
 
-## Fitur MVP
+- **Karakter:** nama bebas, tiga kelas dengan statistik dan skill berbeda.
+- **Fighter:** 100 HP, 30 MP, Power Strike berbasis attack dan armor musuh.
+- **Rogue:** 88 HP, 30 MP, Shadow Strike berbasis attack dan agility; critical pada
+  serangan di setiap giliran tempur keempat jika agility minimal 10.
+- **Mage:** 80 HP, 55 MP, Ember Surge berbasis intelligence dan mengabaikan armor.
+- **Combat:** attack, class skill (6 MP), Arcane Bolt (10 MP), Guard, Mend (8 MP),
+  potion, mana draught, dan retreat. Musuh membalas setiap aksi tempur yang valid.
+- **Heavy attack:** setiap giliran musuh ketiga. Guard membagi dua damage (minimum 1)
+  dan memulihkan hingga 6 MP. Intent musuh terlihat di panel combat.
+- **Pemulihan:** Small Potion +35 HP, Mana Draught +25 MP. Tidak dikonsumsi saat
+  resource penuh. Di combat, meminum potion menggunakan satu giliran.
+- **Kalah:** kembali ke camp dengan setengah HP/MP, kehilangan 20% gold, tanpa hadiah.
+  Retreat kehilangan hingga 5 gold. Musuh pulih saat encounter dimulai lagi.
+- **Level up:** setiap 100 EXP; menaikkan statistik dan memulihkan HP/MP.
+- **Equipment:** sword dan armor benar-benar memengaruhi damage/defense; pilih Equip
+  di Inventory. Equipment dan penggunaan item bebas tidak tersedia selama combat.
+- **Market:** empat barang dijual di Survivor Camp; transaksi memeriksa gold,
+  kepemilikan equipment, lokasi, dan status combat.
+- **Rest:** istirahat pertama gratis, berikutnya 8 gold untuk pemulihan penuh.
+  Jika gold kurang, rough rest gratis memulihkan hingga setengah maksimum HP/MP.
+- **World Map:** tujuh lokasi, status kunjungan, dan travel untuk rute yang terbuka.
+- **Quest Journal:** milestone utama, side quest locket Mira, field notes, panduan
+  combat, penghitung encounter/lokasi, dan achievement.
+- **Ending:** Dawnkeeper, The Silent Watch, atau Sovereign of Ash. Purification
+  membutuhkan Sun Sigil dan archive. Clue yang terlewat masih bisa diambil setelah
+  Warden dikalahkan, sebelum memilih ending. Setelah ending, dunia menjadi epilog.
+- **Hadiah sekali ambil:** pencarian, quest, dan encounter tidak bisa diulang untuk
+  menggandakan gold, EXP, atau item. Aksi tak dikenal tidak memberi hadiah.
 
-- Home Page dengan tombol Start New Story, Continue Story, Inventory, dan Character Profile.
-- Story Chat Page dengan chat log Game Master, player message, system message, pilihan aksi, dan custom action field.
-- Panel status karakter: HP bar, MP bar, EXP bar, level, dan gold.
-- Character Profile berisi name, class, level, EXP, HP, MP, Attack, Strength, Agility, Intelligence, Defense, Gold, Current Location, dan Current Quest.
-- Inventory card/list dengan item type, rarity, description, effect, quantity, dan tombol Use untuk consumable.
-- Small Potion memulihkan 25 HP.
-- Save/load memakai SQLite untuk character, inventory, story logs, dan game state.
-- Story Generator lokal deterministic sederhana, mudah diganti dengan OpenAI API nanti.
+Klik **World** dari Story, Inventory, atau Profile untuk membuka tab **World Map**,
+**Quest Journal**, dan **Camp Market**. Input bebas mendukung ID aksi serta alias
+terbatas seperti `serang`, `bertahan`, `lari`, `sembuh`, `istirahat`, dan `help`.
+Hanya aksi yang tersedia pada kondisi saat ini yang dijalankan.
 
-## Gameplay Awal
+## Penyimpanan dan kompatibilitas
 
-Start New Story membuat karakter default:
+Save SQLite: `data/rpg_chat_game.db`, relatif terhadap folder aplikasi dijalankan.
+Tabel `campaign_save` berisi snapshot versioned lengkap: karakter, inventory,
+equipment, flags, lokasi, combat, pilihan, jurnal, ending, dan seluruh riwayat chat.
+Satu transaksi menyimpan semuanya. State memori baru diterapkan setelah commit
+berhasil; kegagalan menyimpan tidak menimpa progres sebelumnya.
 
-- Name: Kael
-- Class: Fighter
-- Level: 1
-- EXP: 0
-- HP: 100 / 100
-- MP: 30 / 30
-- Strength: 10
-- Agility: 8
-- Intelligence: 6
-- Defense: 8
-- Gold: 20
-- Location: Burned Village
-- Quest: Find the source of the attack
+Save MVP lama dibaca sekali dari tabel legacy. Karakter, statistik, item, gold,
+dan riwayat chat dipertahankan. Karena MVP tidak memiliki milestone quest yang
+tersimpan, alur quest baru dimulai dari Burned Village. Tabel legacy tetap ada.
 
-Item awal:
+## Pixel art dan audio
 
-- Rusty Sword x1
-- Small Potion x2
-- Old Map x1
+Enam belas sprite PNG sumber **64 x 64** berada di `src/main/resources/sprites`.
+`PixelAssets` merender pada skala integer dengan smoothing dimatikan. Beberapa
+item/lokasi baru menggunakan sprite kategori yang sama. Prompt dan asal aset
+tercatat di `sprites/GENERATION.md`.
 
-Opening story:
+Dua musik chiptune original (`embers`, `journey`) dan enam SFX diputar menggunakan
+Java Sound API. Playback berjalan di worker terpisah; audio dilepas saat keluar.
+Jika perangkat audio tidak tersedia, game tetap berjalan tanpa suara.
+Kontrol Music, SFX, dan Mute ada di semua halaman; pengaturan tersimpan di
+`data/audio.properties`. Semua audio offline dan tanpa sampel pihak ketiga.
 
-```text
-You wake up in a burned village. Smoke rises from broken houses, and a strange roar echoes from the northern gate.
-```
-
-## Struktur Project
-
-```text
-src/main/java/com/rpgchatgame/
-  MainApp.java
-  controller/
-    HomeController.java
-    StoryController.java
-    InventoryController.java
-    ProfileController.java
-  model/
-    Character.java
-    Item.java
-    InventoryItem.java
-    GameState.java
-    StoryLog.java
-    Choice.java
-    StoryResponse.java
-  service/
-    GameService.java
-    StoryGeneratorService.java
-    LocalStoryGeneratorService.java
-    OpenAiStoryGeneratorService.java
-    InventoryService.java
-    CharacterService.java
-  repository/
-    DatabaseManager.java
-    CharacterRepository.java
-    InventoryRepository.java
-    StoryLogRepository.java
-  ui/
-    StatusPanel.java
-  util/
-    JsonUtil.java
-    Constants.java
-
-src/main/resources/styles/
-  fantasy.css
-```
-
-## Database Schema
-
-SQLite dibuat otomatis oleh `DatabaseManager`:
-
-- `characters`: data utama karakter.
-- `inventory_items`: item inventory beserta quantity.
-- `story_logs`: log chat Game Master, Player, dan System.
-- `game_state`: story summary, current location, current quest, dan choices aktif dalam JSON.
-
-## Rencana Integrasi OpenAI API
-
-Integrasi disiapkan melalui interface:
-
-```java
-StoryGeneratorService
-```
-
-Saat ini implementasi aktif:
-
-```java
-LocalStoryGeneratorService
-```
-
-Untuk integrasi OpenAI:
-
-1. Implementasikan logic API di `OpenAiStoryGeneratorService`.
-2. Kirim `GameState`, action player, inventory, status karakter, dan story summary sebagai context.
-3. Minta response JSON dengan struktur kompatibel `StoryResponse`.
-4. Ganti wiring di `GameService` dari `LocalStoryGeneratorService` ke `OpenAiStoryGeneratorService`.
-5. Simpan API key melalui environment variable, bukan hardcoded di source code.
-
-Runtime MVP tetap bisa berjalan offline karena tidak memanggil API eksternal.
-
-## Pixel UI redesign
-
-All four screens use the ember/jade pixel theme in `fantasy.css`.
-Sixteen native **64 x 64 PNG** sprites live in `src/main/resources/sprites`.
-`PixelAssets` caches images and renders them at integer scales with smoothing disabled.
-Home and Profile use 2x sprites (128 x 128 on screen); their source files remain 64 x 64.
-The Profile page scrolls at small window sizes, and Story automatically scrolls to the latest message.
-
-Asset generation: built-in imagegen, one 4 x 4 atlas, cropped into cells and
-resampled with nearest-neighbor interpolation. Generation prompt is preserved in
-`src/main/resources/sprites/GENERATION.md`.
-
-## Music and sound
-
-The game includes two original looping chiptune instrumentals: `embers.wav` for
-Home and `journey.wav` for Story. Inventory and Profile keep the current track.
-Six sound effects accompany buttons, story actions, damage, item/gold rewards,
-potion consumption, and level ups. When an action levels up the character, the
-level-up fanfare takes priority over damage/reward sounds.
-
-The footer on every screen contains **Music**, **SFX**, and **Mute** controls.
-Settings persist to `data/audio.properties`, independently of the game save.
-Default music volume is 30% and SFX volume is 60%. Zero volume stops that audio
-channel; unmuting resumes music. If no audio device is available, the game stays
-playable silently and logs a warning.
-
-Audio uses the JDK's Java Sound API; there is no extra dependency or online service.
-All device access and playback run on a dedicated worker, and clips are closed on exit.
-The bundled mono PCM16 WAVs are in `src/main/resources/audio`.
-They were composed and synthesized specifically for this project with no external
-samples. To regenerate the exact assets using Python's standard library:
+Regenerasi WAV dengan Python standard library:
 
 ```powershell
 python scripts/generate_audio.py
 ```
+
+## Pemeriksaan otomatis
+
+Dengan JDK 21 dan dependensi Maven yang sudah terunduh:
+
+```powershell
+./scripts/check-game.ps1
+```
+
+Runner ini mengompilasi main/test source dan menjalankan `CampaignChecks` tanpa
+JUnit/Surefire tambahan. Pemeriksaan menjalankan semua kombinasi kelas/ending,
+batas transaksi, combat, recovery, quest gates, save/load pertarungan, migrasi
+legacy, dan kegagalan commit memakai trigger SQLite. Database uji terisolasi di
+`target/campaign-checks`; save pemain tidak disentuh.
+
+## Struktur
+
+- `controller/`: Home, Story, Inventory, Profile, Adventure (map/journal/market).
+- `model/`: Character, CampaignState, Enemy, inventory, choices, story logs/responses.
+- `service/`: GameService, stateful LocalStoryGeneratorService, ItemCatalog,
+  CharacterService, InventoryService, AudioService.
+- `repository/`: snapshot atomik dan repository legacy untuk migrasi.
+- `ui/`: PixelAssets, StatusPanel, AudioControls.
+- `src/main/resources/`: CSS, sprite 64px, dan WAV.
+- `src/test/java/`: integration checks tanpa dependensi test tambahan.
+
+`OpenAiStoryGeneratorService` tetap placeholder dan tidak dipakai runtime.

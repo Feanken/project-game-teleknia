@@ -24,7 +24,7 @@ public class StoryController {
     private final MainApp app;
     private final GameService gameService;
     private final VBox chatLog = new VBox(12);
-    private final VBox choicesBox = new VBox(10);
+    private final javafx.scene.layout.TilePane choicesBox = new javafx.scene.layout.TilePane(10, 8);
     private final TextField customActionField = new TextField();
     private final StatusPanel statusPanel = new StatusPanel();
 
@@ -36,20 +36,26 @@ public class StoryController {
     public Parent createView() {
         BorderPane root = new BorderPane();
         root.getStyleClass().add("app-root");
-        root.setTop(navBar("Story Chat"));
+        root.setTop(navBar("Story"));
 
         chatLog.setPadding(new Insets(18));
         chatLog.getStyleClass().add("chat-log");
 
         ScrollPane scrollPane = new ScrollPane(chatLog);
         scrollPane.setFitToWidth(true);
+        scrollPane.setMinHeight(100);
         scrollPane.getStyleClass().add("chat-scroll");
 
         VBox storyArea = new VBox(14, scrollPane, actionPanel());
         storyArea.setPadding(new Insets(22));
         VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
-        VBox rightPanel = new VBox(18, statusPanel, locationCard());
+        VBox rightPanel = new VBox(14);
+        boolean inCombat = gameService.getCurrentState().getCampaign().getEnemy() != null;
+        statusPanel.setCombatMode(inCombat);
+        if (inCombat) rightPanel.getChildren().add(enemyCard());
+        rightPanel.getChildren().add(statusPanel);
+        rightPanel.getChildren().add(locationCard());
         rightPanel.setPadding(new Insets(22, 22, 22, 0));
         rightPanel.setPrefWidth(310);
 
@@ -70,7 +76,7 @@ public class StoryController {
         title.getStyleClass().add("screen-title");
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox nav = new HBox(10, title, spacer, navButton("Home", app::showHome), navButton("Inventory", app::showInventory), navButton("Profile", app::showProfile));
+        HBox nav = new HBox(10, title, spacer, navButton("World", app::showAdventure), navButton("Home", app::showHome), navButton("Inventory", app::showInventory), navButton("Profile", app::showProfile));
         nav.setAlignment(Pos.CENTER_LEFT);
         nav.setPadding(new Insets(16, 22, 12, 22));
         nav.getStyleClass().add("top-nav");
@@ -79,29 +85,53 @@ public class StoryController {
 
     private VBox actionPanel() {
         choicesBox.getStyleClass().add("choices-box");
-        customActionField.setPromptText("Custom action...");
+        choicesBox.setPrefColumns(2);
+        choicesBox.prefTileWidthProperty().bind(choicesBox.widthProperty().subtract(10).divide(2));
+        ScrollPane actions = new ScrollPane(choicesBox);
+        actions.setFitToWidth(true);
+        actions.setMinHeight(190);
+        actions.setPrefHeight(210);
+        actions.setMaxHeight(210);
+        actions.getStyleClass().add("plain-scroll");
+        customActionField.setPromptText("Type attack, guard, heal, rest, or help...");
         customActionField.getStyleClass().add("custom-action");
-        customActionField.setOnAction(event -> submitCustomAction());
+        customActionField.setOnAction(event -> app.runSafely(this::submitCustomAction));
 
         Button sendButton = new Button("Send");
         sendButton.getStyleClass().addAll("game-button", "primary-button", "send-button");
-        sendButton.setOnAction(event -> submitCustomAction());
+        sendButton.setOnAction(event -> app.runSafely(this::submitCustomAction));
 
         HBox customRow = new HBox(10, customActionField, sendButton);
         HBox.setHgrow(customActionField, Priority.ALWAYS);
 
-        VBox panel = new VBox(12, choicesBox, customRow);
+        VBox panel = new VBox(12, actions, customRow);
         panel.getStyleClass().addAll("card", "action-panel");
         return panel;
+    }
+
+    private VBox enemyCard() {
+        var state = gameService.getCurrentState();
+        var enemy = state.getCampaign().getEnemy();
+        Label name = new Label(enemy.getName()); name.getStyleClass().add("panel-title");
+        Label health = new Label("HP " + enemy.getHp() + " / " + enemy.getMaxHp());
+        javafx.scene.control.ProgressBar bar = new javafx.scene.control.ProgressBar((double) enemy.getHp() / enemy.getMaxHp());
+        bar.getStyleClass().add("hp-bar"); bar.setMaxWidth(Double.MAX_VALUE);
+        boolean heavy = (state.getCampaign().getTurn() + 1) % 3 == 0;
+        Label intent = new Label(heavy ? "NEXT: HEAVY ATTACK / Guard!" : "Next: normal counterattack");
+        intent.setWrapText(true);
+        VBox card = new VBox(10, new Label("IN COMBAT / TURN " + (state.getCampaign().getTurn() + 1)), name, health, bar, intent);
+        card.getStyleClass().addAll("card", "enemy-card"); return card;
     }
 
     private VBox locationCard() {
         GameState state = gameService.getCurrentState();
         Label location = new Label(state.getCurrentLocation());
+        location.setWrapText(true);
         location.getStyleClass().add("panel-title");
         Label quest = new Label(state.getCurrentQuest());
         quest.setWrapText(true);
-        VBox card = new VBox(10, PixelAssets.view(PixelAssets.location(state.getCurrentLocation()), 2), new Label("CURRENT LOCATION"), location, new Label("ACTIVE QUEST"), quest);
+        Label chapter = new Label(state.getCampaign().chapter()); chapter.setWrapText(true);
+        VBox card = new VBox(10, PixelAssets.view(PixelAssets.location(state.getCurrentLocation()), 2), chapter, new Label("CURRENT LOCATION"), location, new Label("ACTIVE QUEST"), quest);
         card.getStyleClass().addAll("card", "location-card");
         return card;
     }
@@ -110,7 +140,9 @@ public class StoryController {
         GameState state = gameService.getCurrentState();
         statusPanel.update(state.getCharacter());
         chatLog.getChildren().clear();
-        for (StoryLog log : state.getStoryLogs()) {
+        int first = Math.max(0, state.getStoryLogs().size() - 80);
+        if (first > 0) chatLog.getChildren().add(new Label("Showing the latest 80 messages. Full history remains saved."));
+        for (StoryLog log : state.getStoryLogs().subList(first, state.getStoryLogs().size())) {
             chatLog.getChildren().add(messageBubble(log));
         }
         choicesBox.getChildren().clear();
@@ -118,7 +150,7 @@ public class StoryController {
             Button choiceButton = new Button(choice.getLabel());
             choiceButton.getStyleClass().addAll("choice-button", "game-button");
             choiceButton.setMaxWidth(Double.MAX_VALUE);
-            choiceButton.setOnAction(event -> submitAction(choice.getAction()));
+            choiceButton.setOnAction(event -> app.runSafely(() -> submitAction(choice.getAction())));
             choicesBox.getChildren().add(choiceButton);
         }
     }
@@ -151,7 +183,7 @@ public class StoryController {
     private String speakerName(StoryLog.Speaker speaker) {
         return switch (speaker) {
             case GAME_MASTER -> "Game Master";
-            case PLAYER -> "Kael";
+            case PLAYER -> gameService.getCurrentState().getCharacter().getName();
             case SYSTEM -> "System";
         };
     }
@@ -166,10 +198,14 @@ public class StoryController {
 
     private void submitAction(String action) {
         int previousLevel = gameService.getCurrentState().getCharacter().getLevel();
+        int potionsBefore = gameService.getCurrentState().getInventory().stream().filter(i -> i.getItem().getType() == com.rpgchatgame.model.Item.ItemType.CONSUMABLE).mapToInt(com.rpgchatgame.model.InventoryItem::getQuantity).sum();
         var response = gameService.performAction(action);
+        int potionsAfter = gameService.getCurrentState().getInventory().stream().filter(i -> i.getItem().getType() == com.rpgchatgame.model.Item.ItemType.CONSUMABLE).mapToInt(com.rpgchatgame.model.InventoryItem::getQuantity).sum();
         AudioService.Sound sound;
         if (gameService.getCurrentState().getCharacter().getLevel() > previousLevel) {
             sound = AudioService.Sound.LEVEL_UP;
+        } else if (potionsAfter < potionsBefore) {
+            sound = AudioService.Sound.POTION;
         } else if (response.getHpChange() < 0) {
             sound = AudioService.Sound.DAMAGE;
         } else if (response.getGoldChange() > 0 || !response.getItemsGained().isEmpty()) {
@@ -184,7 +220,7 @@ public class StoryController {
     private Button navButton(String text, Runnable action) {
         Button button = new Button(text);
         button.getStyleClass().addAll("game-button", "nav-button");
-        button.setOnAction(event -> action.run());
+        button.setOnAction(event -> app.runSafely(action));
         return button;
     }
 }

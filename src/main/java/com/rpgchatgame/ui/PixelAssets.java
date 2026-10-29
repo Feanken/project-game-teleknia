@@ -34,6 +34,8 @@ public final class PixelAssets {
 
     public static String location(String location) {
         if (location == null) return "village";
+        if (location.contains("Camp")) return "campfire";
+        if (location.contains("Ruins") || location.contains("Tower")) return "gate";
         if (location.contains("Gate")) return "gate";
         if (location.contains("Emberwood") || location.contains("Shrine")) return "shrine";
         return "village";
@@ -42,6 +44,9 @@ public final class PixelAssets {
     public static String item(String id) {
         return switch (id) {
             case "rusty_sword", "small_potion", "old_map", "ash_fang" -> id;
+            case "iron_sword", "ember_blade" -> "rusty_sword";
+            case "mana_potion" -> "mana";
+            case "silver_locket", "sun_sigil" -> "experience";
             default -> "backpack";
         };
     }

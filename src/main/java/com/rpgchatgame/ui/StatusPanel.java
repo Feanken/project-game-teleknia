@@ -7,6 +7,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 
 public class StatusPanel extends VBox {
+    private final javafx.scene.image.ImageView portrait = PixelAssets.view("kael");
+    private final Label title = new Label("ADVENTURER");
     private final Label levelLabel = new Label();
     private final Label goldLabel = new Label();
     private final Label hpLabel = new Label();
@@ -21,7 +23,6 @@ public class StatusPanel extends VBox {
         setSpacing(12);
         setPadding(new Insets(18));
 
-        Label title = new Label("ADVENTURER");
         title.getStyleClass().add("panel-title");
         hpBar.getStyleClass().add("hp-bar");
         mpBar.getStyleClass().add("mp-bar");
@@ -31,7 +32,7 @@ public class StatusPanel extends VBox {
         expBar.setMaxWidth(Double.MAX_VALUE);
 
         getChildren().addAll(
-                PixelAssets.view("kael"),
+                portrait,
                 title,
                 levelLabel,
                 goldLabel,
@@ -44,7 +45,13 @@ public class StatusPanel extends VBox {
         );
     }
 
+    public void setCombatMode(boolean combat) {
+        portrait.setVisible(!combat); portrait.setManaged(!combat);
+        setSpacing(combat ? 8 : 12);
+    }
+
     public void update(Character character) {
+        title.setText(character.getName());
         levelLabel.setText("Level " + character.getLevel() + " " + character.getCharacterClass());
         goldLabel.setText("GOLD  " + character.getGold());
         hpLabel.setText("HP: " + character.getHp() + " / " + character.getMaxHp());
