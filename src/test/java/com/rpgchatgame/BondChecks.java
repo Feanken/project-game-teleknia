@@ -22,7 +22,9 @@ public final class BondChecks {
         var g=WorldChecks.expansion("Mage","STANDARD",false,true,true);
         check(BondService.RECIPES.size()==8&&BondService.COMPANIONS.size()==3,"Release content counts");
         for(var c:BondService.COMPANIONS){
-            g.companion("recruit",c.id());g.companion("activate",c.id());g.companion("bond",c.id());
+            g.companion("recruit",c.id());g.companion("activate",c.id());g.companion("talk",c.id());
+            if(c.id().equals("mira"))act(g,"go_village");else if(c.id().equals("sera"))act(g,"go_frostveil");else{act(g,"go_trail");act(g,"go_shrine");}
+            act(g,"journey_"+c.id());act(g,"go_camp");g.companion("bond",c.id());
             check(g.getCurrentState().getCampaign().has("bond_"+c.id()),"Personal quest resolved: "+c.id());
             int affinity=BondService.affinity(g.getCurrentState(),c);g.companion("talk",c.id());g.companion("talk",c.id());
             check(BondService.affinity(g.getCurrentState(),c)==affinity,"Dialogue cannot farm affinity");

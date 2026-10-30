@@ -1,7 +1,7 @@
 # Roadmap Teleknia: 1.2 sampai 1.10
 
-Status: versi 1.2 sampai 1.5 sudah diimplementasikan. Versi game aktif adalah 1.5.
-Versi 1.6-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
+Status: versi 1.2 sampai 1.6 sudah diimplementasikan. Versi game aktif adalah 1.6.
+Versi 1.7-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
 Target jumlah konten adalah usulan cakupan rilis, bukan fitur yang sudah tersedia.
 Tanggal rilis ditentukan setelah implementasi dan pengujian setiap versi.
 
@@ -149,7 +149,7 @@ Syarat selesai: semua companion dan resep bisa diperoleh melalui jalur yang
 terdokumentasi; arena dapat dimainkan tanpa mengubah hasil cerita; affinity,
 material, dan reward bertahan setelah save/load.
 
-## 1.6 - Living Journeys (rencana)
+## 1.6 - Living Journeys (selesai)
 
 Tujuan: memperdalam hubungan dan eksplorasi yang sudah ada sebelum menambah sistem besar.
 
@@ -237,7 +237,7 @@ Inventory RPG (empat referensi inventory pengguna):
 
 - Ganti daftar kartu vertikal dengan grid **5 kolom x 6 baris**, 30 slot terlihat
   per halaman. Item stack menampilkan jumlah di sudut; slot kosong tetap terlihat.
-  Filter/sort tetap tersedia. Jika jenis item lebih dari 30, gunakan pagination,
+  Kategori inventory hanya **All** dan **Quest Items**; sorting tetap tersedia. Jika jenis item lebih dari 30, gunakan pagination,
   bukan menghapus item atau memberlakukan batas kapasitas baru pada save lama.
 - Ikuti tata letak sketsa terakhir: panel biru di kiri menjadi pratinjau karakter
   full-body/paper doll dan equipment; panel hijau di kanan menjadi grid inventory.
@@ -379,8 +379,6 @@ serta rollback diuji. New Game+ tidak menggandakan item, reward atau bonus comba
 
 ## Langkah pertama yang disarankan
 
-Mulai 1.6 dengan memindahkan definisi companion/resep/challenge ke data tervalidasi,
-lalu implementasikan animasi teks panel biru, kelanjutan dialog kontekstual,
-quest pribadi dan jurnal. Desain minimap/perkamen dikerjakan pada 1.7. Pertahankan tes regresi 1.5 dan buat skenario
-migrasi sebelum menambahkan tahap quest baru. Nomor versi game tetap 1.5 sampai
-implementasi berikutnya benar-benar selesai.
+Lanjutkan 1.7 dengan desain minimap, peta perkamen, dan inventory All/Quest Items.
+Pertahankan dialog bertahap, progres companion serta pengujian migrasi 1.6.
+Nomor versi game tetap 1.6 sampai implementasi berikutnya selesai.

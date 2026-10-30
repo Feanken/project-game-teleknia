@@ -62,9 +62,11 @@ public class AdventureController {
             Button track=button("Track quest",()->{game.trackQuest(quest.id());app.showAdventure(1,"");});
             track.setId("track-"+quest.id());track.setDisable(world.has(quest.id()));
             Label title=text((world.has(quest.id())?"[COMPLETE] ":"[OPEN] ")+quest.title());title.getStyleClass().add("panel-title");
-            VBox card=new VBox(8,title,text(quest.region()+" / "+quest.description()),track);
+            VBox card=new VBox(8,title,text(quest.region()+" / "+quest.description()),text("Next: "+LivingService.questNext(state,quest.id())),track);
             card.getStyleClass().add("card");box.getChildren().add(card);
         }
+        for(var c:BondService.COMPANIONS)box.getChildren().add(text(c.quest()+" / "+LivingService.next(state,c)));
+        box.getChildren().add(text("Camp: "+LivingService.campDescription(state)));
         long complete=WorldContent.QUESTS.keySet().stream().filter(world::has).count();
         box.getChildren().add(text("Quest milestones: "+complete+" / "+WorldContent.QUESTS.size()+" | Places visited: "+world.getVisited().size()+" / "+WorldContent.LOCATIONS.size()));
         if(world.has("locket_returned"))box.getChildren().add(text("ACHIEVEMENT / A Kindness Remembered"));
@@ -131,8 +133,9 @@ public class AdventureController {
             boolean joined=BondService.recruited(state,c);
             VBox card=new VBox(9,PixelAssets.heading(c.sprite(),c.name()+" / "+(state.getCampaign().getCompanion().equals(c.id())?"ACTIVE":joined?"RECRUITED":"LOCKED"),c.role()),
                 text("Recruit: "+c.gate()+" | Affinity "+BondService.affinity(state,c)+" / 3"),text("Personal quest: "+c.quest()+" / "+(state.getCampaign().has("bond_"+c.id())?"COMPLETE":"Complete 2: "+String.join(", ",c.bonds()))));
+            card.getChildren().add(text(LivingService.next(state,c)));
             for(String action:List.of("recruit","activate","talk","bond")){
-                Button b=button(action,()->app.showAdventure(6,game.companion(action,c.id())));b.setId(action+"-"+c.id());
+                Button b=button(action,()->{String message=game.companion(action,c.id());if(action.equals("talk")||action.equals("bond"))app.showStory();else app.showAdventure(6,message);});b.setId(action+"-"+c.id());
                 b.setDisable(!BondService.camp(state)||(action.equals("recruit")?(joined||!state.getCampaign().has(c.gate())):!joined)||(action.equals("bond")&&(BondService.affinity(state,c)<2||state.getCampaign().has("bond_"+c.id()))));card.getChildren().add(b);
             }
             card.getStyleClass().add("card");box.getChildren().add(card);

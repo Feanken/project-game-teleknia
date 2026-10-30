@@ -1,0 +1,44 @@
+[
+  {
+    "id": "embers",
+    "location": "village",
+    "gate": "survivors",
+    "title": "A name in the ashes",
+    "text": "A survivor searches a ruined doorway for the mark their family carved there. You help preserve it on a scrap of timber."
+  },
+  {
+    "id": "footprints",
+    "location": "gate",
+    "gate": "wolf",
+    "title": "Tracks beside the road",
+    "text": "A young traveler has lost the safe path beneath the ash. You show them the camp lights and walk beside them until they can see."
+  },
+  {
+    "id": "moonroot",
+    "location": "trail",
+    "gate": "wolf",
+    "title": "The herbalist's marker",
+    "text": "A faded ribbon marks a patch of healing herbs. You replace the ribbon so the next gatherer will find it without disturbing the roots."
+  },
+  {
+    "id": "pilgrim",
+    "location": "shrine",
+    "gate": "guardian",
+    "title": "An unfinished prayer",
+    "text": "A pilgrim asks whether a broken shrine can still be sacred. Together you clear a place where weary people can rest."
+  },
+  {
+    "id": "shelter",
+    "location": "frostveil",
+    "gate": "q_signal",
+    "title": "Shelter beneath the beacon",
+    "text": "A scout has left a blanket beside a frozen shelter. You repair its loose door and leave a sign pointing toward the beacon."
+  },
+  {
+    "id": "letters",
+    "location": "coast",
+    "gate": "q_chart",
+    "title": "Letters from the tide",
+    "text": "A sealed packet washes ashore. You dry the letters and entrust them to the next boat bound for the camp."
+  }
+]

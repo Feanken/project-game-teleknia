@@ -24,7 +24,7 @@ public final class WorldContent {
     public static final Map<String,Event> EVENTS=events();
     static{validate();}
     private WorldContent(){}
-    private static <T>T read(String name,Class<T> type){try(var input=WorldContent.class.getResourceAsStream("/definitions/"+name+".json")){
+    public static <T>T read(String name,Class<T> type){try(var input=WorldContent.class.getResourceAsStream("/definitions/"+name+".json")){
         if(input==null)throw new IllegalStateException("Missing world data: "+name);
         return JsonUtil.fromJson(new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8),type);
     }catch(java.io.IOException error){throw new ExceptionInInitializerError(error);}}

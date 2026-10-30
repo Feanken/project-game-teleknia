@@ -1,11 +1,11 @@
-# Teleknia 1.5: Bonds and Embers
+# Teleknia 1.6: Living Journeys
 
 Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
 yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
 5 encounter (2 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.5** (build Maven `1.5.0`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.6** (build Maven `1.6.0`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 1.10 tersedia di [ROADMAP.md](ROADMAP.md).
 
@@ -71,6 +71,38 @@ portrait NPC untuk dialog, portrait musuh untuk Attack, atau gambar lokasi untuk
 membuka peta. Pilih kartu aksi dan gunakan filter All/Interact/Travel atau
 All/Skills/Items saat combat. **Read scene** membuka narasi lengkap tanpa memakai
 giliran. Tombol 1-9 dan 0 memilih kartu yang terlihat; Tab/Enter tetap didukung.
+
+## Fitur baru 1.6 - Living Journeys
+
+- Narasi dan dialog tampil huruf demi huruf di panel biru. Klik panel untuk
+  menampilkan halaman penuh; klik berikutnya melanjutkan halaman. Pilihan aksi
+  aktif setelah halaman terakhir selesai. Fokuskan teks dengan Tab, gunakan
+  Space/Enter untuk fungsi yang sama. Reduce animations menampilkan semua teks
+  langsung. Membaca tidak memajukan giliran atau memilih jawaban otomatis.
+- 34 percakapan kontekstual tambahan untuk Mira, Sera, Orin, Marin dan Ilyra.
+  Buka percakapan NPC lalu pilih topik yang tersedia. Topik mengikuti milestone,
+  pilihan karavan/peta, reputasi, hasil damai/combat dan ending (setelah membuka
+  borderlands). Dialog dan lore masih berbahasa Inggris.
+- Quest companion tiga tahap: Talk di Camp & Bonds, aktifkan companion, lalu
+  kunjungi lokasi dan pilih Investigate with ... di Story. Mira: Burned Village;
+  Sera: Frostveil Pass; Orin: Emberwood Shrine. Kembali ke camp dengan affinity
+  minimal dua untuk memilih promise home/watch di Story, atau menyelesaikan bond
+  dari Camp & Bonds. Dua promise saling eksklusif. Bonus support versi 1.5 tidak
+  dihapus; companion lama juga dapat mengikuti kelanjutan tanpa hadiah ganda.
+- Enam event sekali ambil: desa (setelah rescue), gate/trail (wolf), shrine
+  (guardian), Frostveil (q_signal), coast (q_chart). Pilih Help (4 gold) atau
+  Remember (catatan tanpa gold). Save/load tidak mengulang reward.
+- Deskripsi camp dan jurnal mengikuti perubahan dunia. Jurnal/Camp & Bonds
+  menunjukkan langkah berikutnya untuk setiap companion. Companion aktif juga
+  berkomentar sekali ketika kembali ke tempat tujuan pribadinya.
+- Definisi companion, delapan resep, tiga challenge, topik dialog dan event kini
+  berupa JSON tervalidasi di `src/main/resources/definitions`.
+
+Skema save tetap 5: progres baru menggunakan flag campaign yang sudah tersimpan.
+Save lama tetap terbaca. Animasi baca mulai ulang dari halaman pertama ketika
+layar dibuka kembali; narasi lengkap tetap tersimpan di Chronicle. Tidak ada
+reward pada pergantian halaman. Musik 1.4.1 dan fitur 1.5 tetap tersedia.
+Desain minimap/perkamen dan inventory All/Quest Items dikerjakan pada 1.7.
 
 ## Fitur baru 1.5 - Bonds and Embers
 

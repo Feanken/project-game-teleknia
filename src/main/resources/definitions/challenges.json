@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ash",
+    "name": "Trial of Ash",
+    "sprite": "field_wolf",
+    "hp": 100,
+    "attack": 20,
+    "defense": 5,
+    "modifier": "Fury: +4 enemy attack; 10 gold entry."
+  },
+  {
+    "id": "ice",
+    "name": "Trial of Ice",
+    "sprite": "rime_sentinel",
+    "hp": 150,
+    "attack": 20,
+    "defense": 12,
+    "modifier": "Bulwark: +7 enemy defense; 10 gold entry."
+  },
+  {
+    "id": "tide",
+    "name": "Trial of Tides",
+    "sprite": "drowned_captain",
+    "hp": 180,
+    "attack": 24,
+    "defense": 7,
+    "modifier": "Attrition: +80 enemy HP; 10 gold entry."
+  }
+]

@@ -384,5 +384,9 @@
   "Profile unlocks persist across all slots and new characters. Gallery is read-only; restoring an older save cannot erase unlocks.": "Profile unlocks persist across all slots and new characters. Gallery is read-only; restoring an older save cannot erase unlocks.",
   "FIRST CLEAR AVAILABLE": "FIRST CLEAR AVAILABLE",
   "CLEARED / Replay without rewards": "CLEARED / Replay without rewards",
-  "Companion support was not spent.": "Companion support was not spent."
+  "Companion support was not spent.": "Companion support was not spent.",
+  "Click text to reveal": "Click text to reveal",
+  "Click to continue": "Click to continue",
+  "Choose your response": "Choose your response",
+  "Changes are saved automatically. Story narration and lore remain in English.": "Changes are saved automatically. Story narration and lore remain in English."
 }

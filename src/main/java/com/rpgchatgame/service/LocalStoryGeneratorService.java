@@ -15,7 +15,7 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
         var world=state.getCampaign();
         if (world.epilogueClosed()) return List.of(c("Reflect on your journey", "look"), c("Explore the borderlands", "explore_borderlands"));
         if (world.getEnemy()!=null) return combat.choices(state);
-        if (!world.getDialogueNode().isBlank()) return expansion.choices(state);
+        if (!world.getDialogueNode().isBlank()) {var replies=new ArrayList<>(expansion.choices(state));replies.addAll(LivingService.choices(state));return replies;}
         List<Choice> actions=new ArrayList<>();
         switch(state.getCurrentLocation()) {
             case "Burned Village" -> {
@@ -54,7 +54,7 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
             default -> { }
         }
         actions.removeIf(choice -> choice.getAction().startsWith("go_") || (!world.getEnding().isBlank() && choice.getAction().startsWith("end_")));
-        actions.addAll(expansion.choices(state));actions.addAll(WorldService.routes(state));
+        actions.addAll(LivingService.choices(state));actions.addAll(expansion.choices(state));actions.addAll(WorldService.routes(state));
         return actions;
     }
 
@@ -78,8 +78,9 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
             response.setNarration(describe(state));
         } else if (offered) {
             if(state.getCampaign().getEnemy()!=null)combat.resolve(state,action,response);
-            else if (!expansion.handle(state,action,response)) explore(state,action,response);
+            else if (!LivingService.handle(state,action,response)&&!expansion.handle(state,action,response)) explore(state,action,response);
         }
+        LivingService.comment(state,action,response);
         response.setChoices(choices(state));
         return response;
     }
@@ -89,7 +90,7 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
         var enemy=state.getCampaign().getEnemy();
         if(enemy!=null)return enemy.getName()+" blocks your path. Read the intent, status effects and cooldowns. Guard halves direct damage and restores 6 MP. Invalid actions spend no turn. Fatigue increases enemy power after turn 12.";
         if (!state.getCampaign().getDialogueNode().isBlank()) return WorldContent.DIALOGUES.get(state.getCampaign().getDialogueNode()).text();
-        return WorldContent.location(state.getCurrentLocation()).description();
+        return WorldContent.location(state.getCurrentLocation()).description()+(state.getCurrentLocation().equals("Survivor Camp")?"\n\n"+LivingService.campDescription(state):"");
     }
 
     private void once(GameState state,StoryResponse response,String flag) {

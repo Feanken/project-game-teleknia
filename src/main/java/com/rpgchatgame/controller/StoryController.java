@@ -83,7 +83,7 @@ public final class StoryController {
             var people=WorldService.npcs(state);
             if(!people.isEmpty()){
                 var npc=people.getFirst();Button portrait=button("",()->submit("npc_"+npc.id()));portrait.setGraphic(PixelAssets.view(npc.sprite()));portrait.setId("npc-"+npc.id());portrait.getStyleClass().add("actor-portrait");portrait.setTooltip(new Tooltip("Talk to "+npc.name()));portrait.setDisable(!state.getCampaign().getDialogueNode().isBlank());
-                target.getChildren().addAll(portrait,text(npc.name(),"actor-name"),text("Talk / interact","item-meta"));
+                target.getChildren().addAll(portrait,text(npc.name(),"actor-name"));
             }else target.getChildren().addAll(PixelAssets.view("journal"),text("Explore this place","item-meta"));
         }
         for(Node node:target.getChildren())if(node instanceof Label label){label.setWrapText(false);label.setMaxWidth(150);label.setTooltip(new Tooltip(label.getText()));}
@@ -96,7 +96,7 @@ public final class StoryController {
             HBox line=new HBox(10,vitality,health,intent);line.setAlignment(Pos.CENTER);card.getChildren().add(line);
 
         }
-        card.setMinHeight(175);card.setPrefHeight(215);card.setMaxHeight(280);VBox.setVgrow(card,Priority.ALWAYS);
+        card.setMinHeight(enemy!=null?175:150);card.setPrefHeight(215);card.setMaxHeight(280);VBox.setVgrow(card,Priority.ALWAYS);
         // Scenery scales only in whole native 64px increments.
         card.heightProperty().addListener((o,b,a)->{double size=64*Math.max(1,Math.min(3,Math.floor((a.doubleValue()-(enemy!=null?80:52))/64)));vista.setFitWidth(size);vista.setFitHeight(size);
             double actorSize=a.doubleValue()>=260?128:64;
@@ -106,11 +106,13 @@ public final class StoryController {
     }
     private VBox narration(){
         String speaker=state.getCampaign().getEnemy()!=null?"BATTLE":state.getCampaign().getDialogueNode().isBlank()?"EXPLORATION":WorldContent.NPCS.get(WorldContent.DIALOGUES.get(state.getCampaign().getDialogueNode()).npc()).name();
-        Label body=text(state.getCurrentStorySummary(),"narration-text");body.getProperties().put("literal",true);body.setId("scene-narration");
-        ScrollPane scroll=scroll(body);scroll.setMinHeight(35);scroll.setPrefHeight(50);scroll.setMaxHeight(75);
+        DialoguePager reader=new DialoguePager(state.getCurrentStorySummary(),app.getSettings().reducedMotion()||System.getProperty("teleknia.uiCheck.root")!=null);
+        choices.disableProperty().bind(reader.finishedProperty().not());
+        ScrollPane scroll=scroll(reader);scroll.setMinHeight(80);scroll.setPrefHeight(95);scroll.setMaxHeight(125);
         Button read=button("Read scene",this::readScene);read.getStyleClass().add("read-scene-button");
         HBox heading=new HBox(10,text(speaker,"eyebrow"),read);heading.setAlignment(Pos.CENTER_LEFT);
         VBox card=new VBox(5,heading,scroll);card.getStyleClass().add("narration-card");
+        scroll.setOnMouseClicked(e->{if(e.getButton()==javafx.scene.input.MouseButton.PRIMARY){reader.requestFocus();reader.advance();e.consume();}});
         if(!state.getStoryLogs().isEmpty()&&state.getStoryLogs().getLast().getSpeaker()==StoryLog.Speaker.SYSTEM){
             Label result=text(state.getStoryLogs().getLast().getMessage(),"outcome-label");result.setWrapText(false);result.setMaxHeight(22);result.setTooltip(new Tooltip(result.getText()));card.getChildren().add(result);
         }
@@ -131,7 +133,7 @@ public final class StoryController {
             ToggleButton filter=new ToggleButton(name);filter.getStyleClass().addAll("game-button","action-filter");filter.setToggleGroup(group);filter.setSelected(name.equals("All"));
             filter.setOnAction(e->{if(!filter.isSelected())filter.setSelected(true);category=name;populate();app.refreshUi();});filters.getChildren().add(filter);
         }
-        ScrollPane list=scroll(choices);list.setMinHeight(120);list.setPrefHeight(180);list.setMaxHeight(235);
+        ScrollPane list=scroll(choices);list.setMinHeight(100);list.setPrefHeight(180);list.setMaxHeight(235);
         VBox box=new VBox(8,filters,list);VBox.setVgrow(list,Priority.SOMETIMES);box.getStyleClass().add("rpg-actions");populate();return box;
     }
     private void populate(){

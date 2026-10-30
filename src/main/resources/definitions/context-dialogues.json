@@ -1,0 +1,376 @@
+[
+  {
+    "id": "mira0",
+    "npc": "mira",
+    "label": "After the rescue",
+    "requires": [
+      "survivors"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The children count the campfires every evening. Yesterday there was one; tonight there are three. That is how a village begins again.\n\nYou saved people, not just names in a ledger. Give them time to believe they are safe."
+  },
+  {
+    "id": "mira1",
+    "npc": "mira",
+    "label": "How are the patients?",
+    "requires": [
+      "q_medicine"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The medicine reached the oldest patient before dawn. Her fever broke, and she asked whether the shore still smelled of rain.\n\nYou carried a little of that coast home with you. Sometimes healing begins with knowing someone remembered."
+  },
+  {
+    "id": "mira2",
+    "npc": "mira",
+    "label": "About your locket",
+    "requires": [
+      "locket_returned"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "I thought holding this locket would keep the past from leaving me. Now I think it reminds me to keep living.\n\nWhen we build the new homes, there will be room for people who have nothing left to bring."
+  },
+  {
+    "id": "mira3",
+    "npc": "mira",
+    "label": "What does home mean now?",
+    "requires": [
+      "bond_mira"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "Home used to be a place that could burn. Now it is a promise we make to each other.\n\nLet the camp grow slowly. A roof is important, but so is someone waiting beneath it."
+  },
+  {
+    "id": "mira_ending",
+    "npc": "mira",
+    "label": "After our journey",
+    "requires": [],
+    "absent": [],
+    "ending": true,
+    "text": "We cannot return to the world before the Crown. The choices we made belong to us now.\n\nTomorrow will ask different things of us. Stay a while, and tell me what you hope it will become."
+  },
+  {
+    "id": "sera0",
+    "npc": "sera",
+    "label": "The roads before the signal",
+    "requires": [
+      "wolf"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The pass is silent when its beacon fails. Travelers mistake that silence for safety.\n\nFind the lens in Glacier Sanctum. I want the next person who looks up to know we are still here."
+  },
+  {
+    "id": "sera1",
+    "npc": "sera",
+    "label": "Who saw the beacon?",
+    "requires": [
+      "q_signal"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "A caravan answered our signal at first light. Three wagons, all accounted for.\n\nI had forgotten what relief looks like on someone who has spent a night lost in snow."
+  },
+  {
+    "id": "sera2",
+    "npc": "sera",
+    "label": "What happened to the caravan?",
+    "requires": [
+      "q_caravan"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The missing caravan left more than supplies behind. Every broken wheel tells us where the road needs care.\n\nNext winter I want us to prepare before people disappear, rather than search afterward."
+  },
+  {
+    "id": "sera3",
+    "npc": "sera",
+    "label": "Beyond the sentinel",
+    "requires": [
+      "rime_resolved"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The mountain feels different now. Not smaller, and not tame. Just possible.\n\nWhatever happened at the sanctum, we must make sure travelers never pay for our pride."
+  },
+  {
+    "id": "sera_ending",
+    "npc": "sera",
+    "label": "After our journey",
+    "requires": [],
+    "absent": [],
+    "ending": true,
+    "text": "We cannot return to the world before the Crown. The choices we made belong to us now.\n\nTomorrow will ask different things of us. Stay a while, and tell me what you hope it will become."
+  },
+  {
+    "id": "orin0",
+    "npc": "orin",
+    "label": "Before the oath is understood",
+    "requires": [
+      "runes"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "Stone remembers words long after people forget why they spoke them.\n\nBring the tablet, and we will ask what the oath protected before we decide what it demands."
+  },
+  {
+    "id": "orin1",
+    "npc": "orin",
+    "label": "What did the oath protect?",
+    "requires": [
+      "q_oath"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The inscription names a refuge before it names a guardian. Shelter came first.\n\nI spent years defending the order of those words. You made me listen to their meaning."
+  },
+  {
+    "id": "orin2",
+    "npc": "orin",
+    "label": "After reading the archive",
+    "requires": [
+      "archive"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The last keeper wrote about hunger, not glory. About blankets, not crowns.\n\nHistory is full of grand titles. The living need simpler things from us."
+  },
+  {
+    "id": "orin3",
+    "npc": "orin",
+    "label": "Where will the pilgrims go?",
+    "requires": [
+      "q_chart"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "A chart can guide a pilgrimage or bring food through dangerous waters. Neither journey is small.\n\nAn oath that cannot make room for need has become a wall."
+  },
+  {
+    "id": "orin_ending",
+    "npc": "orin",
+    "label": "After our journey",
+    "requires": [],
+    "absent": [],
+    "ending": true,
+    "text": "We cannot return to the world before the Crown. The choices we made belong to us now.\n\nTomorrow will ask different things of us. Stay a while, and tell me what you hope it will become."
+  },
+  {
+    "id": "marin0",
+    "npc": "marin",
+    "label": "Trading through the ruins",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "A safe road changes the price of everything. Fewer broken wagons, fewer names whispered at supper.\n\nThe coast will notice what you have done inland, even if the inland lords never do."
+  },
+  {
+    "id": "marin1",
+    "npc": "marin",
+    "label": "The medicine reached camp",
+    "requires": [
+      "q_medicine"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "A runner brought word from Mira. The medicine arrived. I kept that note beside the scales all morning.\n\nFor once, something that left this market was measured by the lives it helped instead of its weight."
+  },
+  {
+    "id": "marin2",
+    "npc": "marin",
+    "label": "Who received the chart?",
+    "requires": [
+      "q_chart"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "People will argue over who deserved the chart. They always do when the sea offers too little.\n\nWhat matters next is whether the people who received it remember those who did not."
+  },
+  {
+    "id": "marin3",
+    "npc": "marin",
+    "label": "A different harbor",
+    "requires": [
+      "captain_resolved"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "There are boats preparing to leave again. Some captains are afraid, but they are preparing.\n\nTrade is not courage. Still, it gives courage somewhere to go."
+  },
+  {
+    "id": "marin_ending",
+    "npc": "marin",
+    "label": "After our journey",
+    "requires": [],
+    "absent": [],
+    "ending": true,
+    "text": "We cannot return to the world before the Crown. The choices we made belong to us now.\n\nTomorrow will ask different things of us. Stay a while, and tell me what you hope it will become."
+  },
+  {
+    "id": "ilyra0",
+    "npc": "ilyra",
+    "label": "Life at the lighthouse",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "I learned to recognize ships by the rhythm of their lights. Then the harbor went dark, one vessel at a time.\n\nI kept tending this lamp. An empty sea is no reason to stop watching."
+  },
+  {
+    "id": "ilyra1",
+    "npc": "ilyra",
+    "label": "Reading the stars again",
+    "requires": [
+      "q_chart"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The chart is more than a route. It is proof that someone crossed these waters and wanted others to survive them.\n\nI will teach the next keeper to read it before I teach them to light the lamp."
+  },
+  {
+    "id": "ilyra2",
+    "npc": "ilyra",
+    "label": "When the bell fell silent",
+    "requires": [
+      "captain_resolved"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "For the first time in years, the bell did not sound like a warning. The gulls were louder than the harbor.\n\nPeace can be an unfamiliar noise. We will learn it."
+  },
+  {
+    "id": "ilyra3",
+    "npc": "ilyra",
+    "label": "Two distant lights",
+    "requires": [
+      "q_signal"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "A traveler told me the mountain beacon burns again. Imagine that: someone far away doing the same stubborn work.\n\nOne light cannot reach the whole world. It does not have to."
+  },
+  {
+    "id": "ilyra_ending",
+    "npc": "ilyra",
+    "label": "After our journey",
+    "requires": [],
+    "absent": [],
+    "ending": true,
+    "text": "We cannot return to the world before the Crown. The choices we made belong to us now.\n\nTomorrow will ask different things of us. Stay a while, and tell me what you hope it will become."
+  },
+  {
+    "id": "sera_peace",
+    "npc": "sera",
+    "label": "The sentinel was spared",
+    "requires": [
+      "rime_peace"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "You listened when the mountain expected another challenger.\n\nLet us remember that a safe road can begin with a conversation."
+  },
+  {
+    "id": "sera_fight",
+    "npc": "sera",
+    "label": "After the mountain battle",
+    "requires": [
+      "rime_sentinel"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The pass is open, but I will remember what opening it cost.\n\nWe owe the travelers a road that does not demand another fight."
+  },
+  {
+    "id": "marin_peace",
+    "npc": "marin",
+    "label": "The captain stood down",
+    "requires": [
+      "captain_peace"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "Words reached the captain where steel might only have deepened the tide.\n\nI will make sure the harbor remembers who chose to listen."
+  },
+  {
+    "id": "mira_trust",
+    "npc": "mira",
+    "label": "A place at our fire",
+    "requires": [
+      "q_medicine"
+    ],
+    "absent": [],
+    "ending": false,
+    "text": "The people you helped are saving you a seat.\n\nReputation is a number to merchants. Here it means someone trusts you to come back."
+  },
+  {
+    "id": "sera_supplies_returned",
+    "npc": "sera",
+    "label": "The supplies went home",
+    "requires": [
+      "caravan_returned"
+    ],
+    "absent": [
+      "caravan_claimed"
+    ],
+    "ending": false,
+    "text": "The drivers recognized their own marks on the crates. Their relief was worth more than anything we could have sold.\n\nNext time the pass closes, they will know someone is looking for them."
+  },
+  {
+    "id": "sera_supplies_claimed",
+    "npc": "sera",
+    "label": "About keeping the supplies",
+    "requires": [
+      "caravan_claimed"
+    ],
+    "absent": [
+      "caravan_returned"
+    ],
+    "ending": false,
+    "text": "You chose what we needed over what the caravan lost. I will walk beside you, but I will not pretend the choice was weightless.\n\nLet us do enough good with what we kept to remember who paid for it."
+  },
+  {
+    "id": "ilyra_chart_camp",
+    "npc": "ilyra",
+    "label": "The chart and the survivors",
+    "requires": [
+      "chart_camp"
+    ],
+    "absent": [
+      "chart_keepers"
+    ],
+    "ending": false,
+    "text": "The supply boats have a route now. Mira says the camp can plan beyond the next meal.\n\nThe pilgrims will have to wait. I hope they understand why we chose the hungry first."
+  },
+  {
+    "id": "orin_chart_keepers",
+    "npc": "orin",
+    "label": "The pilgrims have a route",
+    "requires": [
+      "chart_keepers"
+    ],
+    "absent": [
+      "chart_camp"
+    ],
+    "ending": false,
+    "text": "The pilgrims can reach the old refuges without trusting rumor. It is a gift, and a responsibility.\n\nI will ask them to carry supplies for the camp on their return."
+  },
+  {
+    "id": "marin_battle",
+    "npc": "marin",
+    "label": "After the harbor battle",
+    "requires": [
+      "drowned_captain"
+    ],
+    "absent": [
+      "captain_peace"
+    ],
+    "ending": false,
+    "text": "The water is quiet, but those who watched the fight are not. Give them time.\n\nWe will reopen the harbor carefully, with room to remember what happened here."
+  }
+]

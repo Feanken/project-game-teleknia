@@ -29,7 +29,7 @@ public final class SettingsController {
                 text("Language"),language,text("Text size"),scale,fullscreen,motion,text("Audio"),new AudioControls(app.getAudio()),
                 text("Shortcuts"),text("F1 Help / F5 Save slots / F9 Load slots / F11 Fullscreen / Esc Settings or Back"),
                 text("1-9, 0 select the visible action cards. Esc leaves an NPC conversation. Tab and Enter navigate controls."),
-                text("Changes are saved automatically. Story narration and lore remain in English in 1.5."),back);
+                text("Changes are saved automatically. Story narration and lore remain in English."),back);
         content.setPadding(new Insets(24));
         ScrollPane scroll=new ScrollPane(content);scroll.setFitToWidth(true);scroll.getStyleClass().add("plain-scroll");
         BorderPane root=new BorderPane(scroll);root.getStyleClass().add("app-root");return root;

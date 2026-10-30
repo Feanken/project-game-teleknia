@@ -1,5 +1,18 @@
 # Catatan Rilis Teleknia
 
+## 1.6 / Living Journeys - 30 Oktober 2026
+
+- Dialog/narasi bertahap di panel biru: klik reveal, klik lanjut halaman, Space/Enter setara. Pilihan terkunci hingga halaman terakhir, Reduce animations menampilkan teks langsung.
+- 34 topik kontekstual untuk lima NPC, termasuk keputusan karavan/peta, reputasi, damai/combat dan keadaan setelah ending.
+- Tiga perjalanan companion: Talk di camp, investigasi lapangan dengan companion aktif, lalu keputusan penutup di camp. Bonus 1.5 dipertahankan.
+- Enam event eksplorasi dengan dua pilihan, reward sekali ambil dan jurnal.
+- Camp bereaksi terhadap milestone; jurnal menampilkan langkah companion; komentar companion pada lokasi pribadi.
+- Companion, recipe dan challenge dipindahkan ke JSON tervalidasi; topik percakapan dan event memakai registry data baru.
+- Skema save tetap 5, memakai flag persisten; narasi disimpan lengkap dan pembacaan UI dimulai dari awal saat layar dibuka kembali.
+- Navigasi travel dan inventory tetap versi sekarang; desain peta/grid direncanakan pada 1.7 dengan kategori inventory All dan Quest Items.
+- Validasi: 998 pemeriksaan game/sistem dan 67 pemeriksaan UI, termasuk gate pembacaan, klik cepat, dialog kontekstual, quest bertahap, reward sekali ambil dan rollback.
+
+
 ## 1.5 / Bonds and Embers - 30 Oktober 2026
 
 - Tiga companion: Mira (heal), Sera (damage), Orin (shield), satu aktif di battle.

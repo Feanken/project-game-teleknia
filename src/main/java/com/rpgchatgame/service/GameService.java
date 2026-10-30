@@ -182,7 +182,7 @@ public class GameService {
         return record(next,"Bought "+entry.item().getName()+" for "+price+" gold.");
     }
     public java.util.Set<String> gallery(){var all=saves.gallery();if(currentState!=null)all.addAll(BondService.achievements(currentState));return all;}
-    public String companion(String action,String id){GameState next=copy();String message=BondService.manage(next,action,id);next.setCurrentChoices(story.choices(next));return record(next,message);}
+    public String companion(String action,String id){GameState next=copy();String message=BondService.manage(next,action,id);next.setCurrentStorySummary(message);next.setCurrentChoices(story.choices(next));return record(next,message);}
     public String craft(String id){GameState next=copy();return record(next,BondService.craft(next,id));}
     public String challenge(String id){GameState next=copy();String message=BondService.challenge(next,id);next.setCurrentStorySummary(message);next.setCurrentChoices(story.choices(next));return record(next,message);}
 

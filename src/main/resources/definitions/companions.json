@@ -1,0 +1,44 @@
+[
+  {
+    "id": "mira",
+    "name": "Mira",
+    "sprite": "ilyra",
+    "gate": "survivors",
+    "role": "Healer: restore 8 HP; bonded 12 HP",
+    "quest": "A Home Worth Returning To",
+    "bonds": [
+      "locket_returned",
+      "q_medicine",
+      "survivors"
+    ],
+    "greeting": "I cannot undo the fire. But we can make sure nobody faces the next one alone."
+  },
+  {
+    "id": "sera",
+    "name": "Sera",
+    "sprite": "sera",
+    "gate": "q_signal",
+    "role": "Striker: 8 damage; bonded 12 damage",
+    "quest": "A Road Without Fear",
+    "bonds": [
+      "q_signal",
+      "q_caravan",
+      "rime_resolved"
+    ],
+    "greeting": "The signal burns again. Walk the pass with me, and let us bring every traveler home."
+  },
+  {
+    "id": "orin",
+    "name": "Orin",
+    "sprite": "orin",
+    "gate": "q_oath",
+    "role": "Protector: 8 shield; bonded 12 shield",
+    "quest": "The Living Oath",
+    "bonds": [
+      "q_oath",
+      "archive",
+      "q_chart"
+    ],
+    "greeting": "An oath means little carved in stone. Let us discover what it means among the living."
+  }
+]

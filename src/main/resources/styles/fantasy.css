@@ -109,3 +109,8 @@
 
 .read-scene-button { -fx-padding: 3 8; -fx-font-size: .8571em; -fx-border-width: 1 1 2 1; }
 .actor-portrait:disabled { -fx-opacity: 1; }
+
+/* Living Journeys: the reading area is distinct from action cards. */
+.narration-card { -fx-background-color: #142d47; -fx-border-color: #497797; }
+#dialogue-reader { -fx-cursor: hand; -fx-padding: 4; }
+#dialogue-reader:focused { -fx-border-color: #e1c989; }

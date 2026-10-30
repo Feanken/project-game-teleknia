@@ -8,26 +8,15 @@ public final class BondService {
     public record Companion(String id,String name,String sprite,String gate,String role,String quest,List<String> bonds,String greeting) {}
     public record Recipe(String id,String output,String blueprint,String material,int amount,int gold) {}
     public record Challenge(String id,String name,String sprite,int hp,int attack,int defense,String modifier) {}
-    public static final List<Companion> COMPANIONS=List.of(
-        new Companion("mira","Mira","ilyra","survivors","Healer: restore 8 HP; bonded 12 HP","A Home Worth Returning To",List.of("locket_returned","q_medicine","survivors"),"I cannot undo the fire. But we can make sure nobody faces the next one alone."),
-        new Companion("sera","Sera","sera","q_signal","Striker: 8 damage; bonded 12 damage","A Road Without Fear",List.of("q_signal","q_caravan","rime_resolved"),"The signal burns again. Walk the pass with me, and let us bring every traveler home."),
-        new Companion("orin","Orin","orin","q_oath","Protector: 8 shield; bonded 12 shield","The Living Oath",List.of("q_oath","archive","q_chart"),"An oath means little carved in stone. Let us discover what it means among the living.")
-    );
-    public static final List<Recipe> RECIPES=List.of(
-        new Recipe("potion","small_potion","wolf","ember_shard",1,3),
-        new Recipe("mana","mana_potion","wolf","ember_shard",1,3),
-        new Recipe("greater","greater_potion","q_signal","frost_thread",1,6),
-        new Recipe("focus","focus_draught","q_chart","tide_pearl",1,6),
-        new Recipe("blade","tempered_blade","guardian","ember_shard",3,15),
-        new Recipe("ward","woven_ward","q_oath","frost_thread",3,15),
-        new Recipe("charm","bond_charm","q_chart","tide_pearl",3,15),
-        new Recipe("frost","awakened_frost","rime_resolved","frost_thread",4,20)
-    );
-    public static final List<Challenge> CHALLENGES=List.of(
-        new Challenge("ash","Trial of Ash","field_wolf",100,20,5,"Fury: +4 enemy attack; 10 gold entry."),
-        new Challenge("ice","Trial of Ice","rime_sentinel",150,20,12,"Bulwark: +7 enemy defense; 10 gold entry."),
-        new Challenge("tide","Trial of Tides","drowned_captain",180,24,7,"Attrition: +80 enemy HP; 10 gold entry.")
-    );
+    public static final List<Companion> COMPANIONS=List.of(WorldContent.read("companions",Companion[].class));
+    public static final List<Recipe> RECIPES=List.of(WorldContent.read("recipes",Recipe[].class));
+    public static final List<Challenge> CHALLENGES=List.of(WorldContent.read("challenges",Challenge[].class));
+    static {
+        Set<String> ids=new HashSet<>();
+        for(var c:COMPANIONS)if(!ids.add(c.id())||c.bonds().size()!=3||c.greeting().isBlank())throw new IllegalStateException("Invalid companion definition");
+        ids.clear();for(var r:RECIPES)if(!ids.add(r.id())||ItemCatalog.entry(r.output())==null||ItemCatalog.entry(r.material())==null||r.amount()<1||r.gold()<0)throw new IllegalStateException("Invalid recipe");
+        ids.clear();for(var c:CHALLENGES)if(!ids.add(c.id())||c.hp()<1||c.attack()<0||c.defense()<0)throw new IllegalStateException("Invalid challenge");
+    }
     public static Companion companion(String id){return COMPANIONS.stream().filter(c->c.id().equals(id)).findFirst().orElse(null);}
     public static int affinity(GameState state,Companion c){return (int)c.bonds().stream().filter(state.getCampaign()::has).count();}
     public static boolean recruited(GameState s,Companion c){return s.getCampaign().has("recruit_"+c.id());}
@@ -54,10 +43,12 @@ public final class BondService {
         }
         if(!recruited(s,c))return "Recruit this companion first.";
         if(action.equals("activate")){w.setCompanion(id);return c.name()+" is your active companion. Only one ally accompanies you.";}
-        if(action.equals("talk"))return c.name()+": "+(w.has("bond_"+id)?"Our promise lives in every step we take together.":c.greeting())+" Affinity "+affinity(s,c)+" / 3. "+c.quest()+": complete two relevant milestones, then resolve this personal quest at camp.";
+        if(action.equals("talk")){w.mark("journey_start_"+id,c.quest()+": visit "+LivingService.objective(id)+" with this companion active.");return c.name()+": "+(w.has("bond_"+id)?"Our promise lives in every step we take together.":c.greeting())+" Affinity "+affinity(s,c)+" / 3. "+c.quest()+". Next: "+LivingService.next(s,c);}
         if(action.equals("bond")){
+            if(!w.has("bond_"+id)&&!w.has("journey_field_"+id))return "Begin with Talk, then visit "+LivingService.objective(id)+" with this companion active before returning to camp.";
             if(affinity(s,c)<2)return "Personal quest requires two relevant milestones: "+String.join(", ",c.bonds());
             if(!w.mark("bond_"+id,c.quest()+": a promise kept. Support skill strengthened."))return "Personal quest already completed.";
+            w.mark("journey_end_"+id,"Personal journey completed.");
             return c.name()+": "+switch(id){case "mira"->"We found more than a locket or medicine. We found people willing to stay. This camp is home.";case "sera"->"The road is safe because we chose to return for others. I will keep that light burning.";default->"I once guarded stones. Today I choose to protect the people who will tell our story.";};
         }
         return "Choose a companion action.";

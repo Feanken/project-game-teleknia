@@ -1,0 +1,66 @@
+[
+  {
+    "id": "potion",
+    "output": "small_potion",
+    "blueprint": "wolf",
+    "material": "ember_shard",
+    "amount": 1,
+    "gold": 3
+  },
+  {
+    "id": "mana",
+    "output": "mana_potion",
+    "blueprint": "wolf",
+    "material": "ember_shard",
+    "amount": 1,
+    "gold": 3
+  },
+  {
+    "id": "greater",
+    "output": "greater_potion",
+    "blueprint": "q_signal",
+    "material": "frost_thread",
+    "amount": 1,
+    "gold": 6
+  },
+  {
+    "id": "focus",
+    "output": "focus_draught",
+    "blueprint": "q_chart",
+    "material": "tide_pearl",
+    "amount": 1,
+    "gold": 6
+  },
+  {
+    "id": "blade",
+    "output": "tempered_blade",
+    "blueprint": "guardian",
+    "material": "ember_shard",
+    "amount": 3,
+    "gold": 15
+  },
+  {
+    "id": "ward",
+    "output": "woven_ward",
+    "blueprint": "q_oath",
+    "material": "frost_thread",
+    "amount": 3,
+    "gold": 15
+  },
+  {
+    "id": "charm",
+    "output": "bond_charm",
+    "blueprint": "q_chart",
+    "material": "tide_pearl",
+    "amount": 3,
+    "gold": 15
+  },
+  {
+    "id": "frost",
+    "output": "awakened_frost",
+    "blueprint": "rime_resolved",
+    "material": "frost_thread",
+    "amount": 4,
+    "gold": 20
+  }
+]

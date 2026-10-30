@@ -21,4 +21,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Audio checks failed.' }
     & java -cp $classpath com.rpgchatgame.BondChecks
     if ($LASTEXITCODE -ne 0) { throw 'Bond checks failed.' }
+    & java -cp $classpath com.rpgchatgame.LivingChecks
+    if ($LASTEXITCODE -ne 0) { throw 'Living checks failed.' }
 } finally { Pop-Location }
