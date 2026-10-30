@@ -18,9 +18,10 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
 
     public List<Choice> choices(GameState state) {
         var world=state.getCampaign();
-        if (world.epilogueClosed()) return List.of(c("Reflect on your journey", "look"), c("Explore the borderlands", "explore_borderlands"));
-        if (world.getEnemy()!=null) return combat.choices(state);
-        if (!world.getDialogueNode().isBlank()) {var replies=new ArrayList<>(expansion.choices(state));replies.addAll(LivingService.choices(state));return replies;}
+        var mode=GameplayMode.of(state);
+        if (mode==GameplayMode.EPILOGUE) return List.of(c("Reflect on your journey", "look"), c("Explore the borderlands", "explore_borderlands"));
+        if (mode==GameplayMode.BATTLE) return combat.choices(state);
+        if (mode==GameplayMode.DIALOGUE) {var replies=new ArrayList<>(expansion.choices(state));replies.addAll(LivingService.choices(state));return replies;}
         List<Choice> actions=new ArrayList<>();
         switch(state.getCurrentLocation()) {
             case "Burned Village" -> {

@@ -29,4 +29,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Presentation checks failed.' }
     & java -cp $classpath com.rpgchatgame.MasteryChecks
     if ($LASTEXITCODE -ne 0) { throw 'Mastery checks failed.' }
+    & java -cp $classpath com.rpgchatgame.FoundationChecks
+    if ($LASTEXITCODE -ne 0) { throw 'Foundation checks failed.' }
 } finally { Pop-Location }

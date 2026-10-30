@@ -1,11 +1,13 @@
-# Teleknia 1.8: Paths of Mastery
+# Teleknia — Project 2.0 (tahap 1)
 
 Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
 yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
 11 encounter (8 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.8** (build Maven `1.8.0`). Versi sebelum pengembangan campaign
+Build pengembangan: **2.0-dev.1** (Maven `2.0.0-alpha.1`). Baseline gameplay: **1.8**.
+Tahap 1 menyiapkan fondasi; eksplorasi 2D belum tersedia. Detail arsitektur,
+backup, kontrol dan task list ada di [Project 2.0](docs/PROJECT-2.0.md). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 1.10 tersedia di [ROADMAP.md](ROADMAP.md).
 

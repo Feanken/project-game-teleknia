@@ -1,7 +1,9 @@
 # Roadmap Teleknia: 1.2 sampai 1.10
 
-Status: versi 1.2 sampai 1.8 sudah diimplementasikan. Versi game aktif adalah 1.8.
-Versi 1.9-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
+Status: versi 1.2 sampai 1.8 sudah diimplementasikan. Gameplay baseline adalah 1.8.
+Pengembangan aktif: **Project 2.0, tahap 1 (fondasi)**. Rencana perombakan 2D kini
+disetujui pengguna; detail dan status tahap 1–8 di [PROJECT-2.0.md](docs/PROJECT-2.0.md).
+Versi 1.9-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar lama diganti oleh Project 2.0.
 Target jumlah konten adalah usulan cakupan rilis, bukan fitur yang sudah tersedia.
 Tanggal rilis ditentukan setelah implementasi dan pengujian setiap versi.
 

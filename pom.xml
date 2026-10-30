@@ -5,8 +5,8 @@
 
     <groupId>com.rpgchatgame</groupId>
     <artifactId>interactive-rpg-chat-story-game</artifactId>
-    <version>1.8.0</version>
-    <name>Teleknia - Paths of Mastery</name>
+    <version>2.0.0-alpha.1</version>
+    <name>Teleknia - Project 2.0 (Foundation)</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

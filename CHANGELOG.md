@@ -1,5 +1,14 @@
 # Catatan Rilis Teleknia
 
+## Project 2.0 / tahap 1 — Foundation (development)
+
+- Baseline 1.8 diarsipkan; backup SQLite konsisten dan preferensi disimpan lokal beserta manifest SHA-256.
+- CampaignEngine memisahkan evaluasi aksi dari commit/publikasi GameService, dengan snapshot terpisah dan GameplayMode tanpa ketergantungan JavaFX.
+- Kontrak map JSON, koordinat/direction, collision grid dan validasi data; spesifikasi kontrol, renderer/kamera serta pemetaan sistem existing didokumentasikan.
+- Identitas build 2.0-dev.1 / Maven 2.0.0-alpha.1. UI gameplay lama tetap berjalan; renderer/gerakan 2D adalah tahap 2. Save tetap skema 6.
+- Validasi: 1.311 pemeriksaan regresi game, 23 pemeriksaan fondasi dan 107 UI lulus. Backup diverifikasi dengan SHA-256, CRC arsip dan SQLite integrity check; perintah invalid sebelum load tidak membuat campaign baru.
+
+
 ## 1.8 / Paths of Mastery - 30 Oktober 2026
 
 - Enam specialization: Guardian/Berserker, Assassin/Ranger, Pyromancer/Arcanist; masing-masing satu passive dan skill aktif dengan biaya MP/cooldown.
