@@ -1,11 +1,11 @@
-# Teleknia 1.6: Living Journeys
+# Teleknia 1.7: Atlas of the Borderlands
 
 Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
 yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
 5 encounter (2 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.6** (build Maven `1.6.0`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.7** (build Maven `1.7.0`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 1.10 tersedia di [ROADMAP.md](ROADMAP.md).
 
@@ -22,7 +22,7 @@ Maven mengunduh dependensi pada build pertama. Folder `target` otomatis dibuat.
 
 ## Memulai petualangan
 
-1. Pilih **Start New Story**, isi nama (1-24 karakter), lalu pilih Fighter, Rogue, atau Mage.
+1. Pilih **New Journey / Petualangan Baru**, isi nama (1-24 karakter), lalu pilih Fighter, Rogue, atau Mage.
 2. Cari persediaan dan selamatkan Mira di Burned Village.
 3. Pergi ke Northern Gate dan hadapi Ash Wolf untuk membuka jalan ke Emberwood.
 4. Kunjungi Survivor Camp untuk istirahat, berdagang, dan berbicara dengan Mira.
@@ -30,7 +30,7 @@ Maven mengunduh dependensi pada build pertama. Folder `target` otomatis dibuat.
 
 Memulai cerita baru hanya menggantikan autosave; tiga slot manual tetap aman.
 **Continue Story** memuat autosave terakhir, termasuk HP musuh dan giliran saat
-berhenti bertarung. Gunakan tombol **Saves** untuk memilih checkpoint manual.
+berhenti bertarung. Gunakan **Menu > Saves** atau **F5/F9** untuk memilih checkpoint manual.
 Tutorial lima langkah bisa ditampilkan saat membuat karakter, dilewati, atau
 dibuka lagi kapan saja melalui **Help / F1**.
 
@@ -56,7 +56,7 @@ dibuka lagi kapan saja melalui **Help / F1**.
   kepemilikan equipment, lokasi, dan status combat.
 - **Rest:** istirahat pertama gratis, berikutnya 8 gold untuk pemulihan penuh.
   Jika gold kurang, rough rest gratis memulihkan hingga setengah maksimum HP/MP.
-- **World Map:** tujuh lokasi, status kunjungan, dan travel untuk rute yang terbuka.
+- **World Map:** sebelas lokasi, status kunjungan, dan travel untuk rute yang terbuka.
 - **Quest Journal:** milestone utama, side quest locket Mira, field notes, panduan
   combat, penghitung encounter/lokasi, dan achievement.
 - **Ending:** Dawnkeeper, The Silent Watch, atau Sovereign of Ash. Purification
@@ -65,14 +65,154 @@ dibuka lagi kapan saja melalui **Help / F1**.
 - **Hadiah sekali ambil:** pencarian, quest, dan encounter tidak bisa diulang untuk
   menggandakan gold, EXP, atau item. Aksi tak dikenal tidak memberi hadiah.
 
-Klik **World** untuk membuka peta, jurnal, market, build, codex, dan kronik.
+Klik **Menu** untuk membuka inventory, peta, jurnal, market, build, arsip, kronik, companion, arena, dan galeri.
 Halaman bermain tidak lagi memakai antarmuka chat atau input aksi bebas. Klik
-portrait NPC untuk dialog, portrait musuh untuk Attack, atau gambar lokasi untuk
-membuka peta. Pilih kartu aksi dan gunakan filter All/Interact/Travel atau
+portrait NPC untuk dialog, portrait musuh untuk Attack, atau **MAP** di kanan bawah untuk
+membuka peta. Pilih kartu aksi dan gunakan filter All/Interact atau
 All/Skills/Items saat combat. **Read scene** membuka narasi lengkap tanpa memakai
 giliran. Tombol 1-9 dan 0 memilih kartu yang terlihat; Tab/Enter tetap didukung.
 
-## Fitur baru 1.6 - Living Journeys
+## Campfire & Purpose - penyempurnaan 1.7
+
+### Start yang lebih atmosferik
+
+Layar pembuka memakai ilustrasi campfire khusus Teleknia, judul besar dan menu
+vertikal: Continue Story, New Journey, Load Game, Settings, Quit. Hover atau fokus
+pada Continue menampilkan nama, kelas, level, lokasi dan waktu autosave (WIB), tanpa
+memuat atau mengubah karakter. Jika autosave hilang/rusak, Continue dinonaktifkan;
+gunakan Load Game untuk checkpoint manual atau pemulihan backup. New Journey
+hanya mengganti autosave yang valid; checkpoint manual tetap aman.
+
+Gunakan panah atas/bawah dan Enter, atau mouse. Ember/fade kecil dimatikan oleh
+Reduce animations. Nama pemain tetap literal. Ilustrasi berada di
+`src/main/resources/art/title-campfire.png`; prompt dan metode built-in imagegen
+dicatat dalam `src/main/resources/art/GENERATION.md`.
+
+### Menu, header dan footer
+
+Menu dikelompokkan menjadi Adventure, Character dan System. Panel karakter
+menampilkan statistik serta tujuan berikutnya dan akses jurnal. Kembali/Esc dari
+Menu mengembalikan pemain ke layar asal petualangan atau Start, bukan selalu Home.
+
+Header memakai judul section dan konteks yang relevan: wilayah pada Story, gold
+pada Market/Crafting, jumlah quest aktif atau jenis item pada jurnal/inventory.
+Tombol Menu tersedia saat bermain; di dalam section tombol Kembali menuju Menu.
+HP/MP tetap pada HUD karakter, tidak diulang di header.
+
+Footer hanya berisi petunjuk kontrol sesuai layar, status save singkat dan mute.
+Slider musik/SFX berada di Settings. Shortcut F1, F5, F9 dan F11 tetap tersedia.
+Indikator Saved/Tersimpan muncul setelah penulisan snapshot berhasil; kegagalan
+save menampilkan Not saved dan tidak mengubah progres aktif. Memilih kartu atau
+membaca preview tidak membuat save baru. Hasil transaksi tampil sementara dekat
+panel aksi; pada layar lain, pesan singkat memakai notifikasi yang tidak menerima
+klik. Pesan lama dibersihkan ketika berpindah layar.
+
+### Persiapan arena
+
+Challenges memakai daftar vertikal tiga trial. Detail menampilkan preview lawan,
+HP/Attack/Defense, modifier, ikon hadiah pertama, ketentuan replay, HP/MP serta
+companion aktif. Checklist menjelaskan syarat cerita selesai, borderlands dibuka
+kembali, lokasi camp, tidak dalam battle/percakapan, dan gold minimal 10. Langkah
+pertama yang belum terpenuhi tertulis di atas tombol masuk. Tombol dan biaya
+berada pada area tetap; persiapan panjang dapat digulir. Build dan Inventory bisa
+dibuka untuk persiapan. Semua data mencerminkan aturan arena 1.5 yang sudah ada:
+biaya/reward/modifier/difficulty tidak ditambah atau diubah.
+
+Panel Market, Build, Crafting dan companion juga menampilkan alasan tombol yang
+belum tersedia (milestone, resource, rank, camp, atau battle). Perubahan ini tetap
+versi 1.7 dan skema save 5, bukan rilis konten baru.
+
+## Penyempurnaan tampilan 1.7 - Traveler interface
+
+Seluruh layar memakai tipografi judul serif, teks isi yang lebih ringan, angka
+statistik monospace, panel navy transparan, latar lokasi yang diredupkan, dan garis ivory tipis, terinspirasi
+susunan UI Octopath Traveler. Aset Teleknia tetap dipakai. Bingkai kuning tebal
+sebelumnya diganti; perkamen dipertahankan khusus untuk peta.
+
+Layout Story mengikuti pilihan pertama: adegan di kiri, dialog tinggi di kanan,
+kartu aksi di kiri bawah dan minimap di kanan bawah. Ringkasan level/HP/MP berada
+di atas. Header menampilkan judul layar dan satu tombol **Menu**. Inventory dan
+semua section game tersedia di dalam Menu; tidak ada tombol Inventory terpisah
+pada header. Inventory juga ada pada navigasi section.
+
+Narasi sekarang **satu teks utuh**, bukan halaman 1/2 atau 2/2. Paragraf dipertahankan,
+teks panjang dapat di-scroll. Saat masih mengetik, satu klik utama di mana saja
+pada layar bermain langsung menampilkan seluruh narasi. Gesture skip dikonsumsi
+sebelum tombol menerima klik, sehingga tidak sekaligus memilih jawaban, menyerang,
+atau membuka Menu. Klik berikutnya bekerja normal. Space/Enter saat fokus pada
+teks juga menampilkan semua. Reduce animations menampilkan teks lengkap langsung.
+Scroll, skip dan membaca tidak mengubah giliran, reward atau isi save.
+
+## Fitur baru 1.7 - Atlas of the Borderlands
+
+### Minimap dan peta perkamen
+
+Layar Story memakai panel klasik navy, adegan di kiri atas, dialog di kanan atas,
+aksi di kiri bawah, dan minimap kanan bawah. Gambar minimap mengikuti lokasi aktif
+dengan saturasi rendah dan tulisan **MAP**. Klik untuk membuka animasi perkamen
+terbentang; Close/Esc menutup peta. Reduce animations melewati animasi buka.
+
+Peta yang sama tersedia melalui **Menu > World Map**. Tile heksagonal memakai
+ilustrasi tiap lokasi, garis rute, dan penanda emas untuk posisi aktif. Lokasi
+belum dikunjungi menjadi node hitam tanpa nama/lore. Frontier yang sudah terbuka
+berlabel Explore/Jelajahi: klik untuk kunjungan pertama. Area yang jauh tetap
+tersembunyi sampai jaringan eksplorasi mendekatinya. Klik node bertetangga yang
+terbuka langsung bepergian. Lokasi yang sudah dikenal tetapi tidak bersebelahan
+tidak memberi teleport. Saat battle/percakapan, peta bisa dilihat tetapi travel
+ditolak. Tombol travel dan filter Travel tidak lagi tampil pada kartu dialog.
+
+### Inventory grid dan paper doll
+
+- Dua kategori: **All** dan **Quest Items** (termasuk material crafting bertipe quest).
+- Grid 5 kolom x 6 baris, 30 slot per halaman; halaman berikutnya menampung jenis
+  item tambahan tanpa menghapus item save lama atau menerapkan batas kapasitas.
+  Pada jendela minimum/teks besar, panel dapat digulir agar ikon tetap tajam.
+- Karakter full-body di kiri dengan slot Weapon/Armor/Accessory. Item dipasang
+  melalui detail atau klik kanan, lalu ikonnya muncul pada slot equipment.
+  Sprite kelas dipakai kembali; baju/senjata pada tubuh belum berubah per item.
+- Hover satu detik menampilkan nama, rarity, deskripsi, jumlah, efek dan preview
+  perbandingan. Fokus keyboard juga membuka detail; klik kartu hanya memilih.
+- Klik kanan / context-menu keyboard: Equip atau Unequip, Use untuk consumable,
+  serta Remove. Tombol setara tersedia pada panel detail untuk keyboard.
+- Remove meminta konfirmasi dan jumlah stack. Tidak menghasilkan gold. Item
+  quest/material tidak dapat dibuang; equipment aktif harus dilepas dahulu.
+- Unequip mengembalikan statistik dasar tanpa menghapus item atau memulihkan HP/MP.
+  Pengubahan inventory dikunci saat battle dan epilog yang belum dibuka kembali.
+
+### Menu dan section game
+
+Navigasi kategori di kiri menggantikan tab panjang. Semua section memakai daftar
+atau kartu, pilihan berbingkai emas, dan panel detail terpisah. Pola browsing
+terinspirasi menu koleksi RPG modern; artwork/aset game lain tidak disalin.
+
+| Section | Cara penggunaan |
+| --- | --- |
+| Inventory | Grid item, paper doll dan aksi equipment/item |
+| World Map | Graph perkamen yang sama dengan minimap |
+| Quest Journal | Active/Completed, tahap berikutnya dan Track quest |
+| Camp Market | Pilih barang, lihat harga/diskon/perbandingan, atur jumlah lalu Buy |
+| Skills & Build | Pilih skill, lihat rank/MP/cooldown/preview, Upgrade/Reset/Difficulty |
+| Archive | Koleksi Locations/Characters/Enemies, menggantikan section lore bernama Codex |
+| Chronicle | Baca sampai 150 catatan terbaru, tanpa replay aksi |
+| Camp & Bonds | Kategori Companions dan Crafting; semua aksi melalui panel detail |
+| Challenges | Modifier, statistik, biaya dan status clear sebelum Enter |
+| Gallery | Endings/Achievements lintas save; entri terkunci tidak membocorkan epilog |
+
+Pilihan kartu tidak langsung membeli, craft, upgrade, atau masuk arena. Kategori,
+pilihan entri dan halaman inventory diingat selama sesi aplikasi. Semua operasi
+memakai validasi service dan save atomik. Pembelian consumable sejumlah 1-99
+menjadi satu transaksi, bukan beberapa transaksi parsial.
+
+Skema save tetap **5**; save 1.6 dan sebelumnya tetap terbaca, termasuk visited,
+equipment, companion, dialog dan galeri. Backend mempertahankan ID travel untuk
+kompatibilitas save/tests; UI perjalanan hanya melalui peta. Musik tetap memakai
+sepuluh MP3 yang sudah disediakan. Kontrol baru mendukung ID/EN; narasi masih Inggris.
+
+Build Maven memakai `target/maven-classes` dan `target/maven-test-classes` agar
+tidak berbenturan dengan bytecode incremental IDE di `target/classes`. Perintah
+menjalankan game tetap `mvn clean javafx:run` (JDK 21).
+
+## Riwayat 1.6 - Living Journeys (paging diganti pada 1.7)
 
 - Narasi dan dialog tampil huruf demi huruf di panel biru. Klik panel untuk
   menampilkan halaman penuh; klik berikutnya melanjutkan halaman. Pilihan aksi
@@ -102,7 +242,7 @@ Skema save tetap 5: progres baru menggunakan flag campaign yang sudah tersimpan.
 Save lama tetap terbaca. Animasi baca mulai ulang dari halaman pertama ketika
 layar dibuka kembali; narasi lengkap tetap tersimpan di Chronicle. Tidak ada
 reward pada pergantian halaman. Musik 1.4.1 dan fitur 1.5 tetap tersedia.
-Desain minimap/perkamen dan inventory All/Quest Items dikerjakan pada 1.7.
+Desain minimap/perkamen dan inventory All/Quest Items tersedia mulai 1.7.
 
 ## Fitur baru 1.5 - Bonds and Embers
 

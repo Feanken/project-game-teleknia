@@ -5,6 +5,11 @@ import java.util.*;
 
 /** Offline campaign with explicit action IDs, gated quests, and deterministic turn combat. */
 public class LocalStoryGeneratorService implements StoryGeneratorService {
+    public static final Map<String,String> ENDINGS=Map.ofEntries(
+        Map.entry("Dawnkeeper","You offer the Sun Sigil and speak the keeper's oath. The Crown's fire turns gold. The Warden's last breath becomes a warm wind, and the survivors find their way home beneath the first clear sunrise."),
+        Map.entry("The Silent Watch","You seal the Crown beneath the tower. The village is safe, though a red light still pulses under the stone. You become its watcher, keeping a promise no monument will remember."),
+        Map.entry("Sovereign of Ash","You take the Crown. Fire obeys, and the village rises from its ashes in a single night. Yet its people whisper your name with fear. The old keeper's story has found a new beginning.")
+    );
     public static final List<String> LOCATIONS = WorldContent.LOCATIONS.values().stream().map(WorldContent.Location::name).toList();
     private final WorldService expansion = new WorldService();
     private final CombatService combat=new CombatService();
@@ -141,9 +146,9 @@ public class LocalStoryGeneratorService implements StoryGeneratorService {
             case "fight_wolf" -> begin(state,response,monster("wolf"));
             case "fight_guardian" -> begin(state,response,monster("guardian"));
             case "fight_warden" -> begin(state,response,monster("warden"));
-            case "end_purify" -> finish(state,response,"Dawnkeeper", "You offer the Sun Sigil and speak the keeper's oath. The Crown's fire turns gold. The Warden's last breath becomes a warm wind, and the survivors find their way home beneath the first clear sunrise.");
-            case "end_seal" -> finish(state,response,"The Silent Watch", "You seal the Crown beneath the tower. The village is safe, though a red light still pulses under the stone. You become its watcher, keeping a promise no monument will remember.");
-            case "end_claim" -> finish(state,response,"Sovereign of Ash", "You take the Crown. Fire obeys, and the village rises from its ashes in a single night. Yet its people whisper your name with fear. The old keeper's story has found a new beginning.");
+            case "end_purify" -> finish(state,response,"Dawnkeeper", ENDINGS.get("Dawnkeeper"));
+            case "end_seal" -> finish(state,response,"The Silent Watch", ENDINGS.get("The Silent Watch"));
+            case "end_claim" -> finish(state,response,"Sovereign of Ash", ENDINGS.get("Sovereign of Ash"));
             default -> response.setNarration(describe(state));
         }
         response.setQuestUpdate(quest(state));

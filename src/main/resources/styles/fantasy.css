@@ -114,3 +114,166 @@
 .narration-card { -fx-background-color: #142d47; -fx-border-color: #497797; }
 #dialogue-reader { -fx-cursor: hand; -fx-padding: 4; }
 #dialogue-reader:focused { -fx-border-color: #e1c989; }
+
+/* Atlas of the Borderlands: ink, brass, dark lacquer and aged parchment. */
+.parchment-shell { -fx-background-color: linear-gradient(to bottom right, #77603f, #d6bd83 18%, #a88b56 75%, #6d4b2d); -fx-border-color: #68492c #f3dfac #68492c #e4ca91; -fx-border-width: 3; -fx-padding: 4; }
+.parchment-shell .top-nav { -fx-background-color: #182633; -fx-border-color: #cfaf71; -fx-border-width: 0 0 2 0; }
+.parchment-shell .screen-title { -fx-font-size: 1.5em; }
+.parchment-shell .plain-scroll > .viewport { -fx-background-color: transparent; }
+.parchment-shell .card { -fx-border-color: #b0935e; }
+.parchment-shell .rpg-scene { -fx-border-color: #c4a56c; -fx-border-width: 2; }
+.parchment-shell .rpg-actions { -fx-background-color: #182633; -fx-padding: 8; -fx-border-color: #ab8b56; -fx-border-width: 1; }
+.parchment-shell .narration-card { -fx-background-color: #15334a; -fx-border-color: #8aa9af; }
+.minimap-button { -fx-background-color: #172a2d; -fx-border-color: #e0c48a #765431 #765431 #e0c48a; -fx-border-width: 3; -fx-padding: 8; }
+.minimap-button:hover { -fx-background-color: #2c4847; -fx-effect: dropshadow(gaussian, #e7ca86, 10, .15, 0, 0); }
+.minimap-label { -fx-text-fill: #fff1bf; -fx-font-size: 1.5em; -fx-font-weight: bold; -fx-background-color: rgba(10,19,23,.78); -fx-padding: 5 14; -fx-border-color: #d4b576; -fx-border-width: 1 0; }
+.atlas-paper { -fx-background-color: linear-gradient(to bottom right, #e0cb96, #f0ddb1 38%, #d8ba7f 80%, #b89257); -fx-border-color: #8a6036 #f6e5b9 #77502f #edd7a2; -fx-border-width: 7 4 7 4; -fx-effect: innershadow(gaussian, #80532d, 24, .25, 0, 0); }
+.atlas-title { -fx-font-size: 1.7em; -fx-text-fill: #4f371f; -fx-font-weight: bold; }
+.ink-label { -fx-text-fill: #62472b; -fx-font-size: .85em; }
+.map-node { -fx-background-radius: 8; -fx-padding: 2; -fx-background-color: #b39867; -fx-border-color: #725639; -fx-border-width: 1; -fx-cursor: hand; }
+.map-node:hover, .map-node:focused { -fx-border-color: #fff4c3; -fx-border-width: 3; -fx-effect: dropshadow(gaussian, #735329, 9, .1, 0, 0); }
+.map-current { -fx-background-color: #e1bd68; -fx-border-color: #fff1a0; -fx-border-width: 3; }
+.map-fog { -fx-background-color: #141c22; -fx-border-color: #5d6258; }
+.map-node-label { -fx-text-fill: #f7edc8; -fx-font-size: 10px; -fx-font-weight: bold; }
+.map-known .map-node-label, .map-current .map-node-label { -fx-text-fill: #352a1b; }
+.fog-symbol { -fx-text-fill: #817f71; -fx-font-size: 32px; -fx-padding: 8; }
+.codex-category { -fx-background-color: #192b38; -fx-border-color: #52616a; -fx-border-width: 1 1 1 3; -fx-alignment: center-left; -fx-font-size: .82em; -fx-padding: 11 8; }
+.codex-category:hover { -fx-background-color: #2e4651; }
+.category-selected { -fx-background-color: #324955; -fx-border-color: #f1d79b; -fx-text-fill: #fff1bd; }
+.collection-view { -fx-background-color: rgba(15,27,37,.94); -fx-border-color: #94794f; -fx-border-width: 1; }
+.collection-card { -fx-background-color: linear-gradient(to bottom, #304354, #172633); -fx-border-color: #53616b; -fx-border-width: 1 1 3 1; -fx-padding: 8 5; -fx-background-radius: 3; }
+.collection-card:hover { -fx-border-color: #e2cca1; }
+.collection-selected { -fx-border-color: #f3d590; -fx-background-color: #344e5a; }
+.collection-name { -fx-font-size: .8em; -fx-text-fill: #e9dfc9; -fx-alignment: center; -fx-text-alignment: center; }
+.codex-detail { -fx-padding: 18; -fx-background-color: #1e303e; -fx-border-color: #776a50; -fx-border-width: 1; }
+.codex-detail .panel-title { -fx-font-size: 1.25em; -fx-wrap-text: true; }
+.codex-detail .game-button { -fx-wrap-text: true; -fx-max-width: 800; }
+.satchel-panel { -fx-background-color: rgba(16,31,40,.96); -fx-border-color: #d4b57d; -fx-border-width: 2; -fx-padding: 10; }
+.paper-doll-panel { -fx-background-color: linear-gradient(to bottom, #1e3642, #12212d); -fx-border-color: #c3a571; -fx-border-width: 2; }
+.inventory-slot { -fx-background-color: linear-gradient(to bottom, #304550, #192935); -fx-background-radius: 3; -fx-border-width: 2; -fx-border-radius: 3; -fx-cursor: hand; }
+.inventory-slot:hover, .inventory-slot:focused { -fx-border-color: #fff0b8; }
+.slot-selected { -fx-border-color: #ffdc8c; -fx-effect: innershadow(gaussian, #ffdc8c, 7, .1, 0, 0); }
+.empty-slot { -fx-background-color: #182932; -fx-border-color: #47504e; -fx-opacity: .65; }
+.stack-count { -fx-background-color: rgba(8,14,21,.87); -fx-font-size: 10px; -fx-text-fill: #fff1c0; -fx-padding: 1 3; }
+.equipment-slot { -fx-padding: 0; -fx-pref-width: 68; -fx-min-width: 64; -fx-max-width: 72; -fx-background-color: #12232e; -fx-border-color: #bd9e68; -fx-border-width: 1; }
+.equipment-slot .label { -fx-font-size: 10px; -fx-text-fill: #e7cd96; }
+.context-menu { -fx-background-color: #1e303e; -fx-border-color: #c4a56d; }
+.menu-item:focused { -fx-background-color: #3d565b; }
+.spinner, .spinner .text-field { -fx-background-color: #233b48; -fx-text-fill: #f3e7c5; }
+
+.codex-section-title { -fx-text-fill: #422e1b; }
+
+.equipment-slot:disabled { -fx-opacity: 1; }
+.party-panel { -fx-background-color: #1b303a; }
+.atlas-paper .atlas-title { -fx-font-size: 1.35em; }
+.atlas-paper .ink-label { -fx-font-size: .78em; }
+
+.equipment-slot:disabled .label { -fx-opacity: 1; -fx-text-fill: #e7cd96; }
+
+#inventory-feedback, #codex-feedback { -fx-text-fill: #382717; -fx-font-weight: bold; }
+
+/* Traveler interface: restrained panels, serif headings and readable numerical rows. */
+.root { -fx-font-family: "Segoe UI", "Arial"; -fx-font-size: 14px; -fx-background-color: #101a23; }
+.app-root, .home-root, .menu-root { -fx-background-color: linear-gradient(to bottom right, #182733, #0d171f 70%, #263336); }
+.parchment-shell { -fx-background-color: linear-gradient(to bottom right, #27343c, #111d27 65%, #374143); -fx-border-color: #8f8c75; -fx-border-width: 1; -fx-padding: 8; }
+.top-nav, .parchment-shell .top-nav { -fx-background-color: rgba(16,26,34,.92); -fx-border-color: #8f8c75; -fx-border-width: 0 0 1 0; }
+.hero-title, .screen-title, .panel-title, .profile-name, .atlas-title, .party-name { -fx-font-family: "Georgia", "Times New Roman"; -fx-text-fill: #eee6cc; -fx-font-weight: normal; -fx-effect: null; }
+.hero-title { -fx-font-size: 3em; }
+.screen-title, .parchment-shell .screen-title { -fx-font-size: 1.65em; }
+.panel-title, .codex-detail .panel-title { -fx-font-size: 1.3em; }
+.label { -fx-text-fill: #e5e4da; }
+.item-meta, .subtitle { -fx-text-fill: #aeb7b7; }
+.game-button { -fx-font-family: "Segoe UI"; -fx-font-weight: normal; -fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 1; -fx-padding: 8 13; -fx-effect: null; }
+.nav-button, .secondary-button, .primary-button { -fx-background-color: rgba(25,40,50,.9); -fx-border-color: #687779; -fx-text-fill: #e5e5d8; }
+.game-button:hover, .game-button:focused { -fx-background-color: #384a51; -fx-border-color: #e5dfbf; -fx-text-fill: #fff9df; }
+.game-button:pressed { -fx-translate-y: 0; -fx-border-width: 1; }
+.card, .parchment-shell .card, .profile-card, .world-strip, .home-menu, .stat-cell { -fx-background-color: rgba(18,31,40,.90); -fx-border-color: #798080; -fx-border-width: 1; -fx-effect: null; }
+.status-panel { -fx-background-color: rgba(16,29,39,.9); -fx-padding: 18; -fx-border-width: 0 0 1 0; }
+.status-panel .label, .stat-value, .hp-value, .mp-value { -fx-font-family: "Consolas", "Monospaced"; -fx-font-size: 1em; }
+.status-panel .panel-title { -fx-font-family: "Georgia"; -fx-font-size: 1.5em; }
+.hp-value { -fx-text-fill: #b6d1b2; }
+.mp-value { -fx-text-fill: #a5c6dc; }
+.party-name { -fx-font-size: 1.3em; }
+.party-strip { -fx-padding: 10 14; -fx-background-color: rgba(15,27,36,.94); -fx-border-color: #8a8b7a; -fx-border-width: 0 0 1 0; }
+.progress-bar { -fx-background-color: #10181d; -fx-border-color: #5e6b70; -fx-padding: 1; }
+.progress-bar > .bar { -fx-padding: 3; }
+.hp-bar > .bar { -fx-background-color: linear-gradient(to right, #4b7561, #a9c6a1); }
+.mp-bar > .bar { -fx-background-color: linear-gradient(to right, #3e617a, #a3c5d9); }
+.exp-bar > .bar { -fx-background-color: #c7bc8f; }
+.codex-section-title { -fx-text-fill: #e5dfc9; -fx-font-family: "Georgia"; }
+.codex-category { -fx-background-color: rgba(19,33,43,.9); -fx-border-color: transparent; -fx-border-width: 0 0 1 0; -fx-font-size: .95em; -fx-padding: 11 12; }
+.category-selected { -fx-background-color: #3e5055; -fx-border-color: #e9e0bb; -fx-text-fill: #fff6d8; }
+.collection-view { -fx-background-color: rgba(16,29,39,.75); -fx-border-color: #707c7c; -fx-border-width: 1; }
+.collection-card { -fx-background-color: rgba(27,44,55,.9); -fx-border-color: #687779; -fx-border-width: 1; -fx-padding: 10 6; }
+.collection-name { -fx-font-family: "Segoe UI"; -fx-font-size: .9em; -fx-text-fill: #e5e2d6; }
+.collection-selected, .slot-selected { -fx-background-color: #354950; -fx-border-color: #f0e4bd; -fx-effect: null; }
+.codex-detail { -fx-background-color: rgba(26,42,54,.85); -fx-border-color: #7f8b8c; -fx-padding: 20; }
+.paper-doll-panel, .satchel-panel { -fx-background-color: rgba(21,37,48,.90); -fx-border-color: #7f8a88; -fx-border-width: 1; }
+.inventory-slot { -fx-background-color: rgba(32,49,60,.9); -fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 1; }
+.stack-count { -fx-font-family: "Consolas"; -fx-font-size: 11px; -fx-background-color: #14212c; }
+.equipment-slot { -fx-background-color: #162a38; -fx-border-color: #81908d; -fx-padding: 0; }
+.equipment-slot .label, .equipment-slot:disabled .label { -fx-font-family: "Segoe UI"; -fx-text-fill: #c7c8b8; }
+.parchment-shell .rpg-scene { -fx-background-color: linear-gradient(to bottom, #253e48, #111e29); -fx-border-color: #8b9590; -fx-border-width: 1; }
+.scene-vista { -fx-background-color: rgba(16,30,38,.8); -fx-border-color: transparent; }
+.parchment-shell .narration-card { -fx-background-color: rgba(22,40,56,.96); -fx-border-color: #96a3a2; -fx-border-width: 1; -fx-padding: 16; }
+.narration-text { -fx-font-family: "Georgia"; -fx-font-size: 1.05em; -fx-line-spacing: 6; -fx-text-fill: #ede8d8; }
+#dialogue-reader { -fx-padding: 2; -fx-cursor: hand; }
+#dialogue-reader:focused { -fx-border-color: transparent; }
+.parchment-shell .rpg-actions { -fx-background-color: rgba(18,32,43,.9); -fx-border-color: #768581; -fx-border-width: 1; -fx-padding: 10; }
+.choice-button { -fx-background-color: transparent; -fx-border-color: #65767c; -fx-border-width: 0 0 1 0; -fx-alignment: center-left; -fx-padding: 10 14; }
+.choice-button:hover { -fx-background-color: #3d515b; }
+.eyebrow { -fx-background-color: transparent; -fx-border-width: 0 0 1 0; -fx-border-color: #627779; -fx-text-fill: #b6c8c6; -fx-padding: 3 0 6 0; }
+.minimap-button { -fx-background-color: #152832; -fx-border-color: #88968b; -fx-border-width: 1; -fx-padding: 8; }
+.minimap-label { -fx-font-family: "Georgia"; -fx-font-size: 1.25em; -fx-border-color: #d9d3ba; -fx-border-width: 1 0; -fx-background-color: rgba(13,26,35,.85); }
+.audio-controls { -fx-background-color: #15232e; -fx-border-color: #677c7e; -fx-border-width: 1 0 0 0; -fx-padding: 8 16; }
+.tooltip, .context-menu, .dialog-pane { -fx-font-family: "Segoe UI"; -fx-background-color: #1d303e; -fx-border-color: #a4ada4; -fx-border-width: 1; -fx-text-fill: #eee8d8; }
+#inventory-feedback, #codex-feedback { -fx-text-fill: #d3d7b8; -fx-font-weight: normal; }
+.atlas-paper { -fx-background-color: linear-gradient(to bottom right, #c7bf9f, #ded5b8 50%, #a7a28b); -fx-border-color: #8f8d75; -fx-border-width: 2; }
+.atlas-title { -fx-text-fill: #35403e; }
+.ink-label { -fx-text-fill: #46504a; }
+
+.app-root, .home-root, .menu-root, .parchment-shell { -fx-background-color: linear-gradient(to bottom right, rgba(25,38,49,.84), rgba(11,23,32,.91) 70%, rgba(44,55,57,.84)); }
+
+/* Campfire & purpose: title screen, context navigation, preparation. */
+.home-cinematic { -fx-background-color: #0a1521; }
+.title-shade { -fx-background-color: linear-gradient(to right, rgba(5,14,24,.88), rgba(5,14,24,.58) 35%, rgba(5,14,24,.12) 65%, rgba(5,14,24,.02)); }
+.title-scroll, .title-scroll > .viewport { -fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0; }
+.title-scroll .scroll-bar { -fx-opacity: .6; }
+.title-logo { -fx-font-family: "Georgia"; -fx-font-size: 3.2em; -fx-text-fill: #f7efcf; -fx-effect: dropshadow(gaussian, #070d18, 14, .4, 0, 3); }
+.title-chapter { -fx-font-size: .84em; -fx-text-fill: #cfcaac; }
+.title-option { -fx-background-color: transparent; -fx-border-color: transparent; -fx-text-fill: #c3c8c3; -fx-font-family: "Georgia"; -fx-font-size: 1.18em; -fx-alignment: center-left; -fx-padding: 7 10; -fx-graphic-text-gap: 12; }
+.title-option:hover, .title-option:focused, .title-option-active { -fx-background-color: linear-gradient(to right, rgba(209,193,148,.13), transparent); -fx-border-color: transparent transparent transparent #d9c99b; -fx-text-fill: #fff4cc; }
+.title-marker { -fx-text-fill: #ead4a0; -fx-font-size: 1.2em; }
+.title-preview { -fx-padding: 12 0 0 20; -fx-border-color: rgba(193,190,157,.5) transparent transparent transparent; -fx-border-width: 1; }
+.title-save-name { -fx-font-family: "Georgia"; -fx-text-fill: #eee7c9; -fx-font-size: 1.05em; }
+.title-meta { -fx-text-fill: #b8c3c5; -fx-font-size: .88em; }
+.title-version { -fx-text-fill: #c2c8c6; -fx-font-size: .72em; }
+.context-footer { -fx-background-color: rgba(12,24,33,.95); -fx-border-color: #657472; -fx-border-width: 1 0 0 0; }
+.control-hint { -fx-text-fill: #adbabb; -fx-font-size: .82em; }
+.quiet-button { -fx-padding: 4 9; -fx-font-size: .8em; -fx-background-color: transparent; -fx-border-color: #576969; }
+.save-status { -fx-text-fill: #b9cbae; -fx-font-size: .8em; }
+.header-context { -fx-text-fill: #9fb2b5; -fx-font-size: .74em; }
+.top-nav .screen-title { -fx-font-size: 1.35em; }
+.action-toast { -fx-background-color: rgba(25,45,56,.98); -fx-border-color: #c2c5a6; -fx-border-width: 1 1 1 3; -fx-padding: 13 18; -fx-text-fill: #f3edd2; -fx-effect: dropshadow(gaussian, #070d12, 15, .2, 0, 4); }
+.action-feedback { -fx-background-color: #233b46; -fx-border-color: #b3b793; -fx-border-width: 1 0 0 0; -fx-text-fill: #e7e5c8; -fx-padding: 10 14; }
+.menu-group-title { -fx-font-size: .75em; -fx-font-weight: bold; -fx-text-fill: #a6bbbc; -fx-padding: 16 0 5 10; }
+.menu-option { -fx-alignment: center-left; -fx-background-color: rgba(22,37,48,.6); -fx-border-color: transparent transparent #3b5159 transparent; -fx-padding: 8 12; }
+.menu-option:hover, .menu-option:focused { -fx-background-color: #38515b; -fx-border-color: #d9d6b8; }
+.journey-reminder { -fx-background-color: rgba(20,37,48,.88); -fx-border-color: #81918b; -fx-border-width: 1 0 0 0; -fx-padding: 16; }
+.arena-list-entry { -fx-alignment: center-left; -fx-padding: 10; -fx-background-color: #1d3340; -fx-border-color: #687c7e; }
+.arena-list-entry .label { -fx-wrap-text: true; -fx-font-size: .88em; }
+.arena-details { -fx-background-color: rgba(22,39,51,.95); -fx-border-color: #788b8c; -fx-border-width: 1; }
+.arena-badge { -fx-font-size: .72em; -fx-text-fill: #d0ccaa; }
+.arena-portrait { -fx-background-color: linear-gradient(to bottom, #294552, #101f2c); -fx-border-color: #5a757d; -fx-padding: 8; }
+.arena-metric { -fx-background-color: #122a37; -fx-padding: 8 11; -fx-min-width: 55; }
+.arena-metric .label { -fx-font-size: .78em; -fx-text-fill: #aec3c6; }
+.arena-metric .panel-title { -fx-font-size: 1.25em; -fx-font-family: "Consolas"; -fx-text-fill: #f1ead4; }
+.arena-block { -fx-background-color: rgba(35,56,68,.7); -fx-padding: 12; -fx-border-color: #455e68; -fx-border-width: 1 0 0 0; }
+.arena-block .panel-title { -fx-font-size: 1.02em; }
+.arena-action { -fx-background-color: #1b3441; -fx-border-color: #8b9d96; -fx-border-width: 1 0 0 0; -fx-padding: 10 14; }
+.arena-action .label { -fx-font-size: .83em; }
+.arena-action .game-button { -fx-background-color: #465c60; -fx-border-color: #ddd4ae; }
+.requirement-met { -fx-text-fill: #b4cdb0; }
+.requirement-missing { -fx-text-fill: #dfc499; }
+
+.action-reason { -fx-font-size: .82em; -fx-text-fill: #d3c7a3; }

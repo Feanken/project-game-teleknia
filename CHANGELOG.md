@@ -1,5 +1,40 @@
 # Catatan Rilis Teleknia
 
+## Campfire & Purpose / polish 1.7 - 30 Oktober 2026
+
+- Start memakai ilustrasi campfire baru, logo Teleknia, menu vertikal dan preview autosave tanpa load/mutasi; Continue dinonaktifkan bila auto tidak valid. Keyboard panah/Enter, fade/ember dengan Reduced Motion.
+- Menu dikelompokkan Adventure/Character/System, statistik dan pengingat quest berikutnya. Perbaiki rute Kembali/Esc agar Menu kembali ke Story, bukan tidak sengaja Home.
+- Header kontekstual dan footer petunjuk kontrol per layar; volume musik/SFX dipindahkan ke Settings, mute ringkas tetap tersedia.
+- Arena: daftar vertikal, preview lawan, statistik, modifier, hadiah, persiapan, checklist syarat dan tombol masuk tetap. Tidak mengubah mekanik/reward/biaya.
+- Alasan tombol terkunci pada Market, Build, Crafting dan companion ditampilkan dekat aksi, bukan hanya tooltip.
+- Feedback transaksi sementara dekat panel aksi; notifikasi lama dibersihkan saat navigasi. Saved hanya mengikuti commit berhasil, Not saved pada kegagalan.
+- Aset title dibuat dengan imagegen bawaan; prompt/provenance di art/GENERATION.md. Sprite 64x64 dan musik tetap dipertahankan. Versi 1.7 dan skema save 5 tetap.
+- Validasi: 1.082 pemeriksaan game/sistem dan 101 pemeriksaan UI lulus; termasuk save gagal, navigasi, transaksi, arena, dialog dan ukuran minimum dengan teks 120%.
+
+
+## Penyempurnaan UI 1.7 - 30 Oktober 2026
+
+- Gaya Traveler yang terinspirasi Octopath: judul serif, angka stats monospace, panel navy, garis ivory tipis; berlaku ke Home, Story, Menu, Inventory, section koleksi, profil, saves dan dialog.
+- Layout pertama: adegan kiri, dialog kanan, aksi dan minimap di bawah, ringkasan karakter di atas.
+- Header hanya memiliki tombol Menu; Inventory dan seluruh section menjadi bagian menu terpadu.
+- Dialog menjadi satu teks scrollable tanpa pembagian halaman. Klik utama di layar bermain menuntaskan seluruh teks; gesture skip dikonsumsi sebelum aktivasi tombol, tanpa perubahan state game.
+- Kartu koleksi diberi tinggi seragam dan panel detail dapat digulir. Progression, musik, aset, dan skema save tetap sama.
+- Validasi: 86 pemeriksaan UI lulus, termasuk teks panjang yang benar-benar scrollable, satu klik reveal seluruh narasi, gesture tanpa aksi ganda, Menu/Inventory dan layout minimum.
+
+## 1.7 / Atlas of the Borderlands - 30 Oktober 2026
+
+- Bingkai perkamen, panel dialog biru dan minimap lokasi di kanan bawah; klik MAP membuka animasi horizontal unfold dengan opsi Reduce animations.
+- Peta node heksagonal berilustrasi, garis rute, posisi aktif dan fog. Frontier memungkinkan eksplorasi pertama tanpa membocorkan nama/ilustrasi; travel mengikuti rute/gate quest dan dikunci saat battle/percakapan.
+- Travel dipindahkan dari kartu aksi ke peta. Map overlay dan Codex memakai graph serta validasi yang sama.
+- Inventory 5x6 per halaman, kategori All/Quest Items, sort, stack count, paper doll dan slot equipment.
+- Klik kanan Equip/Unequip/Use/Remove, tooltip satu detik dan tombol detail setara untuk keyboard. Remove mengonfirmasi jumlah, melindungi quest/material dan equipment aktif.
+- Codex sebagai pusat sembilan section: navigasi kategori, kartu koleksi dan panel detail; lore berganti nama menjadi Archive. Locked entries tidak membocorkan nama/lore.
+- Pembelian consumable beberapa unit menjadi satu transaksi atomik; unequip/discard tidak memberi heal, mana atau gold.
+- Pilihan koleksi/kategori serta halaman inventory diingat selama sesi. Tutorial dan UI ID/EN diperbarui. Musik serta konten 1.6 dipertahankan.
+- Skema save tetap 5; migrasi/default lama tetap berlaku. Output Maven dipisahkan dari hasil incremental IDE untuk menghindari bytecode tertimpa.
+- Validasi: 1.041 pemeriksaan game/sistem dan 77 pemeriksaan UI lulus, termasuk fog/frontier, transaksi gagal, dialog, animasi unfold, dan batas layout pada 980x680 dengan teks 120%.
+
+
 ## 1.6 / Living Journeys - 30 Oktober 2026
 
 - Dialog/narasi bertahap di panel biru: klik reveal, klik lanjut halaman, Space/Enter setara. Pilihan terkunci hingga halaman terakhir, Reduce animations menampilkan teks langsung.

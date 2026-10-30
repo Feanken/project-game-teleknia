@@ -20,6 +20,7 @@ public final class StoryController {
     private final GameState state;
     private String category="All";
     private String animation="";
+    private DialoguePager reader;
     public StoryController(MainApp app,GameService game){this.app=app;this.game=game;this.state=game.getCurrentState();}
     public StoryController(MainApp app,GameService game,String animation){this(app,game);this.animation=animation;}
     private Label text(String value,String style){Label label=new Label(value);label.setWrapText(true);if(!style.isBlank())label.getStyleClass().add(style);return label;}
@@ -27,12 +28,17 @@ public final class StoryController {
     private ScrollPane scroll(Node content){ScrollPane pane=new ScrollPane(content);pane.setFitToWidth(true);pane.getStyleClass().add("plain-scroll");return pane;}
     public Parent createView(){
         var location=WorldContent.location(state.getCurrentLocation());
-        BorderPane root=new BorderPane();root.getStyleClass().addAll("app-root","rpg-root");
+        BorderPane root=new BorderPane();root.getStyleClass().addAll("app-root","rpg-root","parchment-shell");
         HBox spacer=new HBox();HBox.setHgrow(spacer,Priority.ALWAYS);
-        HBox nav=new HBox(10,text(state.getCurrentLocation(),"screen-title"),spacer,button("World",app::showAdventure),button("Inventory",app::showInventory),button("Profile",app::showProfile),button("Home",app::showHome));
-        nav.setAlignment(Pos.CENTER_LEFT);nav.setPadding(new Insets(12,16,12,16));nav.getStyleClass().add("top-nav");root.setTop(nav);
-        ScrollPane party=scroll(party());party.setPrefWidth(230);party.setMinWidth(205);party.setMaxWidth(250);root.setLeft(party);
-        VBox content=new VBox(10,scene(location),narration(),actions());content.setPadding(new Insets(12));root.setCenter(content);
+        root.setTop(RpgUi.nav(app,state.getCurrentLocation()));
+        VBox actionPanel=actions();actionPanel.setMinWidth(0);HBox.setHgrow(actionPanel,Priority.ALWAYS);
+        HBox lower=new HBox(12,actionPanel,minimap(location));lower.setMinHeight(150);
+        VBox stage=scene(location);stage.setMaxHeight(Double.MAX_VALUE);stage.setMinWidth(0);
+        VBox dialogue=narration();dialogue.setMinWidth(250);dialogue.setPrefWidth(330);dialogue.setMaxWidth(410);
+        HBox upper=new HBox(14,stage,dialogue);HBox.setHgrow(stage,Priority.ALWAYS);VBox.setVgrow(upper,Priority.ALWAYS);upper.setMinHeight(230);
+        var hero=state.getCharacter();
+        HBox stats=new HBox(22,text(hero.getName(),"party-name"),text("Lv "+hero.getLevel()+"  "+hero.getCharacterClass(),"stat-value"),text("HP "+hero.getHp()+" / "+hero.getMaxHp(),"hp-value"),text("MP "+hero.getMp()+" / "+hero.getMaxMp(),"mp-value"));stats.getChildren().getFirst().getProperties().put("literal",true);stats.getStyleClass().add("party-strip");stats.setAlignment(Pos.CENTER_LEFT);
+        VBox content=new VBox(12,stats,upper,lower);content.setPadding(new Insets(16));root.setCenter(content);
         if(!app.getSettings().reducedMotion()&&System.getProperty("teleknia.uiCheck.root")==null){var fade=new javafx.animation.FadeTransition(javafx.util.Duration.millis(160),content);fade.setFromValue(.45);fade.setToValue(1);fade.play();}
         if(!app.getSettings().reducedMotion()&&System.getProperty("teleknia.uiCheck.root")==null&&!animation.isBlank()){
             Node actor=content.lookup("#hero-actor"),target=content.lookup("#target-actor");
@@ -51,12 +57,17 @@ public final class StoryController {
         }
         return root;
     }
+    private Button minimap(WorldContent.Location location){
+        ImageView art=PixelAssets.view(location.sprite(),2);art.setEffect(new javafx.scene.effect.ColorAdjust(0,-.65,-.15,-.2));
+        Label label=text("MAP","minimap-label");label.setMouseTransparent(true);StackPane graphic=new StackPane(art,label);graphic.setPrefSize(138,128);
+        Button b=button("",app::showMap);b.setId("scene-map");b.setGraphic(graphic);b.getStyleClass().add("minimap-button");b.setPrefWidth(158);b.setMinWidth(150);b.setMaxWidth(176);b.setTooltip(new Tooltip(UiText.tr("Open regional map")));b.setAccessibleText(UiText.tr("Open regional map"));return b;
+    }
     private VBox party(){
         StatusPanel status=new StatusPanel();status.setCombatMode(true);status.update(state.getCharacter());
         if(!state.getCampaign().getPlayerEffects().isEmpty())status.getChildren().add(3,text(CombatService.effects(state.getCampaign().getPlayerEffects()),"status-badge"));
         if(!state.getCampaign().getEnemyEffects().isEmpty())status.getChildren().add(text("Foe: "+CombatService.effects(state.getCampaign().getEnemyEffects()),"status-badge"));
         var hero=state.getCharacter();
-        VBox box=new VBox(10,status,text("Gold: "+hero.getGold()+" / EXP: "+hero.getExp()+" / 100","item-meta"));box.setPadding(new Insets(12,0,12,12));
+        VBox box=new VBox(10,status,text("Gold: "+hero.getGold()+" / EXP: "+hero.getExp()+" / 100","item-meta"));box.setPadding(new Insets(12,0,12,12));box.getStyleClass().add("party-panel");
         var ally=BondService.companion(state.getCampaign().getCompanion());
         if(ally!=null)box.getChildren().add(PixelAssets.heading(ally.sprite(),ally.name(),ally.role()));
         box.getChildren().add(button(ally==null?"Camp & Bonds":ally.name()+" / Affinity "+BondService.affinity(state,ally),()->app.showAdventure(6,"")));
@@ -70,7 +81,7 @@ public final class StoryController {
         VBox card=new VBox(7);card.getStyleClass().addAll("rpg-scene","region-"+location.region().toLowerCase(java.util.Locale.ROOT).replace(' ','-'));
         Label region=text(location.region()+" / "+UiText.tr(state.getCampaign().getDifficulty()),"eyebrow");
         ImageView vista=PixelAssets.view(location.sprite(),2);
-        Button map=button("",()->app.showAdventure(0,""));map.setGraphic(vista);map.setTooltip(new Tooltip("Open regional map"));map.getStyleClass().add("scene-vista");map.setId("scene-map");
+        StackPane map=new StackPane(vista);map.getStyleClass().add("scene-vista");map.setId("scene-vista");
         VBox hero=new VBox(5,PixelAssets.view("field_"+state.getCharacter().getCharacterClass().toLowerCase(java.util.Locale.ROOT)),text(state.getCharacter().getName(),"actor-name"));hero.setId("hero-actor");hero.setAlignment(Pos.CENTER);hero.setPrefWidth(95);hero.setMaxWidth(115);hero.getChildren().get(1).getProperties().put("literal",true);
         ((Label)hero.getChildren().get(1)).setWrapText(false);((Label)hero.getChildren().get(1)).setMaxWidth(95);
         VBox target=new VBox(5);target.setId("target-actor");target.setAlignment(Pos.CENTER);target.setPrefWidth(140);target.setMaxWidth(160);
@@ -106,12 +117,12 @@ public final class StoryController {
     }
     private VBox narration(){
         String speaker=state.getCampaign().getEnemy()!=null?"BATTLE":state.getCampaign().getDialogueNode().isBlank()?"EXPLORATION":WorldContent.NPCS.get(WorldContent.DIALOGUES.get(state.getCampaign().getDialogueNode()).npc()).name();
-        DialoguePager reader=new DialoguePager(state.getCurrentStorySummary(),app.getSettings().reducedMotion()||System.getProperty("teleknia.uiCheck.root")!=null);
+        reader=new DialoguePager(state.getCurrentStorySummary(),app.getSettings().reducedMotion()||System.getProperty("teleknia.uiCheck.root")!=null);
         choices.disableProperty().bind(reader.finishedProperty().not());
-        ScrollPane scroll=scroll(reader);scroll.setMinHeight(80);scroll.setPrefHeight(95);scroll.setMaxHeight(125);
+        ScrollPane scroll=scroll(reader);scroll.setId("narration-scroll");scroll.setMinHeight(100);scroll.setPrefHeight(280);scroll.setMaxHeight(Double.MAX_VALUE);VBox.setVgrow(scroll,Priority.ALWAYS);
         Button read=button("Read scene",this::readScene);read.getStyleClass().add("read-scene-button");
         HBox heading=new HBox(10,text(speaker,"eyebrow"),read);heading.setAlignment(Pos.CENTER_LEFT);
-        VBox card=new VBox(5,heading,scroll);card.getStyleClass().add("narration-card");
+        VBox card=new VBox(12,heading,scroll);card.getStyleClass().add("narration-card");
         scroll.setOnMouseClicked(e->{if(e.getButton()==javafx.scene.input.MouseButton.PRIMARY){reader.requestFocus();reader.advance();e.consume();}});
         if(!state.getStoryLogs().isEmpty()&&state.getStoryLogs().getLast().getSpeaker()==StoryLog.Speaker.SYSTEM){
             Label result=text(state.getStoryLogs().getLast().getMessage(),"outcome-label");result.setWrapText(false);result.setMaxHeight(22);result.setTooltip(new Tooltip(result.getText()));card.getChildren().add(result);
@@ -129,7 +140,7 @@ public final class StoryController {
     private VBox actions(){
         choices.getStyleClass().add("choices-box");choices.setPrefColumns(2);choices.prefTileWidthProperty().bind(choices.widthProperty().subtract(8).divide(2));
         HBox filters=new HBox(8);ToggleGroup group=new ToggleGroup();
-        for(String name:state.getCampaign().getEnemy()!=null?List.of("All","Skills","Items"):(state.getCampaign().getDialogueNode().isBlank()?List.of("All","Interact","Travel"):List.of("All","Interact"))){
+        for(String name:state.getCampaign().getEnemy()!=null?List.of("All","Skills","Items"):(state.getCampaign().getDialogueNode().isBlank()?List.of("All","Interact"):List.of("All","Interact"))){
             ToggleButton filter=new ToggleButton(name);filter.getStyleClass().addAll("game-button","action-filter");filter.setToggleGroup(group);filter.setSelected(name.equals("All"));
             filter.setOnAction(e->{if(!filter.isSelected())filter.setSelected(true);category=name;populate();app.refreshUi();});filters.getChildren().add(filter);
         }
@@ -139,7 +150,7 @@ public final class StoryController {
     private void populate(){
         choices.getChildren().clear();
         for(var choice:state.getCurrentChoices()){
-            String id=choice.getAction();boolean travel=id.startsWith("go_");boolean item=Set.of("potion","mana","greater","focus").contains(id);
+            String id=choice.getAction();if(id.startsWith("go_"))continue;boolean travel=false;boolean item=Set.of("potion","mana","greater","focus").contains(id);
             if(category.equals("Travel")&&!travel||category.equals("Interact")&&travel||category.equals("Items")&&!item||category.equals("Skills")&&(item||id.equals("flee")))continue;
             Button action=button(choice.getLabel(),()->submit(id));action.getStyleClass().add("choice-button");action.setMaxWidth(Double.MAX_VALUE);
             String tip="";if(state.getCampaign().getEnemy()!=null){tip=UiText.tr(CombatService.unavailable(state,id));action.setDisable(!tip.isBlank());var skill=SkillCatalog.find(state,id);if(skill!=null)tip+=(tip.isBlank()?"":"\n")+UiText.tr(skill.description());}
@@ -147,6 +158,7 @@ public final class StoryController {
         }
     }
     private void submit(String action){
+        if(choices.isDisabled())return;
         int level=state.getCharacter().getLevel(),known=state.getCampaign().getCodex().size();
         long completed=WorldContent.QUESTS.keySet().stream().filter(state.getCampaign()::has).count();
         int potions=state.getInventory().stream().filter(i->i.getItem().getType()==Item.ItemType.CONSUMABLE).mapToInt(InventoryItem::getQuantity).sum();

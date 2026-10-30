@@ -46,6 +46,8 @@ public class StatusPanel extends VBox {
         );
     }
 
+    public void setPortraitVisible(boolean visible){portrait.setVisible(visible);portrait.setManaged(visible);}
+
     public void setCombatMode(boolean combat) {
         portrait.setVisible(!combat); portrait.setManaged(!combat);
         for (javafx.scene.Node node : new javafx.scene.Node[]{goldLabel, expLabel, expBar}) { node.setVisible(!combat); node.setManaged(!combat); }
@@ -53,6 +55,7 @@ public class StatusPanel extends VBox {
     }
 
     public void update(Character character) {
+        portrait.setImage(PixelAssets.view("field_"+character.getCharacterClass().toLowerCase(java.util.Locale.ROOT)).getImage());
         title.setText(character.getName());
         levelLabel.setText("Level " + character.getLevel() + " " + character.getCharacterClass());
         goldLabel.setText("GOLD  " + character.getGold());

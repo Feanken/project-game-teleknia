@@ -9,7 +9,7 @@ try {
     $jars = Get-ChildItem -LiteralPath $repo -Filter '*.jar' -Recurse | Where-Object {
         $_.FullName -match 'javafx-(base|graphics|controls|media).*21.0.5.*win.jar|sqlite-jdbc.*3.46.1.3|jackson-(databind|core|annotations).*2.17.2|slf4j-api'
     } | ForEach-Object FullName
-    $classpath = (@("$projectPath/target/classes", "$projectPath/target/test-classes") + $jars) -join ';'
+    $classpath = (@("$projectPath/target/maven-classes", "$projectPath/target/maven-test-classes") + $jars) -join ';'
     $casePath = Join-Path $projectPath ("target/ui-checks/run-" + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $casePath -Force | Out-Null
     Push-Location $casePath

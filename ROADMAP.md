@@ -1,7 +1,7 @@
 # Roadmap Teleknia: 1.2 sampai 1.10
 
-Status: versi 1.2 sampai 1.6 sudah diimplementasikan. Versi game aktif adalah 1.6.
-Versi 1.7-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
+Status: versi 1.2 sampai 1.7 sudah diimplementasikan. Versi game aktif adalah 1.7.
+Versi 1.8-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
 Target jumlah konten adalah usulan cakupan rilis, bukan fitur yang sudah tersedia.
 Tanggal rilis ditentukan setelah implementasi dan pengujian setiap versi.
 
@@ -190,7 +190,7 @@ Uji save/load pada setiap tahap quest dan kegagalan transaksi reward. Animasi
 teks dan klik cepat harus dapat dipakai tanpa melewati jawaban atau memicu aksi
 ganda. Tombol travel lama tetap tersedia selama 1.6; pemindahan ke peta pada 1.7.
 
-## 1.7 - Atlas of the Borderlands (rencana)
+## 1.7 - Atlas of the Borderlands (selesai)
 
 Tujuan: redesain layar RPG dan jadikan peta sebagai tempat khusus perjalanan,
 sesuai dua sketsa referensi pengguna.
@@ -199,10 +199,10 @@ Komposisi layar utama (gambar pertama):
 
 - Bingkai luar bertekstur scroll/perkamen tua, tepian usang dan ornamen RPG;
   warna kuning pada sketsa menunjukkan material kertas, bukan blok kuning polos.
-- Panel besar atas (merah muda pada sketsa) menjadi adegan lokasi, karakter dan
+- Panel besar kiri atas (merah muda pada sketsa terbaru) menjadi adegan lokasi, karakter dan
   battle. Gunakan identitas visual lokasi saat ini.
-- Panel biru di tengah adalah area narasi/dialog dengan animasi teks versi 1.6.
-  Klik pada area ini mempercepat atau menuntaskan teks; bukan memilih aksi lain.
+- Panel biru di kanan atas memuat satu narasi scrollable tanpa halaman. Klik di
+  mana saja pada layar bermain menuntaskan teks; gesture itu tidak memilih aksi.
 - Panel kiri bawah menjadi pilihan aksi/dialog/combat. Tidak memuat tombol
   perjalanan antar lokasi setelah navigasi peta baru tersedia.
 - Panel kanan bawah menjadi minimap: gambar sesuai lokasi aktif, saturasi gambar
@@ -232,6 +232,47 @@ Peta terbuka (gambar kedua):
 - Tombol aksi perjalanan dan filter Travel di area dialog dipindahkan ke peta;
   seluruh akses peta menggunakan aturan perjalanan yang sama. Keyboard dapat
   memfokuskan dan memilih node; warna bukan satu-satunya penanda status.
+
+Codex sebagai pusat menu dan redesain seluruh section:
+
+- Tombol akses pusat menu menggunakan nama **Menu** (pilihan desain terbaru). Menu ini menampung World
+  Map, Quest Journal, Camp Market, Skills & Build, Chronicle, Camp & Bonds,
+  Challenges, Gallery, dan koleksi lore. Section lore yang sebelumnya bernama
+  Codex menjadi **Archive / Arsip** agar tidak rancu dengan nama pusat menu.
+- Inspirasi layout dari Genshin Impact dan Honkai: Star Rail: kategori yang mudah
+  dipindai, kartu/grid koleksi, highlight pilihan, serta panel detail terpisah.
+  Gunakan desain/aset Teleknia sendiri, dengan sprite pixel 64x64, material
+  perkamen dan ornamen RPG; tidak menyalin logo, artwork, ikon atau tampilan persis.
+- Navigasi section memakai daftar kategori dengan ikon dan label, menggantikan
+  deretan tab panjang yang mudah terpotong. Section aktif terlihat jelas;
+  keyboard dan tombol kembali bekerja konsisten. Posisi pilihan dipertahankan
+  ketika pemain kembali dari detail, selama entri masih tersedia.
+- Tata letak umum adalah kategori, daftar/grid entri, dan panel detail pilihan.
+  Gunakan grid untuk koleksi visual serta daftar untuk teks panjang. Inventory
+  mempertahankan susunan paper doll kiri dan grid kanan sesuai sketsa sebelumnya.
+
+Perubahan per section:
+
+| Section | Daftar/grid | Panel detail dan aksi |
+| --- | --- | --- |
+| World Map | Jaringan node di perkamen, tetap mengikuti desain peta | Lokasi aktif, rute, fog dan akses travel yang sama dengan minimap |
+| Quest Journal | Daftar quest dengan kategori Active/Completed, indikator quest dipin | Deskripsi, tahap, lokasi tujuan, syarat belum terpenuhi, tombol Track |
+| Camp Market | Grid barang dengan ikon, rarity, harga dan penanda Owned | Deskripsi, perbandingan equipment, diskon, jumlah dan Buy; gate camp tetap berlaku |
+| Skills & Build | Kategori kelas/specialization yang sudah tersedia dan kartu skill | Rank, MP, cooldown, efek saat ini/berikutnya, Upgrade dan Reset; jangan tampilkan specialization rencana sebagai fitur aktif |
+| Archive / Arsip | Kategori Locations, Characters dan Enemies; kartu koleksi | Ilustrasi, nama dan lore yang sudah ditemukan; entri terkunci menjadi siluet tanpa spoiler |
+| Chronicle | Daftar riwayat dengan identitas pembicara dan urutan kejadian | Teks lengkap yang dapat dibaca, tanpa aksi replay atau reward |
+| Camp & Bonds | Kartu companion dan kategori Crafting | Portrait, affinity, quest pribadi, support, Recruit/Activate/Talk; crafting menampilkan resep, bahan dimiliki/diperlukan dan hasil |
+| Challenges | Kartu arena dengan status locked/first clear/cleared | Modifier, statistik, biaya, aturan reward dan Enter; gate pascatamat tetap berlaku |
+| Gallery | Kategori Endings dan Achievements dengan kartu locked/unlocked | Detail unlock yang diperoleh lintas save; ending belum ditemukan tidak membocorkan epilog |
+
+- Hover sekitar satu detik dan fokus keyboard menyediakan ringkasan seperlunya;
+  klik memilih entri untuk panel detail. Aksi penting memakai tombol eksplisit
+  agar memilih kartu tidak langsung membeli, meng-upgrade atau masuk battle.
+- Tombol disabled menjelaskan syaratnya. Pesan berhasil/gagal tampil dekat panel
+  aksi. Ukuran detail dapat digulir tanpa membuat navigasi kategori ikut hilang.
+- Redesain mempertahankan seluruh pembatasan transaksi, save, quest, combat dan
+  reward sekali ambil. World Map tetap visual graph, Chronicle tetap riwayat teks;
+  tidak memaksakan semua section menjadi grid item yang sama.
 
 Inventory RPG (empat referensi inventory pengguna):
 
@@ -277,6 +318,9 @@ Inventory juga diuji pada lebih dari 30 jenis item, stack, sort/filter, hover de
 keyboard, equip/unequip, pembatalan Remove, proteksi quest/material, dan save/load.
 Penghapusan/equipment disimpan atomik: kegagalan save tidak menghilangkan item.
 Panel paper doll dan grid harus tetap terbaca pada ukuran minimum/teks 120%.
+Semua section Codex harus lolos navigasi keyboard, empty/locked states, perpindahan
+kategori dan entri, panel detail panjang serta transaksi yang gagal. Uji bahwa
+memilih kartu tidak memicu aksi berbayar dan lore terkunci tidak membocorkan teks.
 
 
 ## 1.8 - Paths of Mastery (rencana)
@@ -379,6 +423,27 @@ serta rollback diuji. New Game+ tidak menggandakan item, reward atau bonus comba
 
 ## Langkah pertama yang disarankan
 
-Lanjutkan 1.7 dengan desain minimap, peta perkamen, dan inventory All/Quest Items.
-Pertahankan dialog bertahap, progres companion serta pengujian migrasi 1.6.
-Nomor versi game tetap 1.6 sampai implementasi berikutnya selesai.
+Lanjutkan 1.8 untuk specialization dan variasi combat. Pertahankan pengujian
+peta/fog, inventory, koleksi Codex, transaksi atomik dan kompatibilitas save 1.7.
+Versi aplikasi tetap 1.7 sampai implementasi berikutnya selesai.
+
+## Penyempurnaan Campfire & Purpose (selesai di 1.7)
+
+### Detail Challenges / Arena
+
+- Pertahankan gaya visual Traveler/Octopath yang dipilih pengguna. Gunakan daftar
+  arena vertikal di kiri, preview lawan yang lebih besar, dan panel informasi
+  terstruktur di kanan; referensi struktur challenge Star Rail dan modifier Hades.
+- Pisahkan statistik, modifier, ikon hadiah pertama/replay, persiapan HP/MP dan
+  companion, syarat akses, serta biaya dan tombol masuk yang posisinya konsisten.
+- Alasan tombol terkunci ditampilkan spesifik. Panel tidak perlu dipaksa penuh
+  tinggi layar jika kontennya pendek. Tidak menambahkan sistem reward/difficulty
+  baru hanya untuk mengisi ruang kosong.
+- Usulan yang ditampung telah disetujui dan diimplementasikan; tidak mengubah biaya/reward arena.
+
+### Start, header dan footer
+
+- Start campfire dengan preview autosave; header kontekstual, footer petunjuk kontrol,
+  Menu Adventure/Character/System dan pengingat tujuan quest sudah tersedia.
+- Gaya utama tetap Traveler/Octopath. Feedback transaksi bersifat sementara dan status
+  Saved mengikuti commit yang berhasil. Versi tetap 1.7, skema save tetap 5.

@@ -94,7 +94,7 @@ public class ProfileController {
         title.getStyleClass().add("screen-title");
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox nav = new HBox(10, title, spacer, navButton("World", app::showAdventure), navButton("Home", app::showHome), navButton("Story", app::showStory), navButton("Inventory", app::showInventory));
+        HBox nav = com.rpgchatgame.ui.RpgUi.nav(app,titleText);
         nav.setAlignment(Pos.CENTER_LEFT);
         nav.setPadding(new Insets(16, 22, 12, 22));
         nav.getStyleClass().add("top-nav");

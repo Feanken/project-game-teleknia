@@ -5,8 +5,8 @@
 
     <groupId>com.rpgchatgame</groupId>
     <artifactId>interactive-rpg-chat-story-game</artifactId>
-    <version>1.6.0</version>
-    <name>Teleknia - Living Journeys</name>
+    <version>1.7.0</version>
+    <name>Teleknia - Atlas of the Borderlands</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -41,6 +41,9 @@
     </dependencies>
 
     <build>
+        <!-- Keep Maven bytecode separate from IDE incremental compilation. -->
+        <outputDirectory>${project.build.directory}/maven-classes</outputDirectory>
+        <testOutputDirectory>${project.build.directory}/maven-test-classes</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -8,7 +8,7 @@ try {
     $jars = Get-ChildItem -LiteralPath $repo -Filter '*.jar' -Recurse | Where-Object {
         $_.FullName -match 'javafx-(base|graphics|controls|media).*21.0.5.*(win|linux|mac).jar|sqlite-jdbc.*3.46.1.3|jackson-(databind|core|annotations).*2.17.2|slf4j-api'
     } | ForEach-Object FullName
-    $classpath = (@('target/classes', 'target/test-classes') + $jars) -join ';'
+    $classpath = (@('target/maven-classes', 'target/maven-test-classes') + $jars) -join ';'
     & java -cp $classpath com.rpgchatgame.CampaignChecks
     if ($LASTEXITCODE -ne 0) { throw 'Campaign checks failed.' }
     & java -cp $classpath com.rpgchatgame.EssentialsChecks
@@ -23,4 +23,8 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Bond checks failed.' }
     & java -cp $classpath com.rpgchatgame.LivingChecks
     if ($LASTEXITCODE -ne 0) { throw 'Living checks failed.' }
+    & java -cp $classpath com.rpgchatgame.AtlasChecks
+    if ($LASTEXITCODE -ne 0) { throw 'Atlas checks failed.' }
+    & java -cp $classpath com.rpgchatgame.PresentationChecks
+    if ($LASTEXITCODE -ne 0) { throw 'Presentation checks failed.' }
 } finally { Pop-Location }

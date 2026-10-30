@@ -12,6 +12,12 @@ public class GameService {
     private final InventoryService inventory=new InventoryService();
     private final LocalStoryGeneratorService story=new LocalStoryGeneratorService();
     private GameState currentState;
+    private long saveRevision;
+    private String lastFeedback="";
+    public long saveRevision(){return saveRevision;}
+    public String lastFeedback(){return lastFeedback;}
+    private void saved(String feedback){saveRevision++;lastFeedback=feedback;}
+
 
     public GameService() { this(new DatabaseManager()); }
     public GameService(DatabaseManager database) {
@@ -42,7 +48,7 @@ public class GameService {
         Optional<GameState> saved=saves.load(slot);
         if(saved.isPresent()) {
             GameState next=saved.get();WorldService.prepare(next);BondService.prepare(next);next.setCurrentChoices(story.choices(next));
-            if(slot!=0)saves.save(next);
+            if(slot!=0){saves.save(next);saved("Journey loaded.");}
             currentState=next;
         }
         return saved;
@@ -50,13 +56,13 @@ public class GameService {
     public void saveSlot(int slot) {
         if(slot<1||slot>3)throw new IllegalArgumentException("Choose manual slot 1-3");
         if(currentState==null)throw new IllegalStateException("Start or load a character before making a manual save.");
-        saves.save(slot,currentState);
+        saves.save(slot,currentState);saved("Checkpoint saved.");
     }
     public java.util.List<SaveGameRepository.SlotInfo> saveSlots() { return saves.slots(); }
     public void restoreBackup(int slot) {
         GameState next=saves.restore(slot);WorldService.prepare(next);BondService.prepare(next);next.setCurrentChoices(story.choices(next));
-        if(slot!=0)saves.save(next);
-        currentState=next;
+        if(slot!=0){saves.save(next);saved("Journey loaded.");}
+        currentState=next;saved("Backup restored.");
     }
     public boolean hasCurrentGame() { return currentState!=null; }
     private void migrateLegacy() {
@@ -90,7 +96,7 @@ public class GameService {
     }
     public boolean hasSavedGame() { return saves.any(); }
     private GameState copy() { return JsonUtil.fromJson(JsonUtil.toJson(getCurrentState()),GameState.class); }
-    private void commit(GameState next) { BondService.prepare(next);saves.save(next);currentState=next; }
+    private void commit(GameState next) { BondService.prepare(next);saves.save(next);currentState=next;saved(""); }
 
     public StoryResponse performAction(String action) {
         if(action==null||action.isBlank()||action.length()>250)throw new IllegalArgumentException("Enter an action of 1-250 characters");
@@ -109,7 +115,7 @@ public class GameService {
         next.getStoryLogs().add(new StoryLog(StoryLog.Speaker.GAME_MASTER,response.getNarration()));
         String result=changes(response)+(levelMessage.isBlank()?"":" "+levelMessage);
         if(!result.isBlank())next.getStoryLogs().add(new StoryLog(StoryLog.Speaker.SYSTEM,result.trim()));
-        commit(next);return response;
+        commit(next);lastFeedback=result.trim();return response;
     }
     private String changes(StoryResponse response) {
         List<String> changes=new ArrayList<>();
@@ -122,7 +128,7 @@ public class GameService {
     }
     private String signed(int value) { return value>0?"+"+value:Integer.toString(value); }
     private String record(GameState next,String message) {
-        next.getStoryLogs().add(new StoryLog(StoryLog.Speaker.SYSTEM,message));commit(next);return message;
+        next.getStoryLogs().add(new StoryLog(StoryLog.Speaker.SYSTEM,message));commit(next);lastFeedback=message;return message;
     }
     public String useItem(String id) {
         GameState next=copy();
@@ -140,6 +146,22 @@ public class GameService {
         else if(entry.item().getType()==Item.ItemType.ACCESSORY)next.getCampaign().setAccessory(id);
         else return "This item cannot be equipped.";
         return record(next,"Equipped "+entry.item().getName()+". Attack "+ItemCatalog.attack(next)+", Defense "+ItemCatalog.defense(next)+".");
+    }
+    public String unequipItem(String id){
+        GameState next=copy();String blocked=AtlasService.inventoryLock(next);if(!blocked.isBlank())return blocked;
+        if(!AtlasService.equipped(next,id))return "This item is not equipped.";
+        var w=next.getCampaign();if(id.equals(w.getWeapon()))w.setWeapon("");if(id.equals(w.getArmor()))w.setArmor("");if(id.equals(w.getAccessory()))w.setAccessory("");
+        return record(next,"Unequipped "+ItemCatalog.equippedName(id)+". Base stats restored; HP and MP unchanged.");
+    }
+    public String removeItem(String id,int quantity){
+        GameState next=copy();String blocked=AtlasService.removeBlock(next,id);if(!blocked.isBlank())return blocked;
+        if(quantity<1||quantity>BondService.quantity(next,id))return "Invalid quantity. Nothing removed.";
+        for(var iterator=next.getInventory().iterator();iterator.hasNext();){var row=iterator.next();if(row.getItem().getId().equals(id)){row.setQuantity(row.getQuantity()-quantity);if(row.getQuantity()==0)iterator.remove();break;}}
+        return record(next,"Removed "+ItemCatalog.equippedName(id)+" x"+quantity+". No gold awarded.");
+    }
+    public StoryResponse travel(String locationId){
+        if(!AtlasService.canTravel(getCurrentState(),locationId))throw new IllegalStateException("No open route. Finish combat or conversation before traveling.");
+        return performAction("go_"+locationId);
     }
     public void trackQuest(String id) {
         if(!WorldContent.QUESTS.containsKey(id))throw new IllegalArgumentException("Unknown quest");
@@ -170,16 +192,17 @@ public class GameService {
         return record(next,"Difficulty changed to "+difficulty+". Rewards and quest progress stay unchanged.");
     }
     public boolean canShop() { var state=getCurrentState();return state.getCurrentLocation().equals("Survivor Camp")&&state.getCampaign().getEnemy()==null&&!state.getCampaign().epilogueClosed(); }
-    public String buyItem(String id) {
+    public String buyItem(String id){return buyItems(id,1);}
+    public String buyItems(String id,int quantity){
         if(!canShop())return "The market is at Survivor Camp. Finish combat before trading.";
         GameState next=copy();var entry=ItemCatalog.entry(id);
         if(entry==null||!ItemCatalog.shop().contains(entry))return "This item is not for sale.";
+        if(quantity<1||quantity>99||entry.item().getType()!=Item.ItemType.CONSUMABLE&&quantity!=1)return "Invalid quantity.";
         if(entry.item().getType()!=Item.ItemType.CONSUMABLE&&ItemCatalog.owns(next,id))return "You already own this equipment.";
-        if(next.getCharacter().getGold()<WorldService.price(next,entry))return "Not enough gold.";
-        int price=WorldService.price(next,entry);
-        next.getCharacter().setGold(next.getCharacter().getGold()-price);
-        inventory.addItem(next.getInventory(),ItemCatalog.stack(id,1));
-        return record(next,"Bought "+entry.item().getName()+" for "+price+" gold.");
+        long total=(long)WorldService.price(next,entry)*quantity;
+        if(next.getCharacter().getGold()<total)return "Not enough gold.";
+        next.getCharacter().setGold(next.getCharacter().getGold()-(int)total);inventory.addItem(next.getInventory(),ItemCatalog.stack(id,quantity));
+        return record(next,"Bought "+entry.item().getName()+(quantity>1?" x"+quantity:"")+" for "+total+" gold.");
     }
     public java.util.Set<String> gallery(){var all=saves.gallery();if(currentState!=null)all.addAll(BondService.achievements(currentState));return all;}
     public String companion(String action,String id){GameState next=copy();String message=BondService.manage(next,action,id);next.setCurrentStorySummary(message);next.setCurrentChoices(story.choices(next));return record(next,message);}

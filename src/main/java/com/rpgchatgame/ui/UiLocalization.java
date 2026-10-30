@@ -19,7 +19,7 @@ public final class UiLocalization {
     public static void apply(Node node){
         if(Boolean.TRUE.equals(node.getProperties().get("literal")))return;
         if(node.getAccessibleText()!=null)text(node.getProperties(),"ui.accessible",node.getAccessibleText(),node::setAccessibleText);
-        if(node instanceof Labeled label)text(node.getProperties(),"ui.text",label.getText(),label::setText);
+        if(node instanceof Labeled label){text(node.getProperties(),"ui.text",label.getText(),label::setText);if(label.getGraphic()!=null)apply(label.getGraphic());}
         if(node instanceof TextInputControl input)text(node.getProperties(),"ui.prompt",input.getPromptText(),input::setPromptText);
         if(node instanceof Control control&&control.getTooltip()!=null){var tooltip=control.getTooltip();text(tooltip.getProperties(),"ui.tip",tooltip.getText(),tooltip::setText);}
         if(node instanceof ScrollPane scroll&&scroll.getContent()!=null)apply(scroll.getContent());
