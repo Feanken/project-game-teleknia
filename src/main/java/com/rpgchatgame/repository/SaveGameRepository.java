@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 
 /** Three manual slots plus independent autosave; valid previous snapshots survive bad writes. */
 public final class SaveGameRepository {
-    public static final int SCHEMA = 4;
+    public static final int SCHEMA = 5;
     public record SlotInfo(int slot, boolean occupied, boolean corrupt, boolean backup,
                            String name, String characterClass, int level, String location, String savedAt) {}
     public static final class SaveProblem extends IllegalStateException {
@@ -63,13 +63,17 @@ public final class SaveGameRepository {
             };
             if(!known)throw new IllegalStateException("Unknown codex entry");
         }
+        if(world.getCompanion()==null||world.getChallenge()==null)throw new IllegalStateException("Missing bond state");
+        if(!world.getCompanion().isBlank()&&(com.rpgchatgame.service.BondService.companion(world.getCompanion())==null||!world.has("recruit_"+world.getCompanion())))throw new IllegalStateException("Invalid active companion");
+        if(!world.getChallenge().isBlank()&&(com.rpgchatgame.service.BondService.CHALLENGES.stream().noneMatch(c->c.id().equals(world.getChallenge()))||world.getEnemy()==null||!world.getEnemy().getId().equals("arena_"+world.getChallenge())||world.getEnding().isBlank()))throw new IllegalStateException("Invalid arena state");
+        if(world.getEnemy()!=null&&world.getEnemy().getId().startsWith("arena_")&&world.getChallenge().isBlank())throw new IllegalStateException("Missing arena state");
         int spent=0;
         for(var rank:world.getSkillRanks().entrySet()){
             if(SkillCatalog.find(state,rank.getKey())==null||rank.getValue()==null||rank.getValue()<1||rank.getValue()>3)throw new IllegalStateException("Invalid skill rank");
             spent+=rank.getValue();
         }
         if(spent>hero.getLevel())throw new IllegalStateException("Skill points exceed earned levels");
-        for(var cd:world.getCooldowns().entrySet())if((!cd.getKey().equals("heal")&&SkillCatalog.find(state,cd.getKey())==null)||cd.getValue()==null||cd.getValue()<1||cd.getValue()>8)
+        for(var cd:world.getCooldowns().entrySet())if((!cd.getKey().equals("companion")&&!cd.getKey().equals("heal")&&SkillCatalog.find(state,cd.getKey())==null)||cd.getValue()==null||cd.getValue()<1||cd.getValue()>8)
             throw new IllegalStateException("Invalid cooldown");
         for(var effects:List.of(world.getPlayerEffects(),world.getEnemyEffects()))for(var effect:effects.entrySet()){
             if(!Set.of("burn","poison","stun","shield").contains(effect.getKey())||effect.getValue()==null||effect.getValue().getTurns()<1||effect.getValue().getTurns()>5||effect.getValue().getPotency()<0||effect.getValue().getPotency()>1000)
@@ -93,7 +97,7 @@ public final class SaveGameRepository {
         GameState state=JsonUtil.fromJson(data.payload(),GameState.class);
         // Sequential v1 -> v2: gameplay payload is unchanged; slots, timestamp and checksum move into the envelope.
         int version=data.version();
-        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else if(version==3)version=4;else throw new IllegalStateException("Missing save migration"); }
+        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else if(version==3)version=4;else if(version==4)version=5;else throw new IllegalStateException("Missing save migration"); }
         validate(state);return state;
     }
     private Snapshot read(Connection connection,String table,int slot) throws SQLException {
@@ -121,7 +125,9 @@ public final class SaveGameRepository {
                     decode(previous); // Never promote corrupted data over a good backup.
                     put(connection,"save_backups",slot,previous);
                 } else if(read(connection,"save_backups",slot)==null)put(connection,"save_backups",slot,next);
-                put(connection,"save_slots",slot,next);connection.commit();
+                put(connection,"save_slots",slot,next);
+                archive(connection,state);
+                connection.commit();
             } catch(Exception error) { connection.rollback();throw error; }
         } catch(Exception error) { throw new SaveProblem(slot,"Save failed. Existing data and backup were preserved. Recover a damaged slot before overwriting it.",error); }
     }
@@ -130,7 +136,10 @@ public final class SaveGameRepository {
         slot(slot);
         try(Connection connection=database.getConnection()) {
             Snapshot data=read(connection,"save_slots",slot);
-            return data==null?Optional.empty():Optional.of(decode(data));
+            if(data==null)return Optional.empty();
+            GameState state=decode(data);connection.setAutoCommit(false);
+            try{archive(connection,state);connection.commit();}catch(Exception error){connection.rollback();throw error;}
+            return Optional.of(state);
         } catch(Exception error) { throw new SaveProblem(slot,"This save cannot be loaded. Open Saves to inspect or restore its backup.",error); }
     }
     public GameState restore(int slot) {
@@ -143,7 +152,7 @@ public final class SaveGameRepository {
                 GameState restored=decode(backup);
                 String payload=JsonUtil.toJson(restored);
                 put(connection,"save_slots",slot,new Snapshot(SCHEMA,backup.savedAt(),payload,digest(payload)));
-                connection.commit();return restored;
+                archive(connection,restored);connection.commit();return restored;
             } catch(Exception error) { connection.rollback();throw error; }
         } catch(Exception error) { throw new SaveProblem(slot,"Backup could not be restored. Current data was kept.",error); }
     }
@@ -178,7 +187,7 @@ public final class SaveGameRepository {
                     if(read(connection,"save_slots",slot)!=null)throw new IllegalStateException("Migration refuses to overwrite existing slots");
                     put(connection,"save_backups",slot,next);put(connection,"save_slots",slot,next);
                 }
-                connection.commit();
+                archive(connection,state);connection.commit();
             } catch(Exception error) {connection.rollback();throw error;}
         } catch(Exception error) { throw new IllegalStateException("Save import failed; legacy tables were preserved",error); }
     }
@@ -193,4 +202,15 @@ public final class SaveGameRepository {
         } catch(Exception error) { throw new IllegalStateException("Version 1.1 save import failed. Original data was preserved.",error); }
         if(legacy!=null)importState(legacy);
     }
+    private void archive(Connection connection,GameState state)throws SQLException{
+        try(var statement=connection.prepareStatement("INSERT OR IGNORE INTO profile_unlocks(id) VALUES(?)")){
+            for(String id:com.rpgchatgame.service.BondService.achievements(state)){statement.setString(1,id);statement.executeUpdate();}
+        }
+    }
+    public Set<String> gallery(){
+        Set<String> result=new TreeSet<>();
+        try(var c=database.getConnection();var q=c.createStatement();var rows=q.executeQuery("SELECT id FROM profile_unlocks ORDER BY id")){while(rows.next())result.add(rows.getString(1));}
+        catch(SQLException error){throw new IllegalStateException("Unable to read gallery",error);}return result;
+    }
+
 }

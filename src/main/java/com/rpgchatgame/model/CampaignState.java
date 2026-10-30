@@ -25,6 +25,12 @@ public class CampaignState {
     public String getTrackedQuest(){return trackedQuest;}
     public void setTrackedQuest(String value){trackedQuest=value;}
     public boolean epilogueClosed(){return !ending.isBlank()&&!has("borderlands_reopened");}
+    private String companion = "";
+    private String challenge = "";
+    public String getCompanion(){return companion;}
+    public void setCompanion(String value){companion=value;}
+    public String getChallenge(){return challenge;}
+    public void setChallenge(String value){challenge=value;}
     private String difficulty = "STANDARD";
     private String accessory = "";
     private Map<String,Integer> skillRanks = new LinkedHashMap<>();

@@ -130,6 +130,18 @@ public final class UiSmokeChecks {
     var vitality=root().lookup("#enemy-vitality");var frame=root().lookup(".rpg-scene");
     check(vitality.localToScene(vitality.getBoundsInLocal()).getMaxY()<=frame.localToScene(frame.getBoundsInLocal()).getMaxY()+1,"Enemy HP remains inside scene frame at minimum size");
     check(root().lookupAll(".text-input").isEmpty(),"No text input after NPC or battle transitions");capture("rime-battle-id");
+    game.performAction("flee");game.getCurrentState().getCampaign().getFlags().addAll(java.util.List.of("survivors","q_signal","q_caravan","q_oath","q_medicine","q_chart"));game.performAction("look");
+    app.showAdventure(6,"");check(root().lookup("#recruit-mira")!=null,"Camp systems tab rendered");
+    ((Button)root().lookup("#recruit-mira")).fire();((Button)root().lookup("#activate-mira")).fire();((Button)root().lookup("#bond-mira")).fire();
+    check(game.getCurrentState().getCampaign().getCompanion().equals("mira")&&game.getCurrentState().getCampaign().has("bond_mira"),"Recruit, activate and personal quest through UI");
+    int beforeCraft=com.rpgchatgame.service.BondService.quantity(game.getCurrentState(),"ember_shard");((Button)root().lookup("#craft-potion")).fire();
+    check(com.rpgchatgame.service.BondService.quantity(game.getCurrentState(),"ember_shard")==beforeCraft-1,"Crafting consumes materials through UI");capture("bonds-crafting-id");
+    app.showAdventure(7,"");check(((Button)root().lookup("#challenge-ash")).isDisabled(),"Arena gated before ending");
+    game.getCurrentState().getCharacter().setGold(100);game.getCurrentState().getCampaign().setEnding("THE SEALED CROWN");game.getCurrentState().getCampaign().mark("borderlands_reopened","");game.performAction("look");
+    app.showAdventure(7,"");capture("challenge-board-id");((Button)root().lookup("#challenge-ash")).fire();
+    check(game.getCurrentState().getCampaign().getEnemy().getId().equals("arena_ash"),"Arena button opens encounter scene");capture("arena-battle-id");game.performAction("flee");
+    app.showAdventure(8,"");check(label("Ending / THE SEALED CROWN"),"Cross-save ending gallery visible");capture("gallery-id");
+    app.showSettings();((CheckBox)root().lookup("#reduced-motion-setting")).fire();check(app.getSettings().reducedMotion(),"Reduced motion saved through UI");
     finish(null);
    }catch(Throwable error){finish(error);}});
   }catch(Throwable error){finish(error);}});

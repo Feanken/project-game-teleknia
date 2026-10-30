@@ -19,7 +19,9 @@ public final class StoryController {
     private final TilePane choices=new TilePane(8,8);
     private final GameState state;
     private String category="All";
+    private String animation="";
     public StoryController(MainApp app,GameService game){this.app=app;this.game=game;this.state=game.getCurrentState();}
+    public StoryController(MainApp app,GameService game,String animation){this(app,game);this.animation=animation;}
     private Label text(String value,String style){Label label=new Label(value);label.setWrapText(true);if(!style.isBlank())label.getStyleClass().add(style);return label;}
     private Button button(String title,Runnable action){Button b=new Button(title);b.getStyleClass().addAll("game-button","nav-button");b.setOnAction(e->app.runSafely(action));return b;}
     private ScrollPane scroll(Node content){ScrollPane pane=new ScrollPane(content);pane.setFitToWidth(true);pane.getStyleClass().add("plain-scroll");return pane;}
@@ -31,7 +33,22 @@ public final class StoryController {
         nav.setAlignment(Pos.CENTER_LEFT);nav.setPadding(new Insets(12,16,12,16));nav.getStyleClass().add("top-nav");root.setTop(nav);
         ScrollPane party=scroll(party());party.setPrefWidth(230);party.setMinWidth(205);party.setMaxWidth(250);root.setLeft(party);
         VBox content=new VBox(10,scene(location),narration(),actions());content.setPadding(new Insets(12));root.setCenter(content);
-        if(System.getProperty("teleknia.uiCheck.root")==null){var fade=new javafx.animation.FadeTransition(javafx.util.Duration.millis(160),content);fade.setFromValue(.45);fade.setToValue(1);fade.play();}
+        if(!app.getSettings().reducedMotion()&&System.getProperty("teleknia.uiCheck.root")==null){var fade=new javafx.animation.FadeTransition(javafx.util.Duration.millis(160),content);fade.setFromValue(.45);fade.setToValue(1);fade.play();}
+        if(!app.getSettings().reducedMotion()&&System.getProperty("teleknia.uiCheck.root")==null&&!animation.isBlank()){
+            Node actor=content.lookup("#hero-actor"),target=content.lookup("#target-actor");
+            if(actor!=null){
+                boolean heal=animation.equals("heal");
+                if(heal)actor.setEffect(new javafx.scene.effect.DropShadow(12,javafx.scene.paint.Color.LIGHTGREEN));
+                var pulse=new javafx.animation.FadeTransition(javafx.util.Duration.millis(120),actor);pulse.setFromValue(1);pulse.setToValue(heal?.65:.4);pulse.setCycleCount(2);pulse.setAutoReverse(true);pulse.setOnFinished(e->actor.setEffect(null));
+                if(heal)pulse.play();else{
+                    var attack=new javafx.animation.TranslateTransition(javafx.util.Duration.millis(110),actor);attack.setByX(animation.equals("hit")?-8:8);attack.setCycleCount(2);attack.setAutoReverse(true);
+                    new javafx.animation.SequentialTransition(attack,pulse).play();
+                }
+                if(target!=null&&!state.getCampaign().getEnemyEffects().isEmpty()){
+                    var status=new javafx.animation.FadeTransition(javafx.util.Duration.millis(160),target);status.setFromValue(1);status.setToValue(.45);status.setCycleCount(2);status.setAutoReverse(true);status.play();
+                }
+            }
+        }
         return root;
     }
     private VBox party(){
@@ -40,6 +57,9 @@ public final class StoryController {
         if(!state.getCampaign().getEnemyEffects().isEmpty())status.getChildren().add(text("Foe: "+CombatService.effects(state.getCampaign().getEnemyEffects()),"status-badge"));
         var hero=state.getCharacter();
         VBox box=new VBox(10,status,text("Gold: "+hero.getGold()+" / EXP: "+hero.getExp()+" / 100","item-meta"));box.setPadding(new Insets(12,0,12,12));
+        var ally=BondService.companion(state.getCampaign().getCompanion());
+        if(ally!=null)box.getChildren().add(PixelAssets.heading(ally.sprite(),ally.name(),ally.role()));
+        box.getChildren().add(button(ally==null?"Camp & Bonds":ally.name()+" / Affinity "+BondService.affinity(state,ally),()->app.showAdventure(6,"")));
         var tracked=WorldService.tracked(state);
         VBox quest=new VBox(8,text("TRACKED QUEST","eyebrow"),text(tracked==null?"All milestones complete":tracked.title(),"panel-title"),text(tracked==null?state.getCurrentQuest():tracked.description(),"item-meta"),button("Quest Journal",()->app.showAdventure(1,"")));
         quest.getStyleClass().add("card");box.getChildren().add(quest);
@@ -51,13 +71,13 @@ public final class StoryController {
         Label region=text(location.region()+" / "+UiText.tr(state.getCampaign().getDifficulty()),"eyebrow");
         ImageView vista=PixelAssets.view(location.sprite(),2);
         Button map=button("",()->app.showAdventure(0,""));map.setGraphic(vista);map.setTooltip(new Tooltip("Open regional map"));map.getStyleClass().add("scene-vista");map.setId("scene-map");
-        VBox hero=new VBox(5,PixelAssets.view("field_"+state.getCharacter().getCharacterClass().toLowerCase(java.util.Locale.ROOT)),text(state.getCharacter().getName(),"actor-name"));hero.setAlignment(Pos.CENTER);hero.setPrefWidth(95);hero.setMaxWidth(115);hero.getChildren().get(1).getProperties().put("literal",true);
+        VBox hero=new VBox(5,PixelAssets.view("field_"+state.getCharacter().getCharacterClass().toLowerCase(java.util.Locale.ROOT)),text(state.getCharacter().getName(),"actor-name"));hero.setId("hero-actor");hero.setAlignment(Pos.CENTER);hero.setPrefWidth(95);hero.setMaxWidth(115);hero.getChildren().get(1).getProperties().put("literal",true);
         ((Label)hero.getChildren().get(1)).setWrapText(false);((Label)hero.getChildren().get(1)).setMaxWidth(95);
-        VBox target=new VBox(5);target.setAlignment(Pos.CENTER);target.setPrefWidth(140);target.setMaxWidth(160);
+        VBox target=new VBox(5);target.setId("target-actor");target.setAlignment(Pos.CENTER);target.setPrefWidth(140);target.setMaxWidth(160);
         var enemy=state.getCampaign().getEnemy();
         if(enemy!=null){
             var data=WorldContent.MONSTERS.get(enemy.getId());
-            Button portrait=button("",()->submit("attack"));portrait.setGraphic(PixelAssets.view(data.sprite()));portrait.setId("scene-opponent");portrait.getStyleClass().add("actor-portrait");portrait.setTooltip(new Tooltip("Click to attack"));
+            Button portrait=button("",()->submit("attack"));portrait.setGraphic(PixelAssets.view(data==null?BondService.CHALLENGES.stream().filter(c->enemy.getId().equals("arena_"+c.id())).findFirst().map(BondService.Challenge::sprite).orElse("field_guardian"):data.sprite()));portrait.setId("scene-opponent");portrait.getStyleClass().add("actor-portrait");portrait.setTooltip(new Tooltip("Click to attack"));
             target.getChildren().addAll(portrait,text(enemy.getName(),"actor-name"));
         }else{
             var people=WorldService.npcs(state);
@@ -117,7 +137,7 @@ public final class StoryController {
     private void populate(){
         choices.getChildren().clear();
         for(var choice:state.getCurrentChoices()){
-            String id=choice.getAction();boolean travel=id.startsWith("go_");boolean item=id.equals("potion")||id.equals("mana");
+            String id=choice.getAction();boolean travel=id.startsWith("go_");boolean item=Set.of("potion","mana","greater","focus").contains(id);
             if(category.equals("Travel")&&!travel||category.equals("Interact")&&travel||category.equals("Items")&&!item||category.equals("Skills")&&(item||id.equals("flee")))continue;
             Button action=button(choice.getLabel(),()->submit(id));action.getStyleClass().add("choice-button");action.setMaxWidth(Double.MAX_VALUE);
             String tip="";if(state.getCampaign().getEnemy()!=null){tip=UiText.tr(CombatService.unavailable(state,id));action.setDisable(!tip.isBlank());var skill=SkillCatalog.find(state,id);if(skill!=null)tip+=(tip.isBlank()?"":"\n")+UiText.tr(skill.description());}
@@ -134,6 +154,6 @@ public final class StoryController {
                 WorldContent.QUESTS.keySet().stream().filter(next.getCampaign()::has).count()>completed?AudioService.Sound.QUEST_COMPLETE:
                 after<potions?AudioService.Sound.POTION:response.getHpChange()<0?AudioService.Sound.DAMAGE:
                 next.getCampaign().getCodex().size()>known?AudioService.Sound.DISCOVERY:response.getGoldChange()>0||!response.getItemsGained().isEmpty()?AudioService.Sound.REWARD:AudioService.Sound.ACTION;
-        app.getAudio().play(sound);app.showStory();
+        app.getAudio().play(sound);app.showStory(response.getHpChange()>0?"heal":state.getCampaign().getEnemy()!=null||next.getCampaign().getEnemy()!=null?(response.getHpChange()<0?"hit":"attack"):"");
     }
 }

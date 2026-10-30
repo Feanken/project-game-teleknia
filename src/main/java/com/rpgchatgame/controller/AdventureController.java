@@ -26,7 +26,7 @@ public class AdventureController {
         HBox nav=new HBox(10,title,spacer,button("Home",app::showHome),button("Story",app::showStory),button("Inventory",app::showInventory),button("Profile",app::showProfile));
         nav.setAlignment(Pos.CENTER_LEFT);nav.setPadding(new Insets(16,22,12,22));nav.getStyleClass().add("top-nav");root.setTop(nav);
         TabPane tabs=new TabPane();tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        tabs.getTabs().addAll(new Tab("WORLD MAP",scroll(map(state))),new Tab("QUEST JOURNAL",scroll(journal(state))),new Tab("CAMP MARKET",scroll(market(state))),new Tab("SKILLS & BUILD",scroll(build(state))),new Tab("CODEX",scroll(codex(state))),new Tab("CHRONICLE",scroll(chronicle(state))));
+        tabs.getTabs().addAll(new Tab("WORLD MAP",scroll(map(state))),new Tab("QUEST JOURNAL",scroll(journal(state))),new Tab("CAMP MARKET",scroll(market(state))),new Tab("SKILLS & BUILD",scroll(build(state))),new Tab("CODEX",scroll(codex(state))),new Tab("CHRONICLE",scroll(chronicle(state))),new Tab("CAMP & BONDS",scroll(bonds(state))),new Tab("CHALLENGES",scroll(challenges(state))),new Tab("GALLERY",scroll(gallery())));
         tabs.getSelectionModel().select(selectedTab);root.setCenter(tabs);return root;
     }
     private ScrollPane scroll(Parent content) {
@@ -122,6 +122,44 @@ public class AdventureController {
         box.getChildren().add(text("STATUS RULES / Damage over time ticks at the end of valid rounds, including its application round, then duration decreases. Stun skips this round's enemy action. Shield absorbs direct damage only. Effects refresh duration and keep the higher potency; they never add stacks. Cooldowns require the shown number of OTHER valid actions. Combat exit clears all effects and cooldowns."));
         box.getChildren().add(text("FATIGUE / After turn 12, enemy direct attacks gain 1 power every two turns. Guard and healing cannot stall a fight forever."));
         return box;
+    }
+
+    private VBox bonds(GameState state){
+        VBox box=section("backpack","BONDS & CRAFTING","Visit Survivor Camp to recruit, switch companions and craft. One active ally; support spends a turn and has a 3-action cooldown. Companions never die: retreat/defeat keeps the ally, resets cooldown. Affinity comes only from distinct milestones.");
+        Label feedback=text("");feedback.getStyleClass().add("feedback-label");box.getChildren().add(feedback);
+        for(var c:BondService.COMPANIONS){
+            boolean joined=BondService.recruited(state,c);
+            VBox card=new VBox(9,PixelAssets.heading(c.sprite(),c.name()+" / "+(state.getCampaign().getCompanion().equals(c.id())?"ACTIVE":joined?"RECRUITED":"LOCKED"),c.role()),
+                text("Recruit: "+c.gate()+" | Affinity "+BondService.affinity(state,c)+" / 3"),text("Personal quest: "+c.quest()+" / "+(state.getCampaign().has("bond_"+c.id())?"COMPLETE":"Complete 2: "+String.join(", ",c.bonds()))));
+            for(String action:List.of("recruit","activate","talk","bond")){
+                Button b=button(action,()->app.showAdventure(6,game.companion(action,c.id())));b.setId(action+"-"+c.id());
+                b.setDisable(!BondService.camp(state)||(action.equals("recruit")?(joined||!state.getCampaign().has(c.gate())):!joined)||(action.equals("bond")&&(BondService.affinity(state,c)<2||state.getCampaign().has("bond_"+c.id()))));card.getChildren().add(b);
+            }
+            card.getStyleClass().add("card");box.getChildren().add(card);
+        }
+        Button dismiss=button("Rest companion at camp",()->app.showAdventure(6,game.companion("dismiss","")));dismiss.setDisable(!BondService.camp(state)||state.getCampaign().getCompanion().isBlank());box.getChildren().add(dismiss);
+        box.getChildren().add(text("CRAFTING / Materials are finite milestone rewards (also granted to old saves). Equipment recipes are one per owned item. No selling or repeatable gold/EXP rewards."));
+        for(var r:BondService.RECIPES){
+            var entry=ItemCatalog.entry(r.output());
+            Button craft=button("Craft / "+r.gold()+" gold",()->app.showAdventure(6,game.craft(r.id())));craft.setId("craft-"+r.id());
+            craft.setDisable(!BondService.camp(state)||!state.getCampaign().has(r.blueprint())||BondService.quantity(state,r.material())<r.amount()||state.getCharacter().getGold()<r.gold()||(entry.item().getType()!=Item.ItemType.CONSUMABLE&&ItemCatalog.owns(state,r.output())));
+            VBox card=new VBox(8,PixelAssets.heading(PixelAssets.item(r.output()),entry.item().getName(),entry.item().getEffect()),text("Blueprint: "+r.blueprint()+" | "+r.material()+": "+BondService.quantity(state,r.material())+" / "+r.amount()),craft);card.getStyleClass().add("card");box.getChildren().add(card);
+        }
+        return box;
+    }
+    private VBox challenges(GameState state){
+        VBox box=section("field_guardian","CHALLENGE BOARD","After an ending, choose Explore the borderlands, then return to camp. Arena fights preserve ending, quests and unique encounter rewards. Entry: 10 gold, no refund on retreat/defeat. First clear grants 2 materials; replays grant none.");
+        Label feedback=text("");feedback.getStyleClass().add("feedback-label");box.getChildren().add(feedback);
+        for(var c:BondService.CHALLENGES){
+            Button enter=button("Enter arena",()->{game.challenge(c.id());app.showStory();});enter.setId("challenge-"+c.id());enter.setDisable(!BondService.camp(state)||state.getCampaign().getEnding().isBlank()||state.getCharacter().getGold()<10);
+            VBox card=new VBox(8,PixelAssets.heading(c.sprite(),c.name(),c.modifier()),text("HP "+c.hp()+" / Attack "+c.attack()+" / Defense "+c.defense()),text(state.getCampaign().has("challenge_"+c.id())?"CLEARED / Replay without rewards":"FIRST CLEAR AVAILABLE"),enter);card.getStyleClass().add("card");box.getChildren().add(card);
+        }return box;
+    }
+    private VBox gallery(){
+        VBox box=section("journal","ENDING GALLERY & ACHIEVEMENTS","Profile unlocks persist across all slots and new characters. Gallery is read-only; restoring an older save cannot erase unlocks.");
+        var unlocked=game.gallery();if(unlocked.isEmpty())box.getChildren().add(text("No profile unlocks yet. Continue your adventure."));
+        for(String id:unlocked)box.getChildren().add(text(id));
+        box.getChildren().add(text("Discover 3 story endings and 6 achievements: A Kindness Remembered, Roads Beyond Emberwood, Found Family, Bonds and Embers, Master Artisan, Arena Champion. Progress unlocks through decisions, recruitment, personal quests, crafting and challenges."));return box;
     }
     private VBox market(GameState state) {
         VBox box=section("backpack","CAMP MARKET","Gold: "+state.getCharacter().getGold()+" / "+UiText.tr(game.canShop()?"The smith and herbalist are ready to trade.":"Visit Survivor Camp outside combat to trade."));

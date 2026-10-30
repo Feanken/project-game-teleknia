@@ -9,6 +9,9 @@ public final class UiSettings {
     private String language="en";
     private double textScale=1;
     private boolean fullscreen;
+    private boolean reducedMotion;
+    public boolean reducedMotion(){return reducedMotion;}
+    public void setReducedMotion(boolean value){reducedMotion=value;save();}
     private boolean tutorialSeen;
     private double width=1180,height=820;
     public UiSettings(){this(Path.of("data","ui.properties"));}
@@ -31,11 +34,12 @@ public final class UiSettings {
         try(var input=Files.newInputStream(file)){
             p.load(input);language=p.getProperty("language","en").equals("id")?"id":"en";
             textScale=number(p,"textScale",1,.9,1.2);width=number(p,"width",1180,980,3840);height=number(p,"height",820,680,2160);
+            reducedMotion=Boolean.parseBoolean(p.getProperty("reducedMotion"));
             fullscreen=Boolean.parseBoolean(p.getProperty("fullscreen"));tutorialSeen=Boolean.parseBoolean(p.getProperty("tutorialSeen"));
         }catch(Exception error){System.getLogger(UiSettings.class.getName()).log(System.Logger.Level.WARNING,"Using default UI settings",error);}
     }
     public void save(){
-        Properties p=new Properties();p.setProperty("language",language);p.setProperty("textScale",Double.toString(textScale));p.setProperty("fullscreen",Boolean.toString(fullscreen));
+        Properties p=new Properties();p.setProperty("reducedMotion",Boolean.toString(reducedMotion));p.setProperty("language",language);p.setProperty("textScale",Double.toString(textScale));p.setProperty("fullscreen",Boolean.toString(fullscreen));
         p.setProperty("tutorialSeen",Boolean.toString(tutorialSeen));p.setProperty("width",Double.toString(width));p.setProperty("height",Double.toString(height));
         Path temporary=file.resolveSibling(file.getFileName()+".tmp");
         try{

@@ -5,8 +5,8 @@
 
     <groupId>com.rpgchatgame</groupId>
     <artifactId>interactive-rpg-chat-story-game</artifactId>
-    <version>1.4.1</version>
-    <name>Teleknia - Beyond Emberwood</name>
+    <version>1.5.0</version>
+    <name>Teleknia - Bonds and Embers</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

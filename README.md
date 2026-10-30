@@ -1,13 +1,13 @@
-# Teleknia 1.4.1: Ashes of the Northern Gate
+# Teleknia 1.5: Bonds and Embers
 
 Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
 yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
 5 encounter (2 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.4.1** (build Maven `1.4.1`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.5** (build Maven `1.5.0`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
-Rencana versi 1.2 sampai 2.0 tersedia di [ROADMAP.md](ROADMAP.md).
+Rencana versi 1.2 sampai 1.10 tersedia di [ROADMAP.md](ROADMAP.md).
 
 ## Menjalankan
 
@@ -71,6 +71,60 @@ portrait NPC untuk dialog, portrait musuh untuk Attack, atau gambar lokasi untuk
 membuka peta. Pilih kartu aksi dan gunakan filter All/Interact/Travel atau
 All/Skills/Items saat combat. **Read scene** membuka narasi lengkap tanpa memakai
 giliran. Tombol 1-9 dan 0 memilih kartu yang terlihat; Tab/Enter tetap didukung.
+
+## Fitur baru 1.5 - Bonds and Embers
+
+Buka World, lalu tab **Camp & Bonds**, **Challenges**, atau **Gallery**.
+Rekrut/switch/crafting memerlukan Survivor Camp di luar battle dan percakapan.
+
+| Companion | Rekrut setelah | Affinity dari milestone | Support |
+| --- | --- | --- | --- |
+| Mira | survivors | survivors, locket_returned, q_medicine | Heal 8 HP |
+| Sera | q_signal | q_signal, q_caravan, rime_resolved | Damage 8 |
+| Orin | q_oath | q_oath, archive, q_chart | Shield 8 |
+
+Satu companion aktif. Support memakai satu giliran, tanpa MP, cooldown tiga aksi
+lain. Affinity 2/3 membuka penyelesaian quest pribadi di camp: A Home Worth
+Returning To (Mira), A Road Without Fear (Sera), The Living Oath (Orin).
+Setelah quest pribadi, kekuatan support menjadi 12. Mengulang dialog tidak memberi
+affinity. Companion tetap aktif setelah kalah/retreat; cooldown direset.
+
+Material diberikan sekali per milestone, termasuk untuk progres save lama:
+
+- Ember Shard x4: wolf, guardian, warden.
+- Frost Thread x4: q_signal, q_oath, rime_resolved.
+- Tide Pearl x4: q_chart, q_captain.
+
+| Resep | Blueprint dari | Material | Gold |
+| --- | --- | --- | --- |
+| Small Potion | wolf | 1 Ember Shard | 3 |
+| Mana Potion | wolf | 1 Ember Shard | 3 |
+| Greater Potion (65 HP) | q_signal | 1 Frost Thread | 6 |
+| Focus Draught (45 MP) | q_chart | 1 Tide Pearl | 6 |
+| Tempered Blade (+12 Attack) | guardian | 3 Ember Shard | 15 |
+| Woven Ward (+8 Defense) | q_oath | 3 Frost Thread | 15 |
+| Bond Charm (+5 Defense) | q_chart | 3 Tide Pearl | 15 |
+| Awakened Frost (+17 Attack) | rime_resolved | 4 Frost Thread | 20 |
+
+Consumable bisa dipakai di Inventory atau melalui kartu battle. Crafting tidak
+memajukan giliran. Bahan/gold diambil hanya jika semua syarat terpenuhi.
+Equipment tidak bisa dibuat ketika sudah dimiliki. Tidak ada penjualan material.
+
+Setelah tamat pilih **Explore the borderlands**, kembali ke camp, buka Challenges.
+Trial of Ash memiliki attack +4; Trial of Ice defense +7; Trial of Tides HP +80.
+Stat final terlihat sebelum masuk. Biaya tiap masuk 10 gold tanpa refund, penalti
+retreat/defeat biasa tetap berlaku. Clear pertama memberi dua material wilayah;
+replay tanpa gold/EXP/loot. Ending, reputasi, quest dan loot unik tidak berubah.
+
+Gallery menyimpan ending dan enam achievement lintas slot/karakter, di tabel profil
+terpisah dalam database. New Game atau restore save tidak menghapus unlock.
+Penyimpanan profil atomik bersama snapshot. Menghapus database menghapus profil.
+Save skema 1-4 tetap terbaca, companion/arena mendapat default aman (skema 5).
+
+Settings > Reduce animations menonaktifkan animasi attack/hit/heal/status dan
+fade layar. Musik MP3 versi 1.4.1 tetap dipakai. Portrait NPC dan ikon kategori
+pixel 64x64 dipakai kembali. Kontrol utama baru tersedia dalam ID/EN; narasi dan
+lore masih Inggris; lokalisasi penuh direncanakan pada 1.10. Game tetap desktop JavaFX; versi browser belum dibuat.
 
 ## Fitur baru 1.4 - Beyond Emberwood
 
@@ -175,7 +229,7 @@ karakter. Pengaturan audio tetap di `data/audio.properties`.
 
 Save SQLite: `data/rpg_chat_game.db`, relatif terhadap folder aplikasi dijalankan.
 Tabel `save_slots` menyimpan slot 0 (auto) serta 1-3 (manual). `save_backups`
-menyimpan backup per slot. Snapshot skema 4 mencakup karakter, inventory,
+menyimpan backup per slot. Snapshot skema 5 mencakup karakter, inventory,
 equipment, flags, combat, skill ranks, cooldown, status, difficulty, quest, ending,
 reputasi, codex, dialog aktif, quest yang dipantau, dan seluruh riwayat pilihan.
 
@@ -185,11 +239,11 @@ save sebelumnya, backup, dan state aktif. Save manual yang bermasalah harus
 pulih dari backup sebelum dapat ditimpa. Pemulihan backup menjaga checkpoint
 manual lain; hasil pemulihan yang dimuat menjadi autosave aktif.
 
-Save skema 1/2/3 tetap terbaca. Data lama mendapat default fitur combat/world yang
+Save skema 1/2/3/4 tetap terbaca. Data lama mendapat default fitur combat/world yang
 belum ada, dengan difficulty Standard jika belum tersimpan. Reputasi awal berasal
 dari milestone yang sudah selesai dan hanya dihitung sekali. Default combat lama: Standard, ranks kosong, dan efek/cooldown
 kosong. HP musuh dan giliran aktif dipertahankan; level menentukan point tersedia.
-Slot diperbarui ke skema 4 saat ditulis atau dipulihkan; backup asal tetap tersedia.
+Slot diperbarui ke skema 5 saat ditulis atau dipulihkan; backup asal tetap tersedia.
 
 Save 1.1 diimpor sekali ke **slot manual 1 dan autosave**, termasuk kondisi combat.
 Payload asli `campaign_save` dipertahankan. Save 1.0 tetap mempertahankan karakter,

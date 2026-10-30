@@ -38,6 +38,11 @@ public final class PixelAssets {
 
     public static String item(String id) {
         return switch (id) {
+            case "greater_potion" -> "small_potion";
+            case "focus_draught", "tide_pearl", "bond_charm" -> "tide_ring";
+            case "tempered_blade", "awakened_frost" -> "frost_blade";
+            case "woven_ward", "frost_thread" -> "glacier_mail";
+            case "ember_shard" -> "ash_fang";
             case "frost_blade", "glacier_mail", "tide_ring", "rusty_sword", "small_potion", "old_map", "ash_fang", "frost_lens", "rune_tablet", "caravan_crate", "tide_medicine", "star_chart", "captains_bell" -> id;
             case "iron_sword", "ember_blade", "prospectors_blade" -> "rusty_sword";
             case "mana_potion" -> "mana";

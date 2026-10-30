@@ -1,5 +1,19 @@
 # Catatan Rilis Teleknia
 
+## 1.5 / Bonds and Embers - 30 Oktober 2026
+
+- Tiga companion: Mira (heal), Sera (damage), Orin (shield), satu aktif di battle.
+- Rekrutmen, dialog, affinity milestone dan tiga quest pribadi; support memakai giliran dan cooldown tiga aksi lain.
+- Delapan resep camp, tiga material dari milestone sekali ambil. Save lama mendapat material sesuai progres tanpa duplikasi.
+- Tiga arena pascatamat dengan modifier, biaya masuk, hadiah pertama terpisah dan replay tanpa reward cerita/gold/EXP.
+- Galeri tiga ending dan enam achievement lintas save dalam tabel profil terpisah; unlock atomik bersama snapshot.
+- Tab Camp & Bonds, Challenges, Gallery; HUD companion; consumable hasil crafting dapat dipakai dalam battle.
+- Animasi attack/hit/heal/status dan opsi Reduce animations yang tersimpan lintas save.
+- Skema save 5, migrasi default dari skema 1-4; cooldown support dan arena tersimpan.
+- Musik MP3 dan aset 64x64 dipertahankan. Portrait NPC/ikon kategori dipakai kembali.
+- Validasi: 798 pemeriksaan game/audio/sistem 1.5 dan 60 pemeriksaan UI lulus; termasuk migrasi skema 4, biaya crafting, support seluruh kelas, arena replay/save-load, dan galeri lintas karakter.
+
+
 ## 1.4.1 / Sound of the Borderlands - 29 Oktober 2026
 
 - Musik eksplorasi berbeda untuk Ashen Reach, Emberwood, Frostveil, dan Drowned Coast.
@@ -100,7 +114,7 @@ Nomor build Maven: `1.2.0`. Versi skema snapshot: `2`.
 34 pemeriksaan UI lulus untuk tutorial, save/load/recovery, filter, preview equipment, lokalisasi,
 shortcut, fullscreen, dan jendela 980 x 680 dengan skala teks 120%.
 
-## 1.1 / The Cinder Crown — 29 Oktober 2026
+## 1.1 / The Cinder Crown â€” 29 Oktober 2026
 
 Versi pengembangan campaign setelah baseline 1.0. Nomor build Maven: `1.1.0`.
 
@@ -136,7 +150,7 @@ Nomor skema snapshot tetap `1`; nomor skema penyimpanan terpisah dari versi game
 ### Validasi pengembangan campaign
 
 217 pemeriksaan integrasi: semua kombinasi tiga kelas/tiga ending, transaksi,
-combat, recovery, migrasi, dan rollback save. UI diperiksa sampai ukuran 980×680.
+combat, recovery, migrasi, dan rollback save. UI diperiksa sampai ukuran 980Ã—680.
 Runner: `scripts/check-game.ps1`.
 
 ## 1.0 / Baseline
@@ -145,5 +159,5 @@ Versi sebelum pengembangan campaign, ditetapkan sebagai baseline 1.0.
 
 - Game RPG chat offline berbasis JavaFX dan narasi lokal sederhana.
 - Home, Story, Inventory, Profile, statistik karakter, potion, serta save SQLite.
-- Desain pixel dark fantasy dengan sprite sumber 64×64.
+- Desain pixel dark fantasy dengan sprite sumber 64Ã—64.
 - Dua musik chiptune original, enam efek suara, kontrol volume, dan mute.

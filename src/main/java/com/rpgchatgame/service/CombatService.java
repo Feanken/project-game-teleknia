@@ -23,13 +23,18 @@ public final class CombatService {
     public static String unavailable(GameState state,String action){
         var hero=state.getCharacter();var skill=SkillCatalog.find(state,action);
         int cost=skill!=null?skill.mp():action.equals("spell")?10:action.equals("heal")?8:0;
+        if(action.equals("companion")){
+            var c=BondService.companion(state.getCampaign().getCompanion());
+            if(c==null||!BondService.recruited(state,c))return "No active companion.";
+            if(c.id().equals("mira")&&hero.getHp()>=hero.getMaxHp())return "HP is full. Companion support was not spent.";
+        }
         if(cooldown(state,action)>0)return "Cooldown: "+cooldown(state,action)+" other actions remaining.";
         if(hero.getMp()<cost)return "Not enough MP. Guard to recover mana; the enemy waits.";
         if((action.equals("heal")||action.equals("rally"))&&hero.getHp()>=hero.getMaxHp())return "HP is full. No resource or turn was spent.";
-        if(action.equals("potion")||action.equals("mana")){
-            String item=action.equals("potion")?"small_potion":"mana_potion";
+        if(Set.of("potion","mana","greater","focus").contains(action)){
+            String item=switch(action){case "potion"->"small_potion";case "mana"->"mana_potion";case "greater"->"greater_potion";default->"focus_draught";};
             if(!ItemCatalog.owns(state,item))return "No "+ItemCatalog.equippedName(item)+" remains. The enemy waits.";
-            if(action.equals("potion")?hero.getHp()>=hero.getMaxHp():hero.getMp()>=hero.getMaxMp())return "That resource is already full. Item kept; the enemy waits.";
+            if(ItemCatalog.entry(item).hp()>0?hero.getHp()>=hero.getMaxHp():hero.getMp()>=hero.getMaxMp())return "That resource is already full. Item kept; the enemy waits.";
         }
         return "";
     }
@@ -43,9 +48,12 @@ public final class CombatService {
         choices.addAll(List.of(new Choice("Arcane Bolt / 10 MP","spell"),new Choice("Guard / recover 6 MP","guard"),
                 new Choice("Mend / 8 MP"+(cooldown(state,"heal")>0?" / CD "+cooldown(state,"heal"):""),"heal"),
                 new Choice("Drink HP potion","potion"),new Choice("Drink mana draught","mana"),new Choice("Retreat / lose up to 5 gold","flee")));
+        if(ItemCatalog.owns(state,"greater_potion"))choices.add(new Choice("Greater Potion / 65 HP","greater"));
+        if(ItemCatalog.owns(state,"focus_draught"))choices.add(new Choice("Focus Draught / 45 MP","focus"));
+        if(!state.getCampaign().getCompanion().isBlank())choices.add(new Choice("Companion support / CD 3","companion"));
         return choices;
     }
-    public static void clear(GameState state){var w=state.getCampaign();w.getPlayerEffects().clear();w.getEnemyEffects().clear();w.getCooldowns().clear();w.setDialogueNode("");w.setTurn(0);}
+    public static void clear(GameState state){var w=state.getCampaign();w.getPlayerEffects().clear();w.getEnemyEffects().clear();w.getCooldowns().clear();w.setDialogueNode("");w.setTurn(0);w.setChallenge("");}
     public void begin(GameState state,Enemy enemy){clear(state);state.getCampaign().setEnemy(enemy);}
     public static void applyEffect(Map<String,StatusEffect> effects,String id,int turns,int potency){
         var previous=effects.get(id);
@@ -96,6 +104,16 @@ public final class CombatService {
             }
             text.append(skill.name()).append("! ");
         }else switch(action){
+            case "companion"->{
+                var ally=BondService.companion(world.getCompanion());int power=world.has("bond_"+ally.id())?12:8;
+                setCooldown(state,"companion",3);
+                switch(ally.id()){
+                    case "mira"->hp=Math.min(hero.getMaxHp(),hp+power);
+                    case "sera"->damage=power;
+                    case "orin"->applyEffect(world.getPlayerEffects(),"shield",2,power);
+                }
+                text.append(ally.name()).append(" supports you! ");
+            }
             case "attack"->{
                 boolean critical=ItemCatalog.criticalEligible(state)&&(world.getTurn()+1)%ItemCatalog.criticalPeriod(state)==0;
                 damage=Math.max(1,ItemCatalog.attack(state)-enemy.getDefense());if(critical)damage+=hero.getAgility()/2;
@@ -104,9 +122,9 @@ public final class CombatService {
             case "spell"->{mp-=10;damage=hero.getIntelligence()*2+12;text.append("Arcane Bolt ignores armor. ");}
             case "guard"->{guard=true;mp=Math.min(hero.getMaxMp(),mp+6);text.append("You Guard and recover mana. ");}
             case "heal"->{mp-=8;hp=Math.min(hero.getMaxHp(),hp+25+hero.getIntelligence());setCooldown(state,"heal",2);text.append("Mend restores health. ");}
-            case "potion","mana"->{
-                String item=action.equals("potion")?"small_potion":"mana_potion";inventory.remove(state.getInventory(),item);
-                if(action.equals("potion"))hp=Math.min(hero.getMaxHp(),hp+35);else mp=Math.min(hero.getMaxMp(),mp+25);
+            case "potion","mana","greater","focus"->{
+                String item=switch(action){case "potion"->"small_potion";case "mana"->"mana_potion";case "greater"->"greater_potion";default->"focus_draught";};inventory.remove(state.getInventory(),item);
+                var entry=ItemCatalog.entry(item);hp=Math.min(hero.getMaxHp(),hp+entry.hp());mp=Math.min(hero.getMaxMp(),mp+entry.mp());
                 text.append("You drink ").append(ItemCatalog.equippedName(item)).append(". ");
             }
             default->{response.setNarration("Choose a combat action.");return;}
@@ -147,7 +165,12 @@ public final class CombatService {
     }
     private void camp(GameState state,StoryResponse response){state.setCurrentLocation("Survivor Camp");state.getCampaign().getVisited().add("Survivor Camp");response.setNewLocation("Survivor Camp");}
     private void victory(GameState state,StoryResponse response,Enemy enemy,StringBuilder text){
-        var world=state.getCampaign();world.setEnemy(null);clear(state);
+        var world=state.getCampaign();String challenge=world.getChallenge();world.setEnemy(null);clear(state);
+        if(!challenge.isBlank()){
+            boolean first=world.mark("challenge_"+challenge,"Cleared arena: "+challenge+".");
+            if(first)response.getItemsGained().add(ItemCatalog.stack(challenge.equals("ash")?"ember_shard":challenge.equals("ice")?"frost_thread":"tide_pearl",2));
+            text.append(first?"Arena victory! First-clear crafting supplies awarded. ":"Arena victory! Replay: no additional rewards. ");return;
+        }
         if(!world.mark(enemy.getId(),"Defeated "+enemy.getName()+"."))return;
         var data=WorldContent.MONSTERS.get(enemy.getId());
         if(data==null)throw new IllegalStateException("Missing encounter definition");

@@ -23,12 +23,13 @@ public final class SettingsController {
         scale.setOnAction(event->app.runSafely(()->{settings.setTextScale(scale.getValue()/100.0);app.applyPreferences();}));
         CheckBox fullscreen=new CheckBox("Fullscreen");fullscreen.setSelected(settings.fullscreen());fullscreen.setId("fullscreen-setting");
         fullscreen.setOnAction(event->app.runSafely(()->app.setFullscreen(fullscreen.isSelected())));
+        CheckBox motion=new CheckBox("Reduce animations");motion.setId("reduced-motion-setting");motion.setSelected(settings.reducedMotion());motion.setOnAction(e->app.runSafely(()->settings.setReducedMotion(motion.isSelected())));
         Button back=new Button("Back");back.getStyleClass().addAll("game-button","secondary-button");back.setOnAction(event->app.runSafely(app::back));
         VBox content=new VBox(18,PixelAssets.heading("journal","PREFERENCES","Display, language and audio settings apply to every save."),
-                text("Language"),language,text("Text size"),scale,fullscreen,text("Audio"),new AudioControls(app.getAudio()),
+                text("Language"),language,text("Text size"),scale,fullscreen,motion,text("Audio"),new AudioControls(app.getAudio()),
                 text("Shortcuts"),text("F1 Help / F5 Save slots / F9 Load slots / F11 Fullscreen / Esc Settings or Back"),
                 text("1-9, 0 select the visible action cards. Esc leaves an NPC conversation. Tab and Enter navigate controls."),
-                text("Changes are saved automatically. Story narration and lore remain in English in 1.4."),back);
+                text("Changes are saved automatically. Story narration and lore remain in English in 1.5."),back);
         content.setPadding(new Insets(24));
         ScrollPane scroll=new ScrollPane(content);scroll.setFitToWidth(true);scroll.getStyleClass().add("plain-scroll");
         BorderPane root=new BorderPane(scroll);root.getStyleClass().add("app-root");return root;

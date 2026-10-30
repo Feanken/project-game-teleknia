@@ -413,5 +413,149 @@
     "mp": 0,
     "sold": false,
     "critical": 0
+  },
+  {
+    "item": {
+      "id": "ember_shard",
+      "name": "Ember Shard",
+      "type": "QUEST",
+      "rarity": "COMMON",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "Crafting material; earned once from milestones."
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "frost_thread",
+      "name": "Frost Thread",
+      "type": "QUEST",
+      "rarity": "COMMON",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "Crafting material; earned once from milestones."
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "tide_pearl",
+      "name": "Tide Pearl",
+      "type": "QUEST",
+      "rarity": "COMMON",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "Crafting material; earned once from milestones."
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "greater_potion",
+      "name": "Greater Potion",
+      "type": "CONSUMABLE",
+      "rarity": "COMMON",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "Restore 65 HP"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 65,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "focus_draught",
+      "name": "Focus Draught",
+      "type": "CONSUMABLE",
+      "rarity": "COMMON",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "Restore 45 MP"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 0,
+    "hp": 0,
+    "mp": 45,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "tempered_blade",
+      "name": "Tempered Blade",
+      "type": "WEAPON",
+      "rarity": "RARE",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "+12 Attack"
+    },
+    "price": 0,
+    "attack": 12,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "woven_ward",
+      "name": "Woven Ward",
+      "type": "ARMOR",
+      "rarity": "RARE",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "+8 Defense"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 8,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "bond_charm",
+      "name": "Bond Charm",
+      "type": "ACCESSORY",
+      "rarity": "RARE",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "+5 Defense"
+    },
+    "price": 0,
+    "attack": 0,
+    "defense": 5,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
+  },
+  {
+    "item": {
+      "id": "awakened_frost",
+      "name": "Awakened Frost",
+      "type": "WEAPON",
+      "rarity": "RARE",
+      "description": "Bonds and Embers camp crafting.",
+      "effect": "+17 Attack"
+    },
+    "price": 0,
+    "attack": 17,
+    "defense": 0,
+    "hp": 0,
+    "mp": 0,
+    "sold": false
   }
 ]

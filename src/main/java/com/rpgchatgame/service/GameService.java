@@ -41,7 +41,7 @@ public class GameService {
     public Optional<GameState> loadSlot(int slot) {
         Optional<GameState> saved=saves.load(slot);
         if(saved.isPresent()) {
-            GameState next=saved.get();WorldService.prepare(next);next.setCurrentChoices(story.choices(next));
+            GameState next=saved.get();WorldService.prepare(next);BondService.prepare(next);next.setCurrentChoices(story.choices(next));
             if(slot!=0)saves.save(next);
             currentState=next;
         }
@@ -54,7 +54,7 @@ public class GameService {
     }
     public java.util.List<SaveGameRepository.SlotInfo> saveSlots() { return saves.slots(); }
     public void restoreBackup(int slot) {
-        GameState next=saves.restore(slot);WorldService.prepare(next);next.setCurrentChoices(story.choices(next));
+        GameState next=saves.restore(slot);WorldService.prepare(next);BondService.prepare(next);next.setCurrentChoices(story.choices(next));
         if(slot!=0)saves.save(next);
         currentState=next;
     }
@@ -90,7 +90,7 @@ public class GameService {
     }
     public boolean hasSavedGame() { return saves.any(); }
     private GameState copy() { return JsonUtil.fromJson(JsonUtil.toJson(getCurrentState()),GameState.class); }
-    private void commit(GameState next) { saves.save(next);currentState=next; }
+    private void commit(GameState next) { BondService.prepare(next);saves.save(next);currentState=next; }
 
     public StoryResponse performAction(String action) {
         if(action==null||action.isBlank()||action.length()>250)throw new IllegalArgumentException("Enter an action of 1-250 characters");
@@ -181,4 +181,9 @@ public class GameService {
         inventory.addItem(next.getInventory(),ItemCatalog.stack(id,1));
         return record(next,"Bought "+entry.item().getName()+" for "+price+" gold.");
     }
+    public java.util.Set<String> gallery(){var all=saves.gallery();if(currentState!=null)all.addAll(BondService.achievements(currentState));return all;}
+    public String companion(String action,String id){GameState next=copy();String message=BondService.manage(next,action,id);next.setCurrentChoices(story.choices(next));return record(next,message);}
+    public String craft(String id){GameState next=copy();return record(next,BondService.craft(next,id));}
+    public String challenge(String id){GameState next=copy();String message=BondService.challenge(next,id);next.setCurrentStorySummary(message);next.setCurrentChoices(story.choices(next));return record(next,message);}
+
 }
