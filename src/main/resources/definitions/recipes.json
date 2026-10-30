@@ -5,7 +5,7 @@
     "blueprint": "wolf",
     "material": "ember_shard",
     "amount": 1,
-    "gold": 3
+    "gold": 2
   },
   {
     "id": "mana",
@@ -13,7 +13,7 @@
     "blueprint": "wolf",
     "material": "ember_shard",
     "amount": 1,
-    "gold": 3
+    "gold": 2
   },
   {
     "id": "greater",
@@ -21,7 +21,7 @@
     "blueprint": "q_signal",
     "material": "frost_thread",
     "amount": 1,
-    "gold": 6
+    "gold": 5
   },
   {
     "id": "focus",
@@ -29,7 +29,7 @@
     "blueprint": "q_chart",
     "material": "tide_pearl",
     "amount": 1,
-    "gold": 6
+    "gold": 5
   },
   {
     "id": "blade",
@@ -37,7 +37,7 @@
     "blueprint": "guardian",
     "material": "ember_shard",
     "amount": 3,
-    "gold": 15
+    "gold": 12
   },
   {
     "id": "ward",
@@ -45,7 +45,7 @@
     "blueprint": "q_oath",
     "material": "frost_thread",
     "amount": 3,
-    "gold": 15
+    "gold": 12
   },
   {
     "id": "charm",
@@ -53,7 +53,7 @@
     "blueprint": "q_chart",
     "material": "tide_pearl",
     "amount": 3,
-    "gold": 15
+    "gold": 12
   },
   {
     "id": "frost",
@@ -61,6 +61,6 @@
     "blueprint": "rime_resolved",
     "material": "frost_thread",
     "amount": 4,
-    "gold": 20
+    "gold": 18
   }
 ]

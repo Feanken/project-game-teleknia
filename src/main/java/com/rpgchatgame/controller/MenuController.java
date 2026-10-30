@@ -27,6 +27,9 @@ public final class MenuController {
         if(game.hasCurrentGame()){
             var state=game.getCurrentState();var hero=state.getCharacter();StatusPanel stats=new StatusPanel();stats.update(hero);stats.setPortraitVisible(false);stats.setMinWidth(0);
             HBox summary=new HBox(24,PixelAssets.view("field_"+hero.getCharacterClass().toLowerCase(java.util.Locale.ROOT),2),stats);summary.setAlignment(Pos.CENTER_LEFT);HBox.setHgrow(stats,Priority.ALWAYS);party.getChildren().add(summary);
+            var path=MasteryService.active(state);
+            if(path!=null)party.getChildren().add(text("Specialization: "+path.name()));
+            else if(hero.getLevel()>=5&&state.getCampaign().has("guardian"))party.getChildren().add(button(app,"Choose your specialization",()->{app.remember("codex.3.category","Specialization");app.showAdventure(3,"");}));
             var quest=WorldService.tracked(state);VBox goal=new VBox(8,title("Next on your journey"),text(state.getCurrentLocation()),text(quest==null?state.getCurrentQuest():quest.title()),text(quest==null?"Explore the borderlands or prepare for the arena.":LivingService.questNext(state,quest.id())),button(app,"Open Quest Journal",()->app.showAdventure(1,"")));goal.getStyleClass().add("journey-reminder");party.getChildren().add(goal);
         }else party.getChildren().addAll(title("Teleknia"),text("Continue your journey or begin a new story from Home."));
         root.setCenter(scroll(party));return root;

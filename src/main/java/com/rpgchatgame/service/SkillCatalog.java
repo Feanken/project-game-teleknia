@@ -30,9 +30,9 @@ public final class SkillCatalog {
     public static String preview(GameState state,Skill skill,int rank){
         var hero=state.getCharacter();
         return switch(skill.kind()){
-            case "POWER"->"Power before armor: "+(ItemCatalog.attack(state)*2+4*rank);
+            case "POWER"->"Power before armor: "+(ItemCatalog.attack(state)*2+4*rank+(MasteryService.is(state,"berserker")&&hero.getHp()*2<=hero.getMaxHp()?4:0));
             case "SHADOW"->"Power before half armor: "+(ItemCatalog.attack(state)+hero.getAgility()+4*rank);
-            case "EMBER"->"Direct damage: "+(hero.getIntelligence()*2+hero.getLevel()*2+3*rank)+" / Burn: 4 x 3 rounds";
+            case "EMBER"->"Direct damage: "+(hero.getIntelligence()*2+hero.getLevel()*2+3*rank)+" / Burn: "+(MasteryService.is(state,"pyromancer")?6:4)+" x 3 rounds";
             case "BASH"->"Power before armor: "+(ItemCatalog.attack(state)+3*rank)+" / Stun: 1 round";
             case "FROST"->"Direct damage: "+(hero.getIntelligence()+3*rank)+" / Stun: 1 round";
             case "VENOM"->"Power before half armor: "+(ItemCatalog.attack(state)/2)+" / Poison: "+(5+2*rank)+" x 3 rounds";

@@ -25,6 +25,9 @@ public class CampaignState {
     public String getTrackedQuest(){return trackedQuest;}
     public void setTrackedQuest(String value){trackedQuest=value;}
     public boolean epilogueClosed(){return !ending.isBlank()&&!has("borderlands_reopened");}
+    private String specialization = "";
+    public String getSpecialization(){return specialization;}
+    public void setSpecialization(String value){specialization=value;}
     private String companion = "";
     private String challenge = "";
     public String getCompanion(){return companion;}

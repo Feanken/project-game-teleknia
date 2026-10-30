@@ -25,5 +25,32 @@
     "attack": 24,
     "defense": 7,
     "modifier": "Attrition: +80 enemy HP; 10 gold entry."
+  },
+  {
+    "id": "crucible",
+    "name": "Trial of Embers",
+    "sprite": "field_wolf",
+    "hp": 150,
+    "attack": 22,
+    "defense": 6,
+    "modifier": "Scorch: hits apply Burn for two rounds; 10 gold entry."
+  },
+  {
+    "id": "mirror",
+    "name": "Trial of Mirrors",
+    "sprite": "field_guardian",
+    "hp": 165,
+    "attack": 22,
+    "defense": 8,
+    "modifier": "Mirror ward: shields on turns 1, 4, 7; 10 gold entry."
+  },
+  {
+    "id": "gale",
+    "name": "Trial of the Gale",
+    "sprite": "rime_sentinel",
+    "hp": 160,
+    "attack": 23,
+    "defense": 7,
+    "modifier": "Riposte: heavy attack every second turn; 10 gold entry."
   }
 ]

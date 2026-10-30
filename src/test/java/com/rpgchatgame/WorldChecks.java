@@ -79,7 +79,7 @@ public final class WorldChecks {
         var reread=new GameService(target);reread.loadSlot(3);check(reread.getCurrentState().getCampaign().getTrackedQuest().equals("q_signal")&&reread.getCurrentState().getCampaign().getEnding().equals(ending),"Tracked quest and epilogue persist");
     }
     static void assetsAndData()throws Exception{
-        WorldContent.validate();check(WorldContent.LOCATIONS.size()==11&&WorldContent.NPCS.size()==5&&WorldContent.MONSTERS.size()==5&&WorldContent.QUESTS.size()==13,"World content counts");
+        WorldContent.validate();check(WorldContent.LOCATIONS.size()==11&&WorldContent.NPCS.size()==5&&WorldContent.MONSTERS.size()==11&&WorldContent.QUESTS.size()==13,"World content counts");
         for(String item:List.of("frost_lens","rune_tablet","caravan_crate","tide_medicine","star_chart","captains_bell","frost_lantern","prospectors_blade","glacier_mail","frost_blade","rime_sigil","tide_ring"))check(ItemCatalog.entry(item)!=null,"New item definition: "+item);
         Set<String> sprites=new HashSet<>();WorldContent.LOCATIONS.values().forEach(l->sprites.add(l.sprite()));WorldContent.NPCS.values().forEach(n->sprites.add(n.sprite()));WorldContent.MONSTERS.values().forEach(e->sprites.add(e.sprite()));
         sprites.addAll(List.of("sera","orin","marin","ilyra","rime_sentinel","drowned_captain","frostveil","glacier","coast","lighthouse","frost_lens","rune_tablet","caravan_crate","tide_medicine","star_chart","captains_bell","field_fighter","field_rogue","field_mage","field_wolf","field_guardian","field_warden","field_trail","field_village","field_gate","field_camp","field_shrine","field_ruins","field_tower","frost_blade","glacier_mail","tide_ring"));

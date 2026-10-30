@@ -1,5 +1,16 @@
 # Catatan Rilis Teleknia
 
+## 1.8 / Paths of Mastery - 30 Oktober 2026
+
+- Enam specialization: Guardian/Berserker, Assassin/Ranger, Pyromancer/Arcanist; masing-masing satu passive dan skill aktif dengan biaya MP/cooldown.
+- Pilih di Build setelah level 5 dan guardian; pertama gratis, ganti di camp 30 gold dengan konfirmasi, tanpa mengisi HP/MP atau mereset rank.
+- Enam Hunt opsional setelah guardian, dengan pola scorch, venom, ward, armor break, mana leech dan riposte; reward sekali, Archive mengikuti penemuan.
+- Tiga arena baru Embers/Mirrors/Gale; reward pertama dua material, replay tanpa reward, tidak mengubah ending.
+- Biaya delapan resep diturunkan; support companion tetap dibatasi cooldown/turn. Tidak menambah stun chain atau meniadakan fatigue.
+- Save skema 6; migrasi save 1–5, cooldown specialization tersimpan saat battle, perubahan build atomik.
+- Validasi: 1.311 pemeriksaan game/sistem dan 107 pemeriksaan UI lulus. Termasuk 24 kombinasi jalur/difficulty/solo-companion, enam Hunt, seluruh arena, replay reward, migrasi, rollback biaya, konfirmasi/cancel dan layout minimum dengan teks 120%.
+
+
 ## Campfire & Purpose / polish 1.7 - 30 Oktober 2026
 
 - Start memakai ilustrasi campfire baru, logo Teleknia, menu vertikal dan preview autosave tanpa load/mutasi; Continue dinonaktifkan bila auto tidak valid. Keyboard panah/Enter, fade/ember dengan Reduced Motion.

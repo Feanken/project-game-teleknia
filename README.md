@@ -1,11 +1,11 @@
-# Teleknia 1.7: Atlas of the Borderlands
+# Teleknia 1.8: Paths of Mastery
 
 Game RPG desktop dark fantasy berbasis pilihan, dengan adegan lokasi dan portrait
 yang bisa diklik. Petualangan offline terdiri dari **3 bab utama, 11 lokasi,
-5 encounter (2 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
+11 encounter (8 opsional), 6 side quest baru, dan 3 ending utama**. Cerita memakai aturan dan
 state lokal; tidak membutuhkan API AI atau koneksi internet saat dimainkan.
 
-Versi saat ini: **1.7** (build Maven `1.7.0`). Versi sebelum pengembangan campaign
+Versi saat ini: **1.8** (build Maven `1.8.0`). Versi sebelum pengembangan campaign
 ditetapkan sebagai **1.0**. Rincian perubahan ada di [CHANGELOG.md](CHANGELOG.md).
 Rencana versi 1.2 sampai 1.10 tersedia di [ROADMAP.md](ROADMAP.md).
 
@@ -119,8 +119,8 @@ dibuka untuk persiapan. Semua data mencerminkan aturan arena 1.5 yang sudah ada:
 biaya/reward/modifier/difficulty tidak ditambah atau diubah.
 
 Panel Market, Build, Crafting dan companion juga menampilkan alasan tombol yang
-belum tersedia (milestone, resource, rank, camp, atau battle). Perubahan ini tetap
-versi 1.7 dan skema save 5, bukan rilis konten baru.
+belum tersedia (milestone, resource, rank, camp, atau battle). Penyempurnaan ini dirilis pada
+versi 1.7 dengan skema save 5; versi 1.8 berikutnya menggunakan skema 6.
 
 ## Penyempurnaan tampilan 1.7 - Traveler interface
 
@@ -500,3 +500,43 @@ Untuk memeriksa decoding semua MP3 di desktop tanpa suara:
 ```powershell
 ./scripts/check-audio.ps1
 ```
+
+
+## 1.8 - Paths of Mastery
+
+Buka Menu → Skills & Build → Specialization. Setelah level 5 dan mengalahkan
+Hollow Guardian, pilih satu dari dua jalur kelas di Survivor Camp. Pilihan pertama
+gratis; pergantian seharga 30 gold membutuhkan konfirmasi. HP/MP dan rank skill
+tidak berubah, dan pergantian dilarang selama battle atau percakapan.
+
+| Kelas | Jalur | Passive | Skill aktif (MP / cooldown) |
+| --- | --- | --- | --- |
+| Fighter | Guardian | Damage langsung diterima -3, minimum 1 | Aegis: shield 24 (10 / 3) |
+| Fighter | Berserker | Attack/Power Strike +4 saat HP ≤50% | Rending Blow: ATK×2+8 sebelum armor (12 / 3) |
+| Rogue | Assassin | Attack +6 pada giliran kelipatan 3 | Nightfall: ATK+AGI+12 langsung (12 / 3) |
+| Rogue | Ranger | Attack +3 | Thorn Volley: ATK+AGI melawan setengah armor, poison 5×3 (10 / 3) |
+| Mage | Pyromancer | Burn Ember Surge +2 | Wildfire: INT×2+8 langsung, burn 6×3 (14 / 3) |
+| Mage | Arcanist | Arcane Bolt hanya 8 MP | Prismatic Lance: INT×2+10 langsung, shield 8 (12 / 3) |
+
+Cooldown 3 berarti tiga aksi valid lain sebelum skill dapat digunakan kembali.
+Shield berlangsung dua giliran termasuk giliran aplikasi, tidak menahan Burn/Poison.
+Preview menunjukkan damage sebelum shield/armor yang disebutkan. Tidak ada stun baru
+atau penghapusan fatigue. Companion tetap opsional.
+
+Enam Hunt opsional muncul setelah guardian: Cinder Stalker di Emberwood Trail,
+Bog Adder di Sunken Ruins, Mirror Keeper di Emberwood Shrine, Iron Reaver di Northern
+Gate, Hollow Leech di Drowned Coast, Frost Duelist di Frostveil Pass. Masing-masing
+memberi 45 EXP, 18 gold dan satu HP potion sekali saja; retreat tidak memberi reward.
+Pola baru meliputi burn, poison, shield, penetrasi armor, drain MP dan riposte.
+Nama/lore masuk Archive saat ditemukan. Mengunjungi lokasi tidak langsung memulai battle.
+
+Arena menambah Trial of Embers, Mirrors dan Gale (total enam). Syarat pascatamat,
+biaya 10 gold, hadiah dua material pada kemenangan pertama dan replay tanpa reward
+tetap berlaku. Embers menguji damage berkelanjutan, Mirrors timing/shield, Gale guard.
+Delapan resep memakai biaya gold baru 2/2/5/5/12/12/12/18 (urutan resep dalam menu);
+bahan tetap terbatas dan equipment tidak dapat digandakan. Support companion tetap
+8/12 power dengan cooldown 3 karena sudah dibatasi giliran dan tidak menghapus fatigue.
+
+Save skema 6 memuat specialization dan cooldown; save skema 1–5 dimigrasi tanpa
+memaksa memilih jalur atau memberi bonus resource. Save gagal membatalkan pilihan dan
+biaya. Sprite pixel 64×64 yang tersedia digunakan kembali untuk varian encounter.

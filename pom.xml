@@ -5,8 +5,8 @@
 
     <groupId>com.rpgchatgame</groupId>
     <artifactId>interactive-rpg-chat-story-game</artifactId>
-    <version>1.7.0</version>
-    <name>Teleknia - Atlas of the Borderlands</name>
+    <version>1.8.0</version>
+    <name>Teleknia - Paths of Mastery</name>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

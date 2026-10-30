@@ -177,6 +177,10 @@ public class GameService {
         next.getCampaign().getSkillRanks().put(id,rank+1);
         return record(next,"Upgraded "+SkillCatalog.find(next,id).name()+" to rank "+(rank+1)+".");
     }
+    public String chooseSpecialization(String id){
+        GameState next=copy();String blocked=MasteryService.blocked(next,id);if(!blocked.isBlank())return blocked;
+        String message=MasteryService.choose(next,id);next.setCurrentChoices(story.choices(next));return record(next,message);
+    }
     public String resetBuild() {
         if(!canShop())return "Reset your build at Survivor Camp outside combat.";
         GameState next=copy();

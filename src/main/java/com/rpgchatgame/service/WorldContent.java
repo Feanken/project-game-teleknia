@@ -52,7 +52,7 @@ public final class WorldContent {
         require(reached.size()==LOCATIONS.size(),"Unreachable location");
         for(var npc:NPCS.values())require(LOCATIONS.containsKey(npc.location())&&DIALOGUES.containsKey(npc.dialogue())&&flags.containsAll(npc.requires()),"Invalid NPC reference");
         for(var quest:QUESTS.values())require(quest.npc().isBlank()||NPCS.containsKey(quest.npc()),"Quest NPC missing");
-        for(var monster:MONSTERS.values()){require(Set.of("wolf","guardian","warden","captain").contains(monster.pattern()),"Invalid enemy pattern");require(monster.hp()>0&&monster.attack()>0&&monster.defense()>=0&&monster.exp()>=0&&monster.gold()>=0,"Invalid encounter stats");rewards(monster.items());}
+        for(var monster:MONSTERS.values()){require(Set.of("wolf","guardian","warden","captain","scorcher","venom","sentinel","breaker","siphon","duelist").contains(monster.pattern()),"Invalid enemy pattern");require(monster.hp()>0&&monster.attack()>0&&monster.defense()>=0&&monster.exp()>=0&&monster.gold()>=0,"Invalid encounter stats");rewards(monster.items());}
         for(var action:ACTIONS.values()){
             require(LOCATIONS.containsKey(action.location())&&flags.containsAll(action.requires())&&flags.containsAll(action.absent()),"Invalid action gates");
             require(action.exp()>=0&&action.gold()>=0&&action.campMin()>=0&&action.campMin()<=10&&action.keeperMin()>=0&&action.keeperMin()<=10,"Invalid reward/reputation gate");

@@ -80,7 +80,16 @@ public final class AdventureController {
         for(var s:SkillCatalog.forClass(state.getCharacter().getCharacterClass()))rows.add(entry(s.id(),s.name(),"experience",s.mp()+" MP",()->{
             int rank=SkillCatalog.rank(state,s.id());ComboBox<String> difficulty=new ComboBox<>();difficulty.getItems().setAll("STANDARD","STORY");difficulty.setValue(state.getCampaign().getDifficulty());difficulty.setId("build-difficulty");difficulty.setDisable(!game.canShop());difficulty.setOnAction(e->app.runSafely(()->transaction(()->game.setDifficulty(difficulty.getValue()))));
             return panel("experience",s.name(),"Rank "+rank+" / 3",text(s.description()),text(s.mp()+" MP / Cooldown "+s.cooldown()),text("Current: "+SkillCatalog.preview(state,s,rank)),text(rank<3?"Next: "+SkillCatalog.preview(state,s,rank+1):"Maximum rank reached."),text("Skill points: "+SkillCatalog.points(state)),action("upgrade-"+s.id(),"Upgrade / 1 point",rank<3&&SkillCatalog.points(state)>0&&state.getCampaign().getEnemy()==null&&!state.getCampaign().epilogueClosed(),"Needs a skill point, rank below 3, and no combat.",()->transaction(()->game.upgradeSkill(s.id()))),action("reset-build","Reset build / 20 gold",game.canShop()&&!state.getCampaign().getSkillRanks().isEmpty()&&state.getCharacter().getGold()>=20,"Reset only at camp with 20 gold.",()->{if(app.confirm("Reset build?","Refund allocated points for 20 gold. HP, MP and character levels do not change."))transaction(game::resetBuild);}),title("Difficulty"),difficulty,text("Story: 35% less incoming damage. Standard: normal damage. Change at camp only. Guard recovers mana; fatigue prevents indefinite stalling."));
-        }));return view(groups(state.getCharacter().getCharacterClass(),rows));
+        }));
+        var categories=groups(state.getCharacter().getCharacterClass(),rows);
+        List<CollectionView.Entry> paths=new ArrayList<>();
+        for(var p:MasteryService.PATHS)if(p.klass().equals(state.getCharacter().getCharacterClass()))paths.add(entry(p.id(),p.name(),"field_"+p.klass().toLowerCase(java.util.Locale.ROOT),MasteryService.is(state,p.id())?"ACTIVE":"Specialization",()->{
+            String blocked=MasteryService.blocked(state,p.id());
+            Button choose=button(app,MasteryService.is(state,p.id())?"ACTIVE":"Choose / "+MasteryService.cost(state)+" gold",()->{
+                if(app.confirm("Choose specialization?",p.name()+" / "+MasteryService.cost(state)+" gold. HP, MP and skill ranks unchanged."))transaction(()->game.chooseSpecialization(p.id()));
+            });choose.setId("mastery-"+p.id());choose.setDisable(!blocked.isBlank());
+            return panel("field_"+p.klass().toLowerCase(java.util.Locale.ROOT),p.name(),MasteryService.is(state,p.id())?"ACTIVE":"Specialization",title("Passive"),text(p.passive()),title(p.skill()),text(p.mp()+" MP / Cooldown "+p.cooldown()),text(MasteryService.preview(state,p)),text("First choice is free. Change at camp for 30 gold. Requires level 5 and the Hollow Guardian milestone."),text(blocked),choose);
+        }));categories.put("Specialization",paths);return view(categories);
     }
     private Node archive(){
         Map<String,List<CollectionView.Entry>> lists=groups("Locations",new ArrayList<>());lists.put("Characters",new ArrayList<>());lists.put("Enemies",new ArrayList<>());

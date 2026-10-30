@@ -27,4 +27,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Atlas checks failed.' }
     & java -cp $classpath com.rpgchatgame.PresentationChecks
     if ($LASTEXITCODE -ne 0) { throw 'Presentation checks failed.' }
+    & java -cp $classpath com.rpgchatgame.MasteryChecks
+    if ($LASTEXITCODE -ne 0) { throw 'Mastery checks failed.' }
 } finally { Pop-Location }

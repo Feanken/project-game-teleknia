@@ -79,7 +79,8 @@ public final class StoryController {
     }
     private VBox scene(WorldContent.Location location){
         VBox card=new VBox(7);card.getStyleClass().addAll("rpg-scene","region-"+location.region().toLowerCase(java.util.Locale.ROOT).replace(' ','-'));
-        Label region=text(location.region()+" / "+UiText.tr(state.getCampaign().getDifficulty()),"eyebrow");
+        var path=MasteryService.active(state);
+        Label region=text(location.region()+" / "+UiText.tr(state.getCampaign().getDifficulty())+(path==null?"":" / "+path.name()),"eyebrow");
         ImageView vista=PixelAssets.view(location.sprite(),2);
         StackPane map=new StackPane(vista);map.getStyleClass().add("scene-vista");map.setId("scene-vista");
         VBox hero=new VBox(5,PixelAssets.view("field_"+state.getCharacter().getCharacterClass().toLowerCase(java.util.Locale.ROOT)),text(state.getCharacter().getName(),"actor-name"));hero.setId("hero-actor");hero.setAlignment(Pos.CENTER);hero.setPrefWidth(95);hero.setMaxWidth(115);hero.getChildren().get(1).getProperties().put("literal",true);
@@ -105,6 +106,10 @@ public final class StoryController {
             Label vitality=text("HP "+enemy.getHp()+" / "+enemy.getMaxHp(),"item-meta");vitality.setId("enemy-vitality");vitality.setWrapText(false);
             Label intent=text("Next: "+UiText.tr(CombatService.intent(state).name()),"intent-label");intent.setTooltip(new Tooltip(CombatService.intent(state).description()));intent.setWrapText(false);
             HBox line=new HBox(10,vitality,health,intent);line.setAlignment(Pos.CENTER);card.getChildren().add(line);
+            if(!state.getCampaign().getPlayerEffects().isEmpty()||!state.getCampaign().getEnemyEffects().isEmpty()){
+                Label effects=text(UiText.tr("You")+": "+CombatService.effects(state.getCampaign().getPlayerEffects())+"\n"+UiText.tr("Foe")+": "+CombatService.effects(state.getCampaign().getEnemyEffects()),"item-meta");
+                effects.setId("battle-effects");effects.setTooltip(new Tooltip(effects.getText()));effects.setMaxHeight(48);card.getChildren().add(effects);
+            }
 
         }
         card.setMinHeight(enemy!=null?175:150);card.setPrefHeight(215);card.setMaxHeight(280);VBox.setVgrow(card,Priority.ALWAYS);
@@ -154,6 +159,7 @@ public final class StoryController {
             if(category.equals("Travel")&&!travel||category.equals("Interact")&&travel||category.equals("Items")&&!item||category.equals("Skills")&&(item||id.equals("flee")))continue;
             Button action=button(choice.getLabel(),()->submit(id));action.getStyleClass().add("choice-button");action.setMaxWidth(Double.MAX_VALUE);
             String tip="";if(state.getCampaign().getEnemy()!=null){tip=UiText.tr(CombatService.unavailable(state,id));action.setDisable(!tip.isBlank());var skill=SkillCatalog.find(state,id);if(skill!=null)tip+=(tip.isBlank()?"":"\n")+UiText.tr(skill.description());}
+            if(id.equals("mastery")&&MasteryService.active(state)!=null)tip+=(tip.isBlank()?"":"\n")+MasteryService.preview(state,MasteryService.active(state));
             action.setTooltip(new Tooltip(tip.isBlank()?UiText.tr("Choose this action"):tip));choices.getChildren().add(action);
         }
     }

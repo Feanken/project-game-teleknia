@@ -107,5 +107,125 @@
       }
     ],
     "lore": "Drowned Captain guards a broken promise. Its intent reveals when to defend, strike, or seek another answer."
+  },
+  {
+    "id": "cinder_stalker",
+    "name": "Cinder Stalker",
+    "hp": 100,
+    "attack": 20,
+    "defense": 5,
+    "exp": 45,
+    "gold": 18,
+    "sprite": "field_wolf",
+    "pattern": "scorcher",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "small_potion",
+        "quantity": 1
+      }
+    ],
+    "lore": "Cinders cling to its claws. Its scorch lingers after a strike."
+  },
+  {
+    "id": "bog_adder",
+    "name": "Bog Adder",
+    "hp": 110,
+    "attack": 18,
+    "defense": 4,
+    "exp": 45,
+    "gold": 18,
+    "sprite": "field_wolf",
+    "pattern": "venom",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "small_potion",
+        "quantity": 1
+      }
+    ],
+    "lore": "Venom outlasts armor. End the fight before repeated bites take their toll."
+  },
+  {
+    "id": "mirror_keeper",
+    "name": "Mirror Keeper",
+    "hp": 130,
+    "attack": 20,
+    "defense": 8,
+    "exp": 45,
+    "gold": 18,
+    "sprite": "field_guardian",
+    "pattern": "sentinel",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "small_potion",
+        "quantity": 1
+      }
+    ],
+    "lore": "A keeper mirrors the shrine wards. Wait for the shield to fade or let poison work."
+  },
+  {
+    "id": "iron_reaver",
+    "name": "Iron Reaver",
+    "hp": 125,
+    "attack": 22,
+    "defense": 7,
+    "exp": 45,
+    "gold": 18,
+    "sprite": "field_guardian",
+    "pattern": "breaker",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "small_potion",
+        "quantity": 1
+      }
+    ],
+    "lore": "A reaver aims for the seams of armor. Its third strike breaks through half your defense."
+  },
+  {
+    "id": "hollow_leech",
+    "name": "Hollow Leech",
+    "hp": 110,
+    "attack": 19,
+    "defense": 5,
+    "exp": 45,
+    "gold": 18,
+    "sprite": "drowned_captain",
+    "pattern": "siphon",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "small_potion",
+        "quantity": 1
+      }
+    ],
+    "lore": "The drowned creature feeds on mana. Keep reserves for a decisive blow."
+  },
+  {
+    "id": "frost_duelist",
+    "name": "Frost Duelist",
+    "hp": 120,
+    "attack": 21,
+    "defense": 6,
+    "exp": 45,
+    "gold": 18,
+    "sprite": "rime_sentinel",
+    "pattern": "duelist",
+    "flags": [],
+    "reputation": {},
+    "items": [
+      {
+        "id": "small_potion",
+        "quantity": 1
+      }
+    ],
+    "lore": "A duelist punishes every second step. Watch its riposte rather than trading attacks blindly."
   }
 ]

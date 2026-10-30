@@ -1,7 +1,7 @@
 # Roadmap Teleknia: 1.2 sampai 1.10
 
-Status: versi 1.2 sampai 1.7 sudah diimplementasikan. Versi game aktif adalah 1.7.
-Versi 1.8-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
+Status: versi 1.2 sampai 1.8 sudah diimplementasikan. Versi game aktif adalah 1.8.
+Versi 1.9-1.10 merupakan rencana; belum diimplementasikan. Rencana rilis besar sebelumnya dihapus sementara.
 Target jumlah konten adalah usulan cakupan rilis, bukan fitur yang sudah tersedia.
 Tanggal rilis ditentukan setelah implementasi dan pengujian setiap versi.
 
@@ -323,9 +323,13 @@ kategori dan entri, panel detail panjang serta transaksi yang gagal. Uji bahwa
 memilih kartu tidak memicu aksi berbayar dan lore terkunci tidak membocorkan teks.
 
 
-## 1.8 - Paths of Mastery (rencana)
+## 1.8 - Paths of Mastery (selesai)
 
 Tujuan: memberi identitas build yang lebih kuat tanpa membuat companion wajib.
+
+Implementasi: enam jalur dengan passive/skill aktif, enam Hunt, tiga arena baru, preview Build, biaya pergantian 30 gold, penyesuaian delapan biaya crafting dan migrasi skema 6. Rincian angka dan akses di README.
+
+Validasi rilis: 1.311 pemeriksaan game/sistem dan 107 UI lulus; 24 kombinasi specialization × difficulty × solo/companion menamatkan campaign, termasuk save/load di tengah battle dan rollback biaya ketika save gagal.
 
 Target fitur:
 
@@ -423,7 +427,7 @@ serta rollback diuji. New Game+ tidak menggandakan item, reward atau bonus comba
 
 ## Langkah pertama yang disarankan
 
-Lanjutkan 1.8 untuk specialization dan variasi combat. Pertahankan pengujian
+Versi 1.8 menambahkan specialization dan variasi combat. Pertahankan pengujian
 peta/fog, inventory, koleksi Codex, transaksi atomik dan kompatibilitas save 1.7.
 Versi aplikasi tetap 1.7 sampai implementasi berikutnya selesai.
 

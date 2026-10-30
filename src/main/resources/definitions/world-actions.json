@@ -783,5 +783,149 @@
     "keeperMin": 0,
     "campMin": 0,
     "enemy": ""
+  },
+  {
+    "id": "hunt_cinder_stalker",
+    "label": "Hunt: Cinder Stalker",
+    "location": "trail",
+    "text": "Cinders cling to its claws. Its scorch lingers after a strike.",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [
+      "cinder_stalker"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "cinder_stalker"
+  },
+  {
+    "id": "hunt_bog_adder",
+    "label": "Hunt: Bog Adder",
+    "location": "ruins",
+    "text": "Venom outlasts armor. End the fight before repeated bites take their toll.",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [
+      "bog_adder"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "bog_adder"
+  },
+  {
+    "id": "hunt_mirror_keeper",
+    "label": "Hunt: Mirror Keeper",
+    "location": "shrine",
+    "text": "A keeper mirrors the shrine wards. Wait for the shield to fade or let poison work.",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [
+      "mirror_keeper"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "mirror_keeper"
+  },
+  {
+    "id": "hunt_iron_reaver",
+    "label": "Hunt: Iron Reaver",
+    "location": "gate",
+    "text": "A reaver aims for the seams of armor. Its third strike breaks through half your defense.",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [
+      "iron_reaver"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "iron_reaver"
+  },
+  {
+    "id": "hunt_hollow_leech",
+    "label": "Hunt: Hollow Leech",
+    "location": "coast",
+    "text": "The drowned creature feeds on mana. Keep reserves for a decisive blow.",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [
+      "hollow_leech"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "hollow_leech"
+  },
+  {
+    "id": "hunt_frost_duelist",
+    "label": "Hunt: Frost Duelist",
+    "location": "frostveil",
+    "text": "A duelist punishes every second step. Watch its riposte rather than trading attacks blindly.",
+    "requires": [
+      "guardian"
+    ],
+    "absent": [
+      "frost_duelist"
+    ],
+    "items": [],
+    "consume": [],
+    "flags": [],
+    "exp": 0,
+    "gold": 0,
+    "reputation": {},
+    "rewards": [],
+    "node": "",
+    "npc": "",
+    "keeperMin": 0,
+    "campMin": 0,
+    "enemy": "frost_duelist"
   }
 ]

@@ -14,5 +14,5 @@ public final class ArenaReadiness {
         new Requirement("Have at least 10 gold",s.getCharacter().getGold()>=10));}
     public static boolean ready(GameState s){return requirements(s).stream().allMatch(Requirement::met);}
     public static String blocked(GameState s){return requirements(s).stream().filter(r->!r.met()).map(Requirement::label).findFirst().orElse("");}
-    public static String material(String id){return switch(id){case "ash"->"ember_shard";case "ice"->"frost_thread";case "tide"->"tide_pearl";default->throw new IllegalArgumentException("Unknown arena");};}
+    public static String material(String id){return switch(id){case "ash","crucible"->"ember_shard";case "ice","mirror"->"frost_thread";case "tide","gale"->"tide_pearl";default->throw new IllegalArgumentException("Unknown arena");};}
 }

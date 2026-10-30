@@ -7,12 +7,17 @@ import java.util.*;
 public final class CombatService {
     public record Intent(String name,String description,int bonus,boolean strike,boolean defend) {}
     private final InventoryService inventory=new InventoryService();
-    private static String pattern(Enemy enemy){var data=WorldContent.MONSTERS.get(enemy.getId());return data==null?"normal":data.pattern();}
+    private static String pattern(Enemy enemy){var data=WorldContent.MONSTERS.get(enemy.getId());return data==null?MasteryService.pattern(enemy.getId()):data.pattern();}
     private static boolean phaseEnemy(Enemy enemy){return pattern(enemy).equals("warden")||pattern(enemy).equals("captain");}
     public static boolean storyMode(GameState state){return state.getCampaign().getDifficulty().equals("STORY");}
     public static Intent intent(GameState state){
         var enemy=state.getCampaign().getEnemy();if(enemy==null)return new Intent("","",0,false,false);
         int turn=state.getCampaign().getTurn()+1;
+        String style=pattern(enemy);
+        if(style.equals("sentinel")&&turn%3==1)return new Intent("Mirror ward","Raises a 16-point shield after your action. Use damage over time or prepare mana.",0,false,true);
+        if(style.equals("duelist")&&turn%2==0)return new Intent("Riposte","A heavy strike every second turn. Guard or stun.",6,true,false);
+        if(style.equals("breaker")&&turn%3==0)return new Intent("Armor break","Heavy strike ignores half your defense.",6,true,false);
+        if(Set.of("scorcher","venom","siphon").contains(style)&&turn%3!=0)return new Intent(style.equals("siphon")?"Mana leech":style.equals("venom")?"Venom fang":"Scorch",style.equals("siphon")?"A hit drains up to 3 MP.":"A hit applies a two-round damage-over-time effect. Guard reduces direct damage only.",0,true,false);
         if(turn%3==0)return new Intent("Heavy attack","A charged strike. Guard, stun or shield can help.",8,true,false);
         if(pattern(enemy).equals("wolf")&&turn%3==2)return new Intent("Charge","The wolf charges; no direct attack this round.",0,false,false);
         if(pattern(enemy).equals("guardian")&&turn%4==0)return new Intent("Defensive stance","The guardian raises a 16-point shield for two rounds after your action.",0,false,true);
@@ -22,7 +27,9 @@ public final class CombatService {
     public static int cooldown(GameState state,String id){return state.getCampaign().getCooldowns().getOrDefault(id,0);}
     public static String unavailable(GameState state,String action){
         var hero=state.getCharacter();var skill=SkillCatalog.find(state,action);
-        int cost=skill!=null?skill.mp():action.equals("spell")?10:action.equals("heal")?8:0;
+        var mastery=MasteryService.active(state);
+        if(action.equals("mastery")&&mastery==null)return "Choose a specialization first.";
+        int cost=action.equals("mastery")?mastery.mp():skill!=null?skill.mp():action.equals("spell")?(MasteryService.is(state,"arcanist")?8:10):action.equals("heal")?8:0;
         if(action.equals("companion")){
             var c=BondService.companion(state.getCampaign().getCompanion());
             if(c==null||!BondService.recruited(state,c))return "No active companion.";
@@ -45,7 +52,9 @@ public final class CombatService {
             if(cooldown(state,skill.id())>0)label+=" / CD "+cooldown(state,skill.id());
             choices.add(new Choice(label,skill.id()));
         }
-        choices.addAll(List.of(new Choice("Arcane Bolt / 10 MP","spell"),new Choice("Guard / recover 6 MP","guard"),
+        var mastery=MasteryService.active(state);
+        if(mastery!=null)choices.add(new Choice(mastery.skill()+" / "+mastery.mp()+" MP / CD "+cooldown(state,"mastery"),"mastery"));
+        choices.addAll(List.of(new Choice("Arcane Bolt / "+(MasteryService.is(state,"arcanist")?8:10)+" MP","spell"),new Choice("Guard / recover 6 MP","guard"),
                 new Choice("Mend / 8 MP"+(cooldown(state,"heal")>0?" / CD "+cooldown(state,"heal"):""),"heal"),
                 new Choice("Drink HP potion","potion"),new Choice("Drink mana draught","mana"),new Choice("Retreat / lose up to 5 gold","flee")));
         if(ItemCatalog.owns(state,"greater_potion"))choices.add(new Choice("Greater Potion / 65 HP","greater"));
@@ -93,7 +102,7 @@ public final class CombatService {
             switch(skill.kind()){
                 case "POWER"->damage=Math.max(1,ItemCatalog.attack(state)*2-enemy.getDefense()+4*rank);
                 case "SHADOW"->damage=Math.max(1,ItemCatalog.attack(state)+hero.getAgility()-enemy.getDefense()/2+4*rank);
-                case "EMBER"->{damage=hero.getIntelligence()*2+hero.getLevel()*2+3*rank;effect(world.getEnemyEffects(),"burn",0);}
+                case "EMBER"->{damage=hero.getIntelligence()*2+hero.getLevel()*2+3*rank;effect(world.getEnemyEffects(),"burn",MasteryService.is(state,"pyromancer")?2:0);}
                 case "BASH"->{damage=Math.max(1,ItemCatalog.attack(state)-enemy.getDefense()+3*rank);effect(world.getEnemyEffects(),"stun",0);}
                 case "FROST"->{damage=hero.getIntelligence()+3*rank;effect(world.getEnemyEffects(),"stun",0);}
                 case "VENOM"->{damage=Math.max(1,ItemCatalog.attack(state)/2-enemy.getDefense()/2);effect(world.getEnemyEffects(),"poison",2*rank);}
@@ -104,6 +113,17 @@ public final class CombatService {
             }
             text.append(skill.name()).append("! ");
         }else switch(action){
+            case "mastery"->{
+                var path=MasteryService.active(state);mp-=path.mp();setCooldown(state,"mastery",path.cooldown());damage=MasteryService.damage(state,path);
+                switch(path.id()){
+                    case "guardian"->applyEffect(world.getPlayerEffects(),"shield",2,24);
+                    case "berserker"->damage=Math.max(1,damage-enemy.getDefense());
+                    case "ranger"->{damage=Math.max(1,damage-enemy.getDefense()/2);applyEffect(world.getEnemyEffects(),"poison",3,5);}
+                    case "pyromancer"->applyEffect(world.getEnemyEffects(),"burn",3,6);
+                    case "arcanist"->applyEffect(world.getPlayerEffects(),"shield",2,8);
+                }
+                text.append(path.skill()).append("! ");
+            }
             case "companion"->{
                 var ally=BondService.companion(world.getCompanion());int power=world.has("bond_"+ally.id())?12:8;
                 setCooldown(state,"companion",3);
@@ -119,7 +139,7 @@ public final class CombatService {
                 damage=Math.max(1,ItemCatalog.attack(state)-enemy.getDefense());if(critical)damage+=hero.getAgility()/2;
                 text.append(critical?"Critical strike! ":"You strike. ");
             }
-            case "spell"->{mp-=10;damage=hero.getIntelligence()*2+12;text.append("Arcane Bolt ignores armor. ");}
+            case "spell"->{mp-=MasteryService.is(state,"arcanist")?8:10;damage=hero.getIntelligence()*2+12;text.append("Arcane Bolt ignores armor. ");}
             case "guard"->{guard=true;mp=Math.min(hero.getMaxMp(),mp+6);text.append("You Guard and recover mana. ");}
             case "heal"->{mp-=8;hp=Math.min(hero.getMaxHp(),hp+25+hero.getIntelligence());setCooldown(state,"heal",2);text.append("Mend restores health. ");}
             case "potion","mana","greater","focus"->{
@@ -129,6 +149,8 @@ public final class CombatService {
             }
             default->{response.setNarration("Choose a combat action.");return;}
         }
+        if(MasteryService.is(state,"berserker")&&hero.getHp()*2<=hero.getMaxHp()&&(action.equals("attack")||action.equals("skill")))damage+=4;
+        if(action.equals("attack")){if(MasteryService.is(state,"ranger"))damage+=3;if(MasteryService.is(state,"assassin")&&(world.getTurn()+1)%3==0)damage+=6;}
         damage=absorb(world.getEnemyEffects(),damage);enemy.setHp(Math.max(0,enemy.getHp()-damage));
         if(damage>0)text.append(enemy.getName()).append(" takes ").append(damage).append(" damage. ");
         if(enemy.getHp()==0){victory(state,response,enemy,text);finishDelta(hero,hp,mp,response,text);return;}
@@ -140,10 +162,16 @@ public final class CombatService {
         }else if(selected.strike()){
             int phaseBonus=phaseEnemy(enemy)&&wasPhase?5:0;
             int fatigue=Math.max(0,turn-12)/2;
-            int incoming=Math.max(1,enemy.getAttack()+selected.bonus()+phaseBonus+fatigue-ItemCatalog.defense(state));
+            int incoming=Math.max(1,enemy.getAttack()+selected.bonus()+phaseBonus+fatigue-(pattern(enemy).equals("breaker")&&selected.bonus()>0?ItemCatalog.defense(state)/2:ItemCatalog.defense(state)));
             if(storyMode(state))incoming=(int)Math.ceil(incoming*.65);
+            if(MasteryService.is(state,"guardian"))incoming=Math.max(1,incoming-3);
             if(guard)incoming=Math.max(1,incoming/2);
             incoming=absorb(world.getPlayerEffects(),incoming);hp-=incoming;
+            if(incoming>0){
+                if(pattern(enemy).equals("scorcher"))applyEffect(world.getPlayerEffects(),"burn",2,3);
+                if(pattern(enemy).equals("venom"))applyEffect(world.getPlayerEffects(),"poison",2,3);
+                if(pattern(enemy).equals("siphon"))mp=Math.max(0,mp-3);
+            }
             text.append(selected.name()).append("! You take ").append(incoming).append(" damage. ");
             if(phaseEnemy(enemy)&&wasPhase&&selected.bonus()>0)applyEffect(world.getPlayerEffects(),enemy.getId().equals("drowned_captain")?"poison":"burn",2,4);
             if(fatigue>0)text.append("Battle fatigue adds ").append(fatigue).append(" enemy power. ");
@@ -168,7 +196,7 @@ public final class CombatService {
         var world=state.getCampaign();String challenge=world.getChallenge();world.setEnemy(null);clear(state);
         if(!challenge.isBlank()){
             boolean first=world.mark("challenge_"+challenge,"Cleared arena: "+challenge+".");
-            if(first)response.getItemsGained().add(ItemCatalog.stack(challenge.equals("ash")?"ember_shard":challenge.equals("ice")?"frost_thread":"tide_pearl",2));
+            if(first)response.getItemsGained().add(ItemCatalog.stack(ArenaReadiness.material(challenge),2));
             text.append(first?"Arena victory! First-clear crafting supplies awarded. ":"Arena victory! Replay: no additional rewards. ");return;
         }
         if(!world.mark(enemy.getId(),"Defeated "+enemy.getName()+"."))return;

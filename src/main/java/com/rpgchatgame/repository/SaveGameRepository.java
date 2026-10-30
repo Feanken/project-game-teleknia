@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 
 /** Three manual slots plus independent autosave; valid previous snapshots survive bad writes. */
 public final class SaveGameRepository {
-    public static final int SCHEMA = 5;
+    public static final int SCHEMA = 6;
     public record SlotInfo(int slot, boolean occupied, boolean corrupt, boolean backup,
                            String name, String characterClass, int level, String location, String savedAt) {}
     public static final class SaveProblem extends IllegalStateException {
@@ -67,13 +67,15 @@ public final class SaveGameRepository {
         if(!world.getCompanion().isBlank()&&(com.rpgchatgame.service.BondService.companion(world.getCompanion())==null||!world.has("recruit_"+world.getCompanion())))throw new IllegalStateException("Invalid active companion");
         if(!world.getChallenge().isBlank()&&(com.rpgchatgame.service.BondService.CHALLENGES.stream().noneMatch(c->c.id().equals(world.getChallenge()))||world.getEnemy()==null||!world.getEnemy().getId().equals("arena_"+world.getChallenge())||world.getEnding().isBlank()))throw new IllegalStateException("Invalid arena state");
         if(world.getEnemy()!=null&&world.getEnemy().getId().startsWith("arena_")&&world.getChallenge().isBlank())throw new IllegalStateException("Missing arena state");
+        var mastery=com.rpgchatgame.service.MasteryService.active(state);
+        if(world.getSpecialization()==null||!world.getSpecialization().isBlank()&&(mastery==null||!mastery.klass().equals(hero.getCharacterClass())||hero.getLevel()<5||!world.has("guardian")))throw new IllegalStateException("Invalid specialization");
         int spent=0;
         for(var rank:world.getSkillRanks().entrySet()){
             if(SkillCatalog.find(state,rank.getKey())==null||rank.getValue()==null||rank.getValue()<1||rank.getValue()>3)throw new IllegalStateException("Invalid skill rank");
             spent+=rank.getValue();
         }
         if(spent>hero.getLevel())throw new IllegalStateException("Skill points exceed earned levels");
-        for(var cd:world.getCooldowns().entrySet())if((!cd.getKey().equals("companion")&&!cd.getKey().equals("heal")&&SkillCatalog.find(state,cd.getKey())==null)||cd.getValue()==null||cd.getValue()<1||cd.getValue()>8)
+        for(var cd:world.getCooldowns().entrySet())if((!(cd.getKey().equals("mastery")&&mastery!=null)&&!cd.getKey().equals("companion")&&!cd.getKey().equals("heal")&&SkillCatalog.find(state,cd.getKey())==null)||cd.getValue()==null||cd.getValue()<1||cd.getValue()>8)
             throw new IllegalStateException("Invalid cooldown");
         for(var effects:List.of(world.getPlayerEffects(),world.getEnemyEffects()))for(var effect:effects.entrySet()){
             if(!Set.of("burn","poison","stun","shield").contains(effect.getKey())||effect.getValue()==null||effect.getValue().getTurns()<1||effect.getValue().getTurns()>5||effect.getValue().getPotency()<0||effect.getValue().getPotency()>1000)
@@ -97,7 +99,7 @@ public final class SaveGameRepository {
         GameState state=JsonUtil.fromJson(data.payload(),GameState.class);
         // Sequential v1 -> v2: gameplay payload is unchanged; slots, timestamp and checksum move into the envelope.
         int version=data.version();
-        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else if(version==3)version=4;else if(version==4)version=5;else throw new IllegalStateException("Missing save migration"); }
+        while(version<SCHEMA) { if(version==1)version=2;else if(version==2)version=3;else if(version==3)version=4;else if(version==4)version=5;else if(version==5)version=6;else throw new IllegalStateException("Missing save migration"); }
         validate(state);return state;
     }
     private Snapshot read(Connection connection,String table,int slot) throws SQLException {

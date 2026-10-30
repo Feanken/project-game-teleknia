@@ -132,6 +132,13 @@ public final class UiSmokeChecks {
         check(sheet.lookup("#atlas-view").getScaleX()<1,"Map starts folded");
         var wait=new javafx.animation.PauseTransition(javafx.util.Duration.millis(620));wait.setOnFinished(e->{try{check(!sheet.lookup("#map-board").isDisabled()&&Math.abs(sheet.lookup("#atlas-view").getScaleX()-1)<.01,"Map unfolds and enables travel");button(sheet,com.rpgchatgame.util.UiText.tr("Close")).fire();}catch(Throwable error){finish(error);}});wait.play();
     }catch(Throwable error){finish(error);}});app.showMap();System.setProperty("teleknia.uiCheck.root",checkProperty);
+    game.getCurrentState().setCurrentLocation("Survivor Camp");game.getCurrentState().getCampaign().setDialogueNode("");new CharacterService().applyProgress(game.getCurrentState().getCharacter(),0,0,400,100);game.performAction("look");
+    app.showAdventure(3,"");category("Specialization");click("entry-pyromancer");String masteryBefore=com.rpgchatgame.util.JsonUtil.toJson(game.getCurrentState());
+    Platform.runLater(()->{try{button(dialog(),com.rpgchatgame.util.UiText.tr("Cancel")).fire();}catch(Throwable error){finish(error);}});click("mastery-pyromancer");check(com.rpgchatgame.util.JsonUtil.toJson(game.getCurrentState()).equals(masteryBefore),"Cancel specialization preserves all resources");
+    answerConfirm();click("mastery-pyromancer");check(MasteryService.is(game.getCurrentState(),"pyromancer"),"Specialization confirmed through Build UI");capture("mastery-build-id-minimum");
+    check(((Button)root().lookup("#mastery-pyromancer")).isDisabled(),"Already active path cannot be charged again");click("entry-arcanist");int masteryGold=game.getCurrentState().getCharacter().getGold();answerConfirm();click("mastery-arcanist");check(game.getCurrentState().getCharacter().getGold()==masteryGold-30,"UI switch charges displayed fee");
+    game.challenge("crucible");app.showStory();check(game.getCurrentState().getCurrentChoices().stream().anyMatch(c->c.getAction().equals("mastery")),"Mastery action available during new trial");capture("mastery-battle-id-minimum");game.performAction("flee");
+    app.showAdventure(7,"");click("entry-mirror");capture("mastery-arena-id-minimum");check(root().lookup("#challenge-mirror")!=null,"New trials are accessible through scrolled arena list");
     key(KeyCode.F11);check(stage.isFullScreen(),"Fullscreen shortcut");key(KeyCode.F11);
     finish(null);
    }catch(Throwable error){finish(error);}});
